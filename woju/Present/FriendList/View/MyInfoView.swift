@@ -1,27 +1,29 @@
 //
-//  FriendInfoView.swift
+//  MyInfoView.swift
 //  woju
 //
-//  Created by 정민호 on 2/16/24.
+//  Created by 정민호 on 2/20/24.
 //
 
 import SwiftUI
 
-struct FriendInfoView: View {
+struct MyInfoView: View {
     @Environment(\.presentationMode) var presentationMode
     
     @State private var isEditMode: Bool = false
+    @EnvironmentObject var appState : AppStateManager
     
-    private var test: [UserInfo] = [UserInfo(realName: "test", loginID: "test", socialID: ["myknow00@icloud.com"])]
+    private var friendship = 30
     
     var body: some View {
         GeometryReader { g in
             NavigationView {
                 ScrollView(.horizontal, showsIndicators: false) {
                     LazyHStack(spacing: 0) {
-                        ForEach(test.indices, id:\.self) { image in
-                            FriendInfoInnerView(pages: test)
-                        }.frame(width: g.size.width, height: g.size.height, alignment: .top)
+                        if let myInfo = Binding($appState.myInfo) {
+                            FriendInfoInnerView(pages: myInfo, friendship: -1)
+                                .frame(width: g.size.width, height: g.size.height, alignment: .top)
+                        }
                     }
                     .ignoresSafeArea()
                 }
@@ -54,5 +56,5 @@ struct FriendInfoView: View {
 }
 
 #Preview {
-    FriendInfoView()
+    MyInfoView().environmentObject(AppStateManager())
 }

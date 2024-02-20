@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SettingView: View {
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var appState: AppStateModel
+    @EnvironmentObject var appState: AppStateManager
     
     var body: some View {
         NavigationView {

@@ -51,20 +51,36 @@ class UserDefaultsManager: ObservableObject{
         }
         return nil
     }
+    
+    // 친구 리스트 저장
+    class func savefriendList(list: [FriendInfo]) {
+        if let encoded = try? JSONEncoder().encode(list) {
+            UserDefaults.standard.set(encoded, forKey: "friendList")
+        }
+    }
+
+    // UserDefaultsManager 내에서
+    class func getFriendList() -> [FriendInfo] {
+        if let savedData = UserDefaults.standard.object(forKey: "friendList") as? Data {
+            let decoder = JSONDecoder()
+            if let savedFriends = try? decoder.decode([FriendInfo].self, from: savedData) {
+                return savedFriends
+            }
+        }
+        return [] // 빈 배열 반환
+    }
 
     // 로그아웃
-    func logout() {
-        isLoggedIn = false
-        isOnboarding = false
-        userDefaults.removeObject(forKey: "userInfo")
-        print("Logout")
+    class func deleteUserData() {
+        UserDefaults.standard.removeObject(forKey: "myInfo")
+        print("Delete")
     }
 }
 
 struct testView: View {
     var body: some View {
         Button(action: {
-            UserDefaultsManager.saveUserInfo(user: UserInfo(realName: "test", loginID: "test", socialID: ["myknow00@icloud.com"]))
+            UserDefaultsManager.saveUserInfo(user: UserInfo(nickName: "test", socialID: [SocialID(socialType: "기타", socialID: "myknow00@icloud.com")]))
         }, label: {
             Text("Button")
         })

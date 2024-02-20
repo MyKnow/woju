@@ -12,6 +12,7 @@ struct wojuApp: App {
     var body: some Scene {
         WindowGroup {
             MainView()
+                .environmentObject(AppStateManager())
         }
     }
 }

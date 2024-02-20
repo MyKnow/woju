@@ -43,5 +43,5 @@ struct FriendAddView: View {
 }
 
 #Preview {
-    FriendAddView()
+    FriendAddView().environmentObject(AppStateManager())
 }

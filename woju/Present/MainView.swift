@@ -10,7 +10,7 @@ import CoreBluetooth
 import Foundation
 
 struct MainView: View {
-    @StateObject var appState = AppStateModel()
+    @StateObject var appState = AppStateManager()
     
     @State private var selection = 2
     
@@ -40,11 +40,14 @@ struct MainView: View {
             })
         }
         .environmentObject(appState)
+        .onAppear() {
+            print("onBoarding : \(appState.isOnboarding), isLoggendIn : \(appState.isLoggedIn)")
+        }
     }
 }
 
-
-
-#Preview {
-    MainView()
+struct MainView_Previews: PreviewProvider {
+    static var previews: some View {
+        MainView()
+    }
 }

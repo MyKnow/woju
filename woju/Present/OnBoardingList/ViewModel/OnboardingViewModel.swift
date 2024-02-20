@@ -16,8 +16,5 @@ enum Page {
 }
 
 class OnboardingViewModel: ObservableObject {
-    @Published var user : UserInfo?
-    @Published var isLogin : Bool = UserDefaultsManager.shared.isLoggedIn
-    @Published var isOnboarding : Bool = UserDefaultsManager.shared.isOnboarding
     @Published var page : Page = .requiredInfo
 }

@@ -13,6 +13,13 @@ class AppleLoginManager: NSObject, ObservableObject, ASAuthorizationControllerDe
     @Published var userName: String?
     @Published var userEmail: String?
     
+    var appState: AppStateManager?
+    var obViewModel: OnboardingViewModel?
+    
+    func setup(appState: AppStateManager, obViewModel: OnboardingViewModel) {
+        self.appState = appState
+        self.obViewModel = obViewModel
+    }
 
     // Sign in with Apple 기능을 사용하여 Apple ID로 로그인을 시도하는 함수
     func showAppleLogin() {
@@ -29,6 +36,8 @@ class AppleLoginManager: NSObject, ObservableObject, ASAuthorizationControllerDe
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
             let userIdentifier = appleIDCredential.user
             let fullName = appleIDCredential.fullName
+            dump(fullName)
+            print(fullName)
             
             if let email = appleIDCredential.email {
                 self.userEmail = email
@@ -56,14 +65,34 @@ class AppleLoginManager: NSObject, ObservableObject, ASAuthorizationControllerDe
             } else {
                 self.userIdentifier = nil
             }
-            self.userName = "\(fullName?.givenName ?? "") \(fullName?.familyName ?? "")"
             
+            if let given = fullName?.givenName {
+                if let family = fullName?.familyName {
+                    self.userName = "\(family)\(given)"
+                    print(self.userName)
+                } else {
+                    self.userName = nil
+                }
+            }
         }
     }
 
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
         // 로그인 실패 시 처리
         print("Authorization failed: \(error.localizedDescription)")
+    }
+    
+    func loginCheck() {
+        if let _ = userIdentifier, let email = userEmail {
+            appState?.myInfo = UserInfo(nickName: userName ?? "", socialID: [SocialID(socialType: "애플", socialID: email)])
+            obViewModel?.page = .requiredInfo
+            appState?.isLoggedIn = true
+            print("loginView : \(appState?.myInfo)\n\(appState?.isLoggedIn)")
+        } else {
+            print("loginError")
+            obViewModel?.page = .login
+            appState?.isLoggedIn = false
+        }
     }
 }
 

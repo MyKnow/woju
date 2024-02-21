@@ -27,7 +27,3 @@ struct UserInfo: Identifiable, Codable {
     
     var readme : String?
 }
-
-extension UserInfo {
-    
-}

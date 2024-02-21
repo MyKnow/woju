@@ -51,24 +51,6 @@ class UserDefaultsManager: ObservableObject{
         }
         return nil
     }
-    
-    // 친구 리스트 저장
-    class func savefriendList(list: [FriendInfo]) {
-        if let encoded = try? JSONEncoder().encode(list) {
-            UserDefaults.standard.set(encoded, forKey: "friendList")
-        }
-    }
-
-    // UserDefaultsManager 내에서
-    class func getFriendList() -> [FriendInfo] {
-        if let savedData = UserDefaults.standard.object(forKey: "friendList") as? Data {
-            let decoder = JSONDecoder()
-            if let savedFriends = try? decoder.decode([FriendInfo].self, from: savedData) {
-                return savedFriends
-            }
-        }
-        return [] // 빈 배열 반환
-    }
 
     // 로그아웃
     class func deleteUserData() {

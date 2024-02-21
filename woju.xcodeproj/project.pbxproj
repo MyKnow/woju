@@ -12,6 +12,8 @@
 		6D5CA61C2B84AC100092A244 /* FriendInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D5CA61B2B84AC100092A244 /* FriendInfoViewModel.swift */; };
 		6D5CA61E2B84B6CF0092A244 /* ImageModifyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D5CA61D2B84B6CF0092A244 /* ImageModifyManager.swift */; };
 		6D5CA6202B84DD790092A244 /* MyInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D5CA61F2B84DD790092A244 /* MyInfoView.swift */; };
+		6D5CA62B2B85DA5C0092A244 /* FriendInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D5CA62A2B85DA5C0092A244 /* FriendInfo.swift */; };
+		6D5CA62D2B85DC700092A244 /* FriendInfoDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D5CA62C2B85DC700092A244 /* FriendInfoDataManager.swift */; };
 		6D84B5F22B83883F00D251F6 /* ChatRoomList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D84B5F12B83883F00D251F6 /* ChatRoomList.swift */; };
 		6D84B5F62B838B6000D251F6 /* RequiredInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D84B5F52B838B6000D251F6 /* RequiredInfoViewModel.swift */; };
 		6D84B5F82B838B6E00D251F6 /* DetailInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D84B5F72B838B6E00D251F6 /* DetailInfoViewModel.swift */; };
@@ -41,9 +43,8 @@
 		6DA8E2632B836D9600EC205A /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA8E25F2B836D9600EC205A /* UserInfo.swift */; };
 		6DA8E2642B836D9600EC205A /* DiscoveredDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA8E2602B836D9600EC205A /* DiscoveredDevice.swift */; };
 		6DA8E2652B836D9600EC205A /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA8E2612B836D9600EC205A /* KeychainManager.swift */; };
-		6DA8E2662B836D9600EC205A /* FriendInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA8E2622B836D9600EC205A /* FriendInfoModel.swift */; };
 		6DA8E2692B836D9B00EC205A /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA8E2682B836D9B00EC205A /* UserDefaultsManager.swift */; };
-		6DA8E26B2B836E0600EC205A /* DeviceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA8E26A2B836E0600EC205A /* DeviceViewModel.swift */; };
+		6DA8E26B2B836E0600EC205A /* BluetoothViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA8E26A2B836E0600EC205A /* BluetoothViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +53,8 @@
 		6D5CA61B2B84AC100092A244 /* FriendInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendInfoViewModel.swift; sourceTree = "<group>"; };
 		6D5CA61D2B84B6CF0092A244 /* ImageModifyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageModifyManager.swift; sourceTree = "<group>"; };
 		6D5CA61F2B84DD790092A244 /* MyInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoView.swift; sourceTree = "<group>"; };
+		6D5CA62A2B85DA5C0092A244 /* FriendInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendInfo.swift; sourceTree = "<group>"; };
+		6D5CA62C2B85DC700092A244 /* FriendInfoDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendInfoDataManager.swift; sourceTree = "<group>"; };
 		6D84B5F12B83883F00D251F6 /* ChatRoomList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomList.swift; sourceTree = "<group>"; };
 		6D84B5F52B838B6000D251F6 /* RequiredInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequiredInfoViewModel.swift; sourceTree = "<group>"; };
 		6D84B5F72B838B6E00D251F6 /* DetailInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailInfoViewModel.swift; sourceTree = "<group>"; };
@@ -84,9 +87,8 @@
 		6DA8E25F2B836D9600EC205A /* UserInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
 		6DA8E2602B836D9600EC205A /* DiscoveredDevice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscoveredDevice.swift; sourceTree = "<group>"; };
 		6DA8E2612B836D9600EC205A /* KeychainManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
-		6DA8E2622B836D9600EC205A /* FriendInfoModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendInfoModel.swift; sourceTree = "<group>"; };
 		6DA8E2682B836D9B00EC205A /* UserDefaultsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
-		6DA8E26A2B836E0600EC205A /* DeviceViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceViewModel.swift; sourceTree = "<group>"; };
+		6DA8E26A2B836E0600EC205A /* BluetoothViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BluetoothViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +120,14 @@
 				6D5CA61B2B84AC100092A244 /* FriendInfoViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		6D5CA6272B85DA470092A244 /* DB */ = {
+			isa = PBXGroup;
+			children = (
+				6D5CA62A2B85DA5C0092A244 /* FriendInfo.swift */,
+			);
+			path = DB;
 			sourceTree = "<group>";
 		};
 		6D84B5F32B8389A500D251F6 /* View */ = {
@@ -169,12 +179,12 @@
 		6DA8E2112B83600000EC205A /* woju */ = {
 			isa = PBXGroup;
 			children = (
+				6D5CA6272B85DA470092A244 /* DB */,
 				6DA8E2212B836C6200EC205A /* Application */,
 				6D84DA7A2B8383B5000FAEAF /* Extension */,
 				6DA8E2672B836D9B00EC205A /* Manager */,
 				6DA8E25E2B836D9600EC205A /* Model */,
 				6DA8E2282B836D8500EC205A /* Present */,
-				6DA8E24C2B836D8B00EC205A /* ViewModel */,
 				6DA8E2192B83600100EC205A /* Preview Content */,
 			);
 			path = woju;
@@ -251,7 +261,8 @@
 		6DA8E2382B836D8500EC205A /* Find */ = {
 			isa = PBXGroup;
 			children = (
-				6DA8E23A2B836D8500EC205A /* DeviceListView.swift */,
+				6DA8E24D2B836D8B00EC205A /* View */,
+				6DA8E24C2B836D8B00EC205A /* ViewModel */,
 			);
 			path = Find;
 			sourceTree = "<group>";
@@ -259,18 +270,18 @@
 		6DA8E24C2B836D8B00EC205A /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				6DA8E24D2B836D8B00EC205A /* Find */,
+				6DA8E26A2B836E0600EC205A /* BluetoothViewModel.swift */,
+				6DA8E24E2B836D8B00EC205A /* AdvertisingViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
-		6DA8E24D2B836D8B00EC205A /* Find */ = {
+		6DA8E24D2B836D8B00EC205A /* View */ = {
 			isa = PBXGroup;
 			children = (
-				6DA8E26A2B836E0600EC205A /* DeviceViewModel.swift */,
-				6DA8E24E2B836D8B00EC205A /* AdvertisingViewModel.swift */,
+				6DA8E23A2B836D8500EC205A /* DeviceListView.swift */,
 			);
-			path = Find;
+			path = View;
 			sourceTree = "<group>";
 		};
 		6DA8E25E2B836D9600EC205A /* Model */ = {
@@ -278,7 +289,6 @@
 			children = (
 				6DA8E25F2B836D9600EC205A /* UserInfo.swift */,
 				6DA8E2602B836D9600EC205A /* DiscoveredDevice.swift */,
-				6DA8E2622B836D9600EC205A /* FriendInfoModel.swift */,
 				6D84B5F12B83883F00D251F6 /* ChatRoomList.swift */,
 			);
 			path = Model;
@@ -293,6 +303,7 @@
 				6DA8E2612B836D9600EC205A /* KeychainManager.swift */,
 				6D5A96C02B847BF90048CFA9 /* ImagePicker.swift */,
 				6D5CA61D2B84B6CF0092A244 /* ImageModifyManager.swift */,
+				6D5CA62C2B85DC700092A244 /* FriendInfoDataManager.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -392,17 +403,18 @@
 				6DA8E24A2B836D8500EC205A /* MainView.swift in Sources */,
 				6DA8E2422B836D8500EC205A /* LoginView.swift in Sources */,
 				6D5CA6202B84DD790092A244 /* MyInfoView.swift in Sources */,
-				6DA8E26B2B836E0600EC205A /* DeviceViewModel.swift in Sources */,
+				6DA8E26B2B836E0600EC205A /* BluetoothViewModel.swift in Sources */,
 				6DA8E2572B836D8B00EC205A /* AdvertisingViewModel.swift in Sources */,
 				6D5A96C12B847BF90048CFA9 /* ImagePicker.swift in Sources */,
 				6DA8E25D2B836D8B00EC205A /* OnboardingViewModel.swift in Sources */,
 				6DA8E2692B836D9B00EC205A /* UserDefaultsManager.swift in Sources */,
+				6D5CA62D2B85DC700092A244 /* FriendInfoDataManager.swift in Sources */,
 				6DA8E2472B836D8500EC205A /* FriendListView.swift in Sources */,
 				6DA8E2492B836D8500EC205A /* DeviceListView.swift in Sources */,
 				6D5A96C32B847F210048CFA9 /* View.swift in Sources */,
 				6D84B5F62B838B6000D251F6 /* RequiredInfoViewModel.swift in Sources */,
-				6DA8E2662B836D9600EC205A /* FriendInfoModel.swift in Sources */,
 				6DA8E2452B836D8500EC205A /* FriendInfoInnerView.swift in Sources */,
+				6D5CA62B2B85DA5C0092A244 /* FriendInfo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -550,6 +562,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "주변 친구 찾기";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -588,6 +601,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "주변 친구 찾기";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;

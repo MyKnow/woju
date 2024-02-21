@@ -36,8 +36,6 @@ class AppleLoginManager: NSObject, ObservableObject, ASAuthorizationControllerDe
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
             let userIdentifier = appleIDCredential.user
             let fullName = appleIDCredential.fullName
-            dump(fullName)
-            print(fullName)
             
             if let email = appleIDCredential.email {
                 self.userEmail = email

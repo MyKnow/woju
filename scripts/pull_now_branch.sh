@@ -7,9 +7,7 @@ git pull origin $(git rev-parse --abbrev-ref HEAD)
 echo "암호를 입력하세요 : "
 read -s password
 
-openssl aes-256-cbc -d -pbkdf2 -in web/index.html.enc -out web/index.html -k $password
 openssl aes-256-cbc -d -pbkdf2 -in .env.enc -out .env -k $password
-openssl aes-256-cbc -d -pbkdf2 -in nginx.conf.enc -out nginx.conf -k $password
 
 # 복호화 성공 여부 확인
 if [ $? -ne 0 ]; then

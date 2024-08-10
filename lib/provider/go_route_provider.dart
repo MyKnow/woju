@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../services/debug_service.dart';
+import '../service/debug_service.dart';
 
 class RouterObserver extends NavigatorObserver {
   @override

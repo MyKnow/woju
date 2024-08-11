@@ -1,0 +1,11 @@
+{
+    "onboarding": {
+        "description": {
+            "1": "Connect with people you've crossed paths with",
+            "2": "Chat with people nearby in real-time",
+            "3": "Talk to strangers before sleep"
+        },
+        "start": "Start with phone number",
+        "skip": "Skip"
+    }
+}

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:woju/model/app_state_model.dart';
 import 'package:woju/model/hive_box_enum.dart';
 
-import 'provider/app_state_notifier.dart';
+import 'provider/go_route_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,31 +28,13 @@ class MainApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final onboardingState = ref.watch(onboardingStateProvider);
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       debugShowMaterialGrid: false,
-      darkTheme: ThemeData.dark(useMaterial3: true),
+      darkTheme: ThemeData.dark(useMaterial3: false),
       themeMode: ThemeMode.system,
-      home: Scaffold(
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Text(onboardingState.isCompleted ? 'Completed' : 'Not Completed'),
-            ElevatedButton(
-              onPressed: () {
-                ref.read(onboardingStateProvider.notifier).update(
-                      OnboardingState(
-                          isCompleted: true, isAlreadyOnboarded: true),
-                    );
-              },
-              child: const Text('Complete'),
-            ),
-          ],
-        ),
-      ),
+      theme: ThemeData.light(),
+      routerConfig: ref.watch(goRouterProvider),
     );
   }
 }

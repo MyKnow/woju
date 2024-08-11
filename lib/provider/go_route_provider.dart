@@ -1,40 +1,77 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:woju/page/onboarding/onboarding_page.dart';
 
 import '../service/debug_service.dart';
+import 'app_state_notifier.dart';
 
 class RouterObserver extends NavigatorObserver {
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    printd("DidPush: $route");
+    printd("DidPush: $previousRoute -> $route");
   }
 
   @override
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    printd("DidPop: $route");
+    printd("DidPop: $route -> $previousRoute");
   }
 
   @override
   void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    printd("DidRemove: $route");
+    printd("DidRemove: $route -> $previousRoute");
   }
 
   @override
   void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
-    printd("DidReplace: $newRoute");
+    printd("DidReplace: $oldRoute -> $newRoute");
   }
 }
 
-///
 final goRouterProvider = Provider<GoRouter>((ref) {
+  final onboardingState = ref.watch(onboardingStateProvider);
   return GoRouter(
     initialLocation: '/',
     observers: [RouterObserver()],
-    redirect: (context, state) async {
+    redirect: (context, state) {
+      if (!onboardingState.isAlreadyOnboarded) {
+        return '/onboarding';
+      }
       return null;
     },
-    routes: [],
+    routes: [
+      _buildNoTransitionRoute(
+        path: '/',
+        builder: (context, state) {
+          return const Scaffold(
+            body: Center(
+              child: Text('Home Page'),
+            ),
+          );
+        },
+        text: 'Home',
+      ),
+      _buildNestedRoute(
+        path: '/onboarding',
+        builder: (context, state) {
+          return const OnboardingPage();
+        },
+        text: 'Onboarding',
+        routes: [
+          _buildNoTransitionRoute(
+            path: 'step1',
+            builder: (context, state) {
+              return const Scaffold(
+                body: Center(
+                  child: Text('Onboarding Step 1'),
+                ),
+              );
+            },
+            text: 'Onboarding Step 1',
+          ),
+        ],
+      ),
+    ],
   );
 });
 

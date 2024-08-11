@@ -7,6 +7,7 @@ environment:
   sdk: '>=3.4.3 <4.0.0'
 
 dependencies:
+  easy_localization: ^3.0.7
   flutter:
     sdk: flutter
   flutter_native_splash: ^2.4.1

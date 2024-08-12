@@ -10,8 +10,10 @@ dependencies:
   accessibility_tools: ^2.2.1
   cupertino_icons: ^1.0.8
   easy_localization: ^3.0.7
+  firebase_core: ^2.24.2
   flutter:
     sdk: flutter
+  flutter_dotenv: ^5.1.0
   flutter_native_splash: ^2.4.1
   flutter_onboarding_slider: ^1.0.11
   flutter_riverpod: ^2.5.1
@@ -30,4 +32,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - .env
     - assets/translations/

@@ -111,7 +111,7 @@ fi
 
 # 암호화
 # 파일 목록
-files=("web/index.html" ".env" "nginx.conf")
+files=("firebase.json", ".env", "android/app/google-services.json" "ios/Runner/GoogleService-Info.plist")
 
 # 변경된 파일 목록 초기화
 changed_files=()

@@ -4,16 +4,21 @@ import 'package:accessibility_tools/accessibility_tools.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import 'package:woju/firebase_options.dart';
 import 'package:woju/model/hive_box_enum.dart';
 import 'package:woju/provider/go_route_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   await Hive.initFlutter();
   await EasyLocalization.ensureInitialized();
-
-  // Hive.registerAdapter(OnboardingStateAdapter()); // 생성된 어댑터 등록
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   for (var box in HiveBox.values) {
     box.registerAdapter();

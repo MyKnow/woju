@@ -18,18 +18,21 @@ class OnboardingStateAdapter extends TypeAdapter<OnboardingState> {
     };
     return OnboardingState(
       isAlreadyOnboarded: fields[0] as bool,
-      isCompleted: fields[1] as bool,
+      isSignIn: fields[1] as bool,
+      gotoSignIn: fields[2] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, OnboardingState obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.isAlreadyOnboarded)
       ..writeByte(1)
-      ..write(obj.isCompleted);
+      ..write(obj.isSignIn)
+      ..writeByte(2)
+      ..write(obj.gotoSignIn);
   }
 
   @override

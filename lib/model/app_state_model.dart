@@ -8,26 +8,33 @@ class OnboardingState {
   final bool isAlreadyOnboarded;
 
   @HiveField(1)
-  final bool isCompleted;
+  final bool isSignIn;
+
+  @HiveField(2)
+  final bool gotoSignIn;
 
   OnboardingState({
     required this.isAlreadyOnboarded,
-    required this.isCompleted,
+    this.isSignIn = false,
+    required this.gotoSignIn,
   });
 
   OnboardingState copyWith({
     bool? isAlreadyOnboarded,
-    bool? isCompleted,
+    bool? isSignIn,
+    bool? gotoSignIn,
   }) {
     return OnboardingState(
       isAlreadyOnboarded: isAlreadyOnboarded ?? this.isAlreadyOnboarded,
-      isCompleted: isCompleted ?? this.isCompleted,
+      isSignIn: isSignIn ?? this.isSignIn,
+      gotoSignIn: gotoSignIn ?? this.gotoSignIn,
     );
   }
 
   // default value
   static OnboardingState get initialState => OnboardingState(
         isAlreadyOnboarded: false,
-        isCompleted: false,
+        gotoSignIn: false,
+        isSignIn: false,
       );
 }

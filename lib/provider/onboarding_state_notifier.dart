@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:woju/model/hive_box_enum.dart';
@@ -56,8 +57,36 @@ class OnboardingStateNotifier extends StateNotifier<OnboardingState> {
 
     return state;
   }
+
+  /// ### OnboardingState 반환
+  ///
+  /// 현재 OnboardingState를 반환합니다.
+  ///
+  /// #### Return
+  ///
+  /// - [OnboardingState] : 현재 OnboardingState
+  ///
+  OnboardingState get onboardingState => state;
 }
 
 /// OnboardingStateNotifier를 위한 Action을 정의한 확장
 ///
-extension OnboardingAction on OnboardingState {}
+extension OnboardingAction on OnboardingStateNotifier {
+  /// ### Sign In 페이지로 이동
+  ///
+  /// 온보딩을 완료하고 Sign In 페이지로 이동합니다.
+  ///
+  void pushRouteSignInPage(BuildContext context) {
+    update(
+        onboardingState.copyWith(isAlreadyOnboarded: true, gotoSignIn: true));
+  }
+
+  /// ### SignUp 페이지로 이동
+  ///
+  /// 온보딩을 완료하고 SignUp 페이지로 이동합니다.
+  ///
+  void pushRouteSignUpPage(BuildContext context) {
+    update(
+        onboardingState.copyWith(isAlreadyOnboarded: true, gotoSignIn: false));
+  }
+}

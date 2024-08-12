@@ -1,10 +1,15 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:woju/page/onboarding/onboarding_page.dart';
 
-import '../service/debug_service.dart';
-import 'app_state_notifier.dart';
+import 'package:woju/page/onboarding/onboarding_page.dart';
+import 'package:woju/page/onboarding/signin_page.dart';
+import 'package:woju/page/onboarding/signup_page.dart';
+import 'package:woju/provider/onboarding_state_notifier.dart';
+import 'package:woju/service/debug_service.dart';
 
 class RouterObserver extends NavigatorObserver {
   @override
@@ -34,40 +39,59 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     initialLocation: '/',
     observers: [RouterObserver()],
     redirect: (context, state) {
-      if (!onboardingState.isAlreadyOnboarded) {
+      // 로그인이 되어있지 않고, 온보딩이 되어있지 않다면 온보딩 페이지로 이동
+      if (!onboardingState.isAlreadyOnboarded && !onboardingState.isSignIn) {
         return '/onboarding';
       }
+
+      // 온보딩은 완료되었지만 로그인이 되어있지 않다면
+      if (onboardingState.isAlreadyOnboarded && !onboardingState.isSignIn) {
+        // 로그인 페이지로 이동하는 경우
+        if (onboardingState.gotoSignIn) {
+          return '/onboarding/signin';
+        }
+        // 회원가입 페이지로 이동하는 경우
+        return '/onboarding/signup';
+      }
+
       return null;
     },
     routes: [
       _buildNoTransitionRoute(
         path: '/',
         builder: (context, state) {
-          return const Scaffold(
+          return Scaffold(
             body: Center(
-              child: Text('Home Page'),
+              child: ElevatedButton(
+                  onPressed: () {
+                    ref.read(onboardingStateProvider.notifier).delete();
+                  },
+                  child: Text("Delete Onboarding State")),
             ),
           );
         },
-        text: 'Home',
+        text: '홈',
       ),
       _buildNestedRoute(
         path: '/onboarding',
         builder: (context, state) {
           return const OnboardingPage();
         },
-        text: 'Onboarding',
+        text: '온보딩',
         routes: [
           _buildNoTransitionRoute(
-            path: 'step1',
+            path: 'signup',
             builder: (context, state) {
-              return const Scaffold(
-                body: Center(
-                  child: Text('Onboarding Step 1'),
-                ),
-              );
+              return const SignUpPage();
             },
-            text: 'Onboarding Step 1',
+            text: '회원가입',
+          ),
+          _buildNoTransitionRoute(
+            path: 'signin',
+            builder: (context, state) {
+              return const SignInPage();
+            },
+            text: '로그인',
           ),
         ],
       ),

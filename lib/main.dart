@@ -1,10 +1,12 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+
+import 'package:accessibility_tools/accessibility_tools.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:woju/model/hive_box_enum.dart';
 
-import 'provider/go_route_provider.dart';
+import 'package:woju/model/hive_box_enum.dart';
+import 'package:woju/provider/go_route_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +38,7 @@ class MainApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp.router(
+      builder: (context, child) => AccessibilityTools(child: child),
       debugShowCheckedModeBanner: false,
       debugShowMaterialGrid: false,
       darkTheme: ThemeData.dark(useMaterial3: false),

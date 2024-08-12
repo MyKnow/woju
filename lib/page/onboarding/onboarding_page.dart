@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_onboarding_slider/flutter_onboarding_slider.dart';
+import 'package:woju/provider/onboarding_state_notifier.dart';
 
 class OnboardingPage extends ConsumerWidget {
   const OnboardingPage({super.key});
@@ -12,15 +13,19 @@ class OnboardingPage extends ConsumerWidget {
       home: OnBoardingSlider(
         pageBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
         headerBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        finishButtonText: 'onboarding.start'.tr(),
+        finishButtonText: 'onboarding.startWithPhoneNumber'.tr(),
         finishButtonStyle: FinishButtonStyle(
           backgroundColor: Theme.of(context).primaryColor,
         ),
         onFinish: () {
-          // TODO : Go to Auth Page
+          ref
+              .read(onboardingStateProvider.notifier)
+              .pushRouteSignUpPage(context);
         },
         skipTextButton: const Text('onboarding.skip').tr(),
-        trailing: const Icon(CupertinoIcons.info_circle),
+        skipIcon: Icon(CupertinoIcons.arrow_right,
+            semanticLabel: "onboarding.skip".tr()),
+        trailing: const Text('onboarding.signIn').tr(),
         trailingFunction: () {
           // TODO : Help Page
         },

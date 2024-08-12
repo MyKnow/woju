@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:woju/model/hive_box_enum.dart';
 
-import '../model/app_state_model.dart';
+import '../../model/app_state_model.dart';
 
 /// ### 온보딩 상태를 관리하는 StateNotifier
 ///

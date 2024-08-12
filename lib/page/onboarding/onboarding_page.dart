@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_onboarding_slider/flutter_onboarding_slider.dart';
-import 'package:woju/provider/onboarding_state_notifier.dart';
+import 'package:woju/provider/onboarding/onboarding_state_notifier.dart';
 
 class OnboardingPage extends ConsumerWidget {
   const OnboardingPage({super.key});

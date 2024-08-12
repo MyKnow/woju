@@ -8,7 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:woju/page/onboarding/onboarding_page.dart';
 import 'package:woju/page/onboarding/signin_page.dart';
 import 'package:woju/page/onboarding/signup_page.dart';
-import 'package:woju/provider/onboarding_state_notifier.dart';
+import 'package:woju/provider/onboarding/onboarding_state_notifier.dart';
 import 'package:woju/service/debug_service.dart';
 
 class RouterObserver extends NavigatorObserver {

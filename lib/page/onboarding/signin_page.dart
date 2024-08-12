@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:woju/provider/onboarding_state_notifier.dart';
+import 'package:woju/provider/onboarding/onboarding_state_notifier.dart';
 
 class SignInPage extends ConsumerWidget {
   const SignInPage({super.key});

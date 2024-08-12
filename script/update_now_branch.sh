@@ -111,7 +111,7 @@ fi
 
 # 암호화
 # 파일 목록
-files=("firebase.json", ".env", "android/app/google-services.json" "ios/Runner/GoogleService-Info.plist")
+files=("firebase.json" ".env" "android/app/google-services.json" "ios/Runner/GoogleService-Info.plist")
 
 # 변경된 파일 목록 초기화
 changed_files=()
@@ -136,6 +136,8 @@ for file in "${files[@]}"; do
     echo "$file 파일이 존재하지 않습니다."
   fi
 done
+
+echo -e "\n파일 변경 사항을 확인합니다."
 
 # 새로운 SHA-256 해시 값 읽기 및 비교
 for file in "${files[@]}"; do

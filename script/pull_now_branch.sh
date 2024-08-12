@@ -4,10 +4,20 @@
 git pull origin $(git rev-parse --abbrev-ref HEAD)
 
 # 암호화된 파일을 복호화한다.
+files=("firebase.json" ".env" "android/app/google-services.json" "ios/Runner/GoogleService-Info.plist")
+
 echo "암호를 입력하세요 : "
 read -s password
 
-openssl aes-256-cbc -d -pbkdf2 -in .env.enc -out .env -k $password
+for file in ${files[@]}; do
+  echo -e "\nDecrypting $file..."
+  openssl enc -d -aes-256-cbc -in $file.enc -out $file -k $password
+  if [ $? -ne 0 ]; then
+    echo "Decryption failed."
+    exit 2
+  fi
+done
+
 
 # 복호화 성공 여부 확인
 if [ $? -ne 0 ]; then

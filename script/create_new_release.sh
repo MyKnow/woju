@@ -65,17 +65,20 @@ sed -i '' "s/version: .*/version: ${new_version}/" pubspec.yaml
 # sed -i '' "s/return \"$current_version\";/return \"$new_version\";/" $dart_file_path
 
 # 암호화
-echo -e "\nEnter password for encryption:"
-read -s password
-openssl aes-256-cbc -pbkdf2 -in web/index.html -out web/index.html.enc -k $password
-openssl aes-256-cbc -pbkdf2 -in .env -out .env.enc -k $password
-openssl aes-256-cbc -pbkdf2 -in nginx.conf -out nginx.conf.enc -k $password
+# 파일 목록
+files=("firebase.json" ".env" "android/app/google-services.json" "ios/Runner/GoogleService-Info.plist")
 
-# 암호화 성공 여부 확인
-if [ $? -ne 0 ]; then
-  echo "Encryption failed."
-  exit 2
-fi
+# 파일 암호화
+echo -e "\n	파일 암호화를 위해 암호를 입력하세요 : "
+read -s password
+for file in ${files[@]}; do
+  echo -e "\nEncrypting $file..."
+  openssl enc -aes-256-cbc -salt -in $file -out $file.enc -k $password
+  if [ $? -ne 0 ]; then
+    echo "암호화 실패."
+    exit 2
+  fi
+done
 
 # 최종 확인
 echo -e "\n버전 업데이트 완료: ${current_version} -> ${new_version}"

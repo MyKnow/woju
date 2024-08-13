@@ -13,8 +13,26 @@
             "email": "Email",
             "password": "Password",
             "confirmPassword": "Confirm Password",
-            "searchCountry": "Search country by English or code"
+            "searchCountry": "Search country by English or code",
+            "next": "Next",
+            "sendCode": "Send Code",
+            "authCode": "Auth Code",
+            "authCodeVerify": "Verify",
+            "changePhoneNumber": "Change Number",
+            "authCodeResend": "Resend",
+            "error" : {
+                "phoneNumberEmpty" : "Please enter your phone number",
+                "phoneNumberInvalid" : "Please enter a valid phone number",
+                "isoCodeEmpty" : "Please select a country",
+                "authCodeEmpty" : "Please enter the auth code",
+                "authCodeInvalid" : "Please enter a valid auth code",
+                "authCodeTimeout" : "Auth code has expired. Please request again",
+                "authCodeNotSent" : "Auth code could not be sent. Please try again"
+            }
         },
         "skip": "Skip"
+    },
+    "accessibility": {
+        "accessibility.hideKeyboard": "Hide Keyboard"
     }
 }

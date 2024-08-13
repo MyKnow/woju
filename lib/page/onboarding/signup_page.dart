@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
@@ -14,7 +15,9 @@ class SignUpPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final signUpState = ref.watch(signUpStateProvider);
+    final phoneNumberTextEditingController =
+        ref.watch(phoneNumberTextEditingControllerProvider);
+    final stateOfAuthCodeSent = ref.watch(signUpStateProvider).authCodeSent;
     return Scaffold(
       appBar: AppBar(
         title: const Text("onboarding.signUp.title").tr(),
@@ -24,9 +27,9 @@ class SignUpPage extends ConsumerWidget {
         child: Column(
           children: <Widget>[
             const SizedBox(height: 20),
-            // 전화번호 입력
             Consumer(
               builder: (context, ref, child) {
+                final signUp = ref.watch(signUpStateProvider);
                 return Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -42,45 +45,68 @@ class SignUpPage extends ConsumerWidget {
                   padding: const EdgeInsets.all(8),
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   child: InternationalPhoneNumberInput(
-                    initialValue: signUpState.phoneNumber,
-                    inputDecoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "onboarding.signUp.phoneNumber".tr(),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                      ),
-                      suffix: (signUpState.authCodeSent)
-                          ? TextButton(
-                              onPressed: () {
-                                ref
-                                    .read(signUpStateProvider.notifier)
-                                    .sendAuthCode();
-                              },
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                              ),
-                              child:
-                                  const Text("onboarding.signUp.authCodeResend")
-                                      .tr(),
-                            )
-                          : TextButton(
-                              onPressed: () {
-                                ref
-                                    .read(signUpStateProvider.notifier)
-                                    .sendAuthCode();
-                              },
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                              ),
-                              child:
-                                  const Text("onboarding.signUp.sendCode").tr(),
-                            ),
+                    initialValue: PhoneNumber(
+                      phoneNumber: signUp.phoneNumber,
+                      isoCode: signUp.isoCode,
+                      dialCode: signUp.dialCode,
                     ),
-                    onInputChanged: (PhoneNumber number) {
-                      ref.read(signUpStateProvider.notifier).update(number);
-                    },
+                    inputDecoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "onboarding.signUp.phoneNumber".tr(),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                        ),
+                        suffix: (stateOfAuthCodeSent)
+                            ? TextButton(
+                                onPressed: () {
+                                  ref
+                                      .read(signUpStateProvider.notifier)
+                                      .changePhoneNumber();
+                                },
+                                style: TextButton.styleFrom(
+                                  padding: EdgeInsets.zero,
+                                ),
+                                child: const Text(
+                                        "onboarding.signUp.changePhoneNumber")
+                                    .tr(),
+                              )
+                            : TextButton(
+                                onPressed: ref
+                                    .read(signUpStateProvider.notifier)
+                                    .sendAuthCodeButton(
+                                      phoneNumberTextEditingController.text,
+                                    ),
+                                style: TextButton.styleFrom(
+                                  padding: EdgeInsets.zero,
+                                ),
+                                child: const Text("onboarding.signUp.sendCode")
+                                    .tr(),
+                              )),
+                    textFieldController: phoneNumberTextEditingController,
                     onInputValidated: (bool value) {
-                      printd(value);
+                      printd("onInputValidated: $value");
+                      ref
+                          .read(signUpStateProvider.notifier)
+                          .updatePhoneNumberValid(value);
+                    },
+                    isEnabled: !stateOfAuthCodeSent,
+                    validator: (String? value) {
+                      printd("validator: $value");
+                      if (signUp.isPhoneNumberValid) {
+                        return null;
+                      } else {
+                        return "onboarding.signUp.error.phoneNumberInvalid"
+                            .tr();
+                      }
+                    },
+                    autoValidateMode: AutovalidateMode.onUserInteraction,
+                    onInputChanged: (PhoneNumber number) {
+                      ref
+                          .read(signUpStateProvider.notifier)
+                          .updateIsoCode(number.isoCode ?? "");
+                      ref
+                          .read(signUpStateProvider.notifier)
+                          .updateDialCode(number.dialCode ?? "");
                     },
                     selectorConfig: const SelectorConfig(
                       selectorType: PhoneInputSelectorType.DIALOG,
@@ -99,7 +125,7 @@ class SignUpPage extends ConsumerWidget {
             const SizedBox(height: 20),
 
             // 인증코드 요청 시 입력한 전화번호로 전송된 인증코드 입력창 표시
-            if (signUpState.authCodeSent) // 인증코드 요청 시 true로 변경
+            if (stateOfAuthCodeSent) // 인증코드 요청 시 true로 변경
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -121,17 +147,46 @@ class SignUpPage extends ConsumerWidget {
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 10,
                     ),
-                    suffix: TextButton(
-                      onPressed: () {},
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                      ),
-                      child:
-                          const Text("onboarding.signUp.authCodeVerify").tr(),
+                    suffix: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                          onPressed: ref
+                              .read(signUpStateProvider.notifier)
+                              .resendAuthCodeButton(
+                                  phoneNumberTextEditingController.text),
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                          ),
+                          child: const Text("onboarding.signUp.authCodeResend")
+                              .tr(),
+                        ),
+                        const SizedBox(width: 8),
+                        TextButton(
+                          onPressed: ref
+                              .read(signUpStateProvider.notifier)
+                              .verifyAuthCodeButton(),
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                          ),
+                          child: const Text("onboarding.signUp.authCodeVerify")
+                              .tr(),
+                        ),
+                      ],
                     ),
                   ),
                   keyboardType: TextInputType.number,
                   autofillHints: const <String>[AutofillHints.oneTimeCode],
+                  onChanged: (value) {
+                    ref
+                        .read(signUpStateProvider.notifier)
+                        .updateAuthCode(value);
+                  },
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(6),
+                  ],
                 ),
               ),
           ],
@@ -160,7 +215,7 @@ class SignUpPage extends ConsumerWidget {
                   tooltip: "accessibility.hideKeyboard".tr(),
                 ),
               ),
-            Spacer(),
+            const Spacer(),
             Padding(
               padding: const EdgeInsets.only(right: 20),
               child: ElevatedButton(

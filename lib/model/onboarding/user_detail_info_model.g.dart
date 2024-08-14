@@ -1,35 +1,41 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'app_state_model.dart';
+part of 'user_detail_info_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class OnboardingStateAdapter extends TypeAdapter<OnboardingState> {
+class UserDetailInfoModelAdapter extends TypeAdapter<UserDetailInfoModel> {
   @override
-  final int typeId = 0;
+  final int typeId = 1;
 
   @override
-  OnboardingState read(BinaryReader reader) {
+  UserDetailInfoModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return OnboardingState(
-      isSignIn: fields[0] as bool,
-      isAuthCompleted: fields[1] as bool,
+    return UserDetailInfoModel(
+      profileImage: fields[0] as Image?,
+      userNickName: fields[1] as String,
+      userPhoneNumber: fields[2] as String,
+      userUID: fields[3] as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, OnboardingState obj) {
+  void write(BinaryWriter writer, UserDetailInfoModel obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(4)
       ..writeByte(0)
-      ..write(obj.isSignIn)
+      ..write(obj.profileImage)
       ..writeByte(1)
-      ..write(obj.isAuthCompleted);
+      ..write(obj.userNickName)
+      ..writeByte(2)
+      ..write(obj.userPhoneNumber)
+      ..writeByte(3)
+      ..write(obj.userUID);
   }
 
   @override
@@ -38,7 +44,7 @@ class OnboardingStateAdapter extends TypeAdapter<OnboardingState> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is OnboardingStateAdapter &&
+      other is UserDetailInfoModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

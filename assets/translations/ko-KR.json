@@ -16,7 +16,7 @@
             "searchCountry": "영어나 코드로 국가를 검색할 수 있어요",
             "next": "다음",
             "sendCode": "인증",
-            "authCode": "인증번호",
+            "authCode": "인증번호를 입력해주세요",
             "authCodeVerify": "인증번호 확인",
             "changePhoneNumber": "번호 변경",
             "authCodeResend": "재전송",
@@ -27,12 +27,18 @@
                 "authCodeEmpty" : "인증번호를 입력해주세요",
                 "authCodeInvalid" : "올바른 인증번호를 입력해주세요",
                 "authCodeTimeout" : "인증번호가 만료되었습니다. 다시 요청해주세요",
-                "authCodeNotSent" : "인증번호를 전송할 수 없습니다. 다시 시도해주세요"
+                "authCodeNotSent" : "인증번호를 전송할 수 없습니다. 다시 시도해주세요",
+                "serverError" : "서버 오류가 발생했습니다. 다시 시도해주세요",
+                "alreadySignedUp" : "이미 가입된 전화번호입니다."
+            },
+            "detail" : {
+                "title": "프로필 작성",
+                "name": "이름"
             }
         },
         "skip": "건너뛰기"
     },
     "accessibility": {
-        "accessibility.hideKeyboard": "키보드 숨기기"
+        "hideKeyboard": "키보드 숨기기"
     }
 }

@@ -10,7 +10,7 @@ class HttpService {
     return Uri.parse(baseUrl + path);
   }
 
-  static Future<Map<String, dynamic>> post(
+  static Future<http.Response> post(
       String url, Map<String, dynamic> body) async {
     final response = await http.post(
       getApiUrl(url),
@@ -24,10 +24,10 @@ class HttpService {
       printd("statusCode: ${response.statusCode}");
       throw Exception('Failed to load data');
     }
-    return jsonDecode(response.body);
+    return response;
   }
 
-  static Future<Map<String, dynamic>> get(String url) async {
+  static Future<http.Response> get(String url) async {
     final response = await http.get(
       getApiUrl(url),
       headers: <String, String>{
@@ -38,6 +38,6 @@ class HttpService {
       printd("statusCode: ${response.statusCode}");
       throw Exception('Failed to load data');
     }
-    return jsonDecode(response.body);
+    return response;
   }
 }

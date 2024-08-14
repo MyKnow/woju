@@ -16,7 +16,7 @@
             "searchCountry": "Search country by English or code",
             "next": "Next",
             "sendCode": "Send Code",
-            "authCode": "Auth Code",
+            "authCode": "Enter auth code",
             "authCodeVerify": "Verify",
             "changePhoneNumber": "Change Number",
             "authCodeResend": "Resend",
@@ -27,12 +27,14 @@
                 "authCodeEmpty" : "Please enter the auth code",
                 "authCodeInvalid" : "Please enter a valid auth code",
                 "authCodeTimeout" : "Auth code has expired. Please request again",
-                "authCodeNotSent" : "Auth code could not be sent. Please try again"
+                "authCodeNotSent" : "Auth code could not be sent. Please try again",
+                "serverError" : "Server error occurred. Please try again",
+                "alreadySignedUp" : "This Phone number is already signed up"
             }
         },
         "skip": "Skip"
     },
     "accessibility": {
-        "accessibility.hideKeyboard": "Hide Keyboard"
+        "hideKeyboard": "Hide Keyboard"
     }
 }

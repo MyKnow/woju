@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-import 'package:woju/provider/onboarding/onboarding_state_notifier.dart';
 import 'package:woju/provider/onboarding/sign_up_state_notifier.dart';
 import 'package:woju/service/debug_service.dart';
 
@@ -17,11 +16,35 @@ class SignUpPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final phoneNumberTextEditingController =
         ref.watch(phoneNumberTextEditingControllerProvider);
-    final stateOfAuthCodeSent = ref.watch(signUpStateProvider).authCodeSent;
+    final signUp = ref.watch(signUpStateProvider);
+    final focus = ref.watch(signUpAuthFocusProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text("onboarding.signUp.title").tr(),
         centerTitle: false,
+        actions: [
+          // TODO : Delete
+          IconButton(
+            onPressed: () {
+              ref.read(signUpStateProvider.notifier).updateAuthCompleted(true);
+            },
+            icon: Icon(CupertinoIcons.arrow_right),
+          ),
+          Container(
+            margin: const EdgeInsets.only(right: 8),
+            child: (signUp.authCodeSent)
+                ? IconButton(
+                    onPressed: () {
+                      ref
+                          .read(signUpStateProvider.notifier)
+                          .changePhoneNumber();
+                    },
+                    icon: const Icon(CupertinoIcons.refresh_bold),
+                    tooltip: "onboarding.signUp.changePhoneNumber".tr(),
+                  )
+                : const SizedBox(),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -29,7 +52,6 @@ class SignUpPage extends ConsumerWidget {
             const SizedBox(height: 20),
             Consumer(
               builder: (context, ref, child) {
-                final signUp = ref.watch(signUpStateProvider);
                 return Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -50,38 +72,25 @@ class SignUpPage extends ConsumerWidget {
                       isoCode: signUp.isoCode,
                       dialCode: signUp.dialCode,
                     ),
+                    formatInput: true,
                     inputDecoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "onboarding.signUp.phoneNumber".tr(),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 10,
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                      ),
+                      suffix: TextButton(
+                        onPressed: ref
+                            .read(signUpStateProvider.notifier)
+                            .sendAuthCodeButton(
+                              phoneNumberTextEditingController.text,
+                            ),
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
                         ),
-                        suffix: (stateOfAuthCodeSent)
-                            ? TextButton(
-                                onPressed: () {
-                                  ref
-                                      .read(signUpStateProvider.notifier)
-                                      .changePhoneNumber();
-                                },
-                                style: TextButton.styleFrom(
-                                  padding: EdgeInsets.zero,
-                                ),
-                                child: const Text(
-                                        "onboarding.signUp.changePhoneNumber")
-                                    .tr(),
-                              )
-                            : TextButton(
-                                onPressed: ref
-                                    .read(signUpStateProvider.notifier)
-                                    .sendAuthCodeButton(
-                                      phoneNumberTextEditingController.text,
-                                    ),
-                                style: TextButton.styleFrom(
-                                  padding: EdgeInsets.zero,
-                                ),
-                                child: const Text("onboarding.signUp.sendCode")
-                                    .tr(),
-                              )),
+                        child: const Text("onboarding.signUp.sendCode").tr(),
+                      ),
+                      labelText: "onboarding.signUp.phoneNumber".tr(),
+                    ),
                     textFieldController: phoneNumberTextEditingController,
                     onInputValidated: (bool value) {
                       printd("onInputValidated: $value");
@@ -89,7 +98,7 @@ class SignUpPage extends ConsumerWidget {
                           .read(signUpStateProvider.notifier)
                           .updatePhoneNumberValid(value);
                     },
-                    isEnabled: !stateOfAuthCodeSent,
+                    isEnabled: !signUp.authCodeSent,
                     validator: (String? value) {
                       printd("validator: $value");
                       if (signUp.isPhoneNumberValid) {
@@ -99,6 +108,7 @@ class SignUpPage extends ConsumerWidget {
                             .tr();
                       }
                     },
+                    focusNode: focus[0],
                     autoValidateMode: AutovalidateMode.onUserInteraction,
                     onInputChanged: (PhoneNumber number) {
                       ref
@@ -113,7 +123,6 @@ class SignUpPage extends ConsumerWidget {
                     ),
                     keyboardType: TextInputType.number,
                     keyboardAction: TextInputAction.done,
-                    hintText: "onboarding.signUp.phoneNumber".tr(),
                     searchBoxDecoration: InputDecoration(
                       hintText: "onboarding.signUp.searchCountry".tr(),
                     ),
@@ -125,7 +134,7 @@ class SignUpPage extends ConsumerWidget {
             const SizedBox(height: 20),
 
             // 인증코드 요청 시 입력한 전화번호로 전송된 인증코드 입력창 표시
-            if (stateOfAuthCodeSent) // 인증코드 요청 시 true로 변경
+            if (signUp.authCodeSent) // 인증코드 요청 시 true로 변경
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -143,10 +152,10 @@ class SignUpPage extends ConsumerWidget {
                 child: TextField(
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: "onboarding.signUp.authCode".tr(),
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 10,
                     ),
+                    labelText: "onboarding.signUp.authCode".tr(),
                     suffix: Row(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -187,11 +196,14 @@ class SignUpPage extends ConsumerWidget {
                     FilteringTextInputFormatter.digitsOnly,
                     LengthLimitingTextInputFormatter(6),
                   ],
+                  enabled: !signUp.authCompleted,
+                  focusNode: focus[1],
                 ),
               ),
           ],
         ),
       ),
+      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Container(
         decoration: BoxDecoration(
@@ -219,11 +231,8 @@ class SignUpPage extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.only(right: 20),
               child: ElevatedButton(
-                onPressed: () {
-                  ref
-                      .read(onboardingStateProvider.notifier)
-                      .pushRouteSignInPage(context);
-                },
+                onPressed:
+                    ref.read(signUpStateProvider.notifier).nextButton(context),
                 child: const Text("onboarding.signUp.next").tr(),
               ),
             ),

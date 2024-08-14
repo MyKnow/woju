@@ -1,21 +1,25 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
-import 'package:woju/model/sign_up_model.dart';
+import 'package:woju/model/onboarding/sign_up_model.dart';
+import 'package:woju/provider/onboarding/onboarding_state_notifier.dart';
 import 'package:woju/service/debug_service.dart';
 import 'package:woju/service/http_service.dart';
 import 'package:woju/service/toast_message_service.dart';
 
 final signUpStateProvider =
     StateNotifierProvider.autoDispose<SignUpStateNotifier, SignUpModel>(
-  (ref) => SignUpStateNotifier(),
+  (ref) => SignUpStateNotifier(ref),
 );
 
 class SignUpStateNotifier extends StateNotifier<SignUpModel> {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  SignUpStateNotifier() : super(SignUpModel.initial());
+  final Ref ref;
+  SignUpStateNotifier(this.ref) : super(SignUpModel.initial());
 
   void updateAuthCode(String authCode) {
     state = state.copyWith(authCode: authCode);
@@ -143,6 +147,7 @@ extension SignUpAction on SignUpStateNotifier {
         printd("resendToken: $resendToken");
         updateVerificationId(verificationId);
         updateResendToken(resendToken);
+        ref.read(signUpAuthFocusProvider.notifier).requestFocusAuthCode();
       },
       codeAutoRetrievalTimeout: (String verificationId) {
         printd('인증번호 입력 시간 초과');
@@ -209,7 +214,7 @@ extension SignUpAction on SignUpStateNotifier {
   /// Function: 인증번호 확인 함수 반환 메서드
   ///
   VoidCallback? verifyAuthCodeButton() {
-    if (!getSignUpModel.authCodeSent) {
+    if (!getSignUpModel.authCodeSent || getSignUpModel.authCompleted) {
       return null;
     }
 
@@ -222,7 +227,6 @@ extension SignUpAction on SignUpStateNotifier {
       printd("verifyAuthCodeButton");
       final bool isVerified = await verifyAuthCode();
       if (isVerified) {
-        updateAuthCodeSent(false);
         updateAuthCompleted(true);
       }
     };
@@ -237,7 +241,7 @@ extension SignUpAction on SignUpStateNotifier {
   /// Function: 인증번호 전송 메서드
   ///
   VoidCallback? sendAuthCodeButton(String phoneNumber) {
-    if (!getSignUpModel.isPhoneNumberValid) {
+    if (!getSignUpModel.isPhoneNumberValid || getSignUpModel.authCodeSent) {
       return null;
     }
     return () {
@@ -266,7 +270,10 @@ extension SignUpAction on SignUpStateNotifier {
   /// 사용자가 인증번호를 발송할 번호를 변경하기 위해 버튼을 누르면 실행된다.
   ///
   void changePhoneNumber() {
+    printd("changePhoneNumber");
     updateAuthCodeSent(false);
+    updateAuthCompleted(false);
+    updateAuthCode("");
   }
 
   /// ### 인증번호 재전송 메서드
@@ -278,7 +285,7 @@ extension SignUpAction on SignUpStateNotifier {
   /// Function: 인증번호 재전송 메서드
   ///
   VoidCallback? resendAuthCodeButton(String phoneNumber) {
-    if (!getSignUpModel.authCodeSent) {
+    if (!getSignUpModel.authCodeSent || getSignUpModel.authCompleted) {
       return null;
     }
     return () {
@@ -305,13 +312,48 @@ extension SignUpAction on SignUpStateNotifier {
     // 백엔드로 전화번호 및 uid 전송
     final response = await HttpService.post("/check-exist-user", json);
 
-    if (response["exist"] == true) {
-      printd("회원가입된 사용자");
-      return true;
+    if (response.statusCode != 200) {
+      final data = jsonDecode(response.body);
+      if (data["exist"] == true) {
+        printd("회원가입된 사용자");
+        updateError(SignUpError.alreadySignedUp);
+        showToastMessage();
+        return false;
+      } else {
+        printd("회원가입되지 않은 사용자");
+        return true;
+      }
     } else {
-      printd("회원가입되지 않은 사용자");
+      printd("회원가입 여부 확인 실패");
+      updateError(SignUpError.serverError);
+      showToastMessage();
       return false;
     }
+  }
+
+  /// ### 다음 페이지 이동 버튼 활성화 여부 확인 메서드
+  ///
+  /// 인증을 완료하고 다음 페이지로 이동하는 함수를 상태에 따라 반환한다.
+  ///
+  /// #### Parameters
+  ///
+  /// [WidgetRef] ref: Provider를 사용하기 위한 ref
+  /// [BuildContext] context: BuildContext
+  ///
+  /// #### Returns
+  ///
+  /// [VoidCallback] 다음 페이지 이동 버튼 활성화 여부 확인 메서드
+  ///
+  VoidCallback? nextButton(BuildContext context) {
+    if (!getSignUpModel.authCompleted) {
+      return null;
+    }
+    return () {
+      printd("nextButton");
+      ref
+          .read(onboardingStateProvider.notifier)
+          .pushRouteSignUpDetailPage(context);
+    };
   }
 }
 
@@ -319,3 +361,36 @@ extension SignUpAction on SignUpStateNotifier {
 final phoneNumberTextEditingControllerProvider =
     StateProvider.autoDispose<TextEditingController>(
         (ref) => TextEditingController());
+
+/// ### 회원가입 페이지의 포커스 상태 Provider
+///
+/// - 포커스 상태를 관리한다.
+///
+final signUpAuthFocusProvider =
+    StateNotifierProvider.autoDispose<SignUpAuthFocusNotifier, List<FocusNode>>(
+  (ref) => SignUpAuthFocusNotifier(),
+);
+
+/// ### 회원가입 페이지의 FocusNode StateNotifier Provider
+///
+/// - 전화번호 입력 필드와 인증번호 입력 필드의 포커스를 관리한다.
+///
+class SignUpAuthFocusNotifier extends StateNotifier<List<FocusNode>> {
+  SignUpAuthFocusNotifier() : super([FocusNode(), FocusNode()]);
+
+  void requestFocusPhoneNumber() {
+    state[0].requestFocus();
+  }
+
+  void requestFocusAuthCode() {
+    state[1].requestFocus();
+  }
+
+  void unfocusPhoneNumber() {
+    state[0].unfocus();
+  }
+
+  void unfocusAuthCode() {
+    state[1].unfocus();
+  }
+}

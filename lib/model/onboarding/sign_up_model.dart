@@ -8,6 +8,8 @@ enum SignUpError {
   authCodeInvalid,
   authCodeTimeout,
   authCodeNotSent,
+  serverError,
+  alreadySignedUp,
 }
 
 extension SignUpErrorExtenstion on SignUpError {
@@ -27,6 +29,10 @@ extension SignUpErrorExtenstion on SignUpError {
         return "onboarding.signUp.error.authCodeTimeout";
       case SignUpError.authCodeNotSent:
         return "onboarding.signUp.error.authCodeNotSent";
+      case SignUpError.serverError:
+        return "onboarding.signUp.error.serverError";
+      case SignUpError.alreadySignedUp:
+        return "onboarding.signUp.error.alreadySignedUp";
     }
   }
 }

@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:woju/page/onboarding/onboarding_page.dart';
 import 'package:woju/page/onboarding/signin_page.dart';
 import 'package:woju/page/onboarding/signup_page.dart';
+import 'package:woju/page/onboarding/signup_userinfo_page.dart';
 import 'package:woju/provider/onboarding/onboarding_state_notifier.dart';
 import 'package:woju/service/debug_service.dart';
 
@@ -39,19 +40,30 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     initialLocation: '/',
     observers: [RouterObserver()],
     redirect: (context, state) {
-      // 로그인이 되어있지 않고, 온보딩이 되어있지 않다면 온보딩 페이지로 이동
-      if (!onboardingState.isAlreadyOnboarded && !onboardingState.isSignIn) {
-        return '/onboarding';
+      // 현재 경로가 null이라면 null 반환
+      if (state.fullPath == null || state.fullPath == '') {
+        return null;
       }
 
-      // 온보딩은 완료되었지만 로그인이 되어있지 않다면
-      if (onboardingState.isAlreadyOnboarded && !onboardingState.isSignIn) {
-        // 로그인 페이지로 이동하는 경우
-        if (onboardingState.gotoSignIn) {
-          return '/onboarding/signin';
+      // null이 아니라면 상태를 확인하여 리다이렉트
+      final nowPath = state.fullPath as String;
+      // 현재 경로
+      printd("Current Path: $nowPath");
+
+      // 로그인 상태가 아닐 때
+      if (!onboardingState.isSignIn) {
+        // 온보딩 하위 경로에 있지 않다면 온보딩으로 리다이렉트
+        if (!nowPath.contains('/onboarding')) {
+          return '/onboarding';
         }
-        // 회원가입 페이지로 이동하는 경우
-        return '/onboarding/signup';
+      }
+
+      // 로그인 상태일 때
+      if (onboardingState.isSignIn) {
+        // 온보딩 하위 경로에 있다면 홈으로 리다이렉트
+        if (nowPath.contains('/onboarding')) {
+          return '/';
+        }
       }
 
       return null;
@@ -79,12 +91,21 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         },
         text: '온보딩',
         routes: [
-          _buildNoTransitionRoute(
+          _buildNestedRoute(
             path: 'signup',
             builder: (context, state) {
               return const SignUpPage();
             },
             text: '회원가입',
+            routes: [
+              _buildNoTransitionRoute(
+                path: 'detail',
+                builder: (context, state) {
+                  return const SignupUserinfoPage();
+                },
+                text: '회원가입 상세',
+              ),
+            ],
           ),
           _buildNoTransitionRoute(
             path: 'signin',

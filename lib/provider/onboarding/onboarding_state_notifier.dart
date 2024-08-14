@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:woju/model/hive_box_enum.dart';
 
@@ -77,8 +78,7 @@ extension OnboardingAction on OnboardingStateNotifier {
   /// 온보딩을 완료하고 Sign In 페이지로 이동합니다.
   ///
   void pushRouteSignInPage(BuildContext context) {
-    update(
-        onboardingState.copyWith(isAlreadyOnboarded: true, gotoSignIn: true));
+    context.push('/onboarding/signin');
   }
 
   /// ### SignUp 페이지로 이동
@@ -86,7 +86,18 @@ extension OnboardingAction on OnboardingStateNotifier {
   /// 온보딩을 완료하고 SignUp 페이지로 이동합니다.
   ///
   void pushRouteSignUpPage(BuildContext context) {
-    update(
-        onboardingState.copyWith(isAlreadyOnboarded: true, gotoSignIn: false));
+    context.push('/onboarding/signup');
+  }
+
+  /// ### SignUp에서 인증을 완료하고 세부 정보 입력 페이지로 이동
+  ///
+  /// SignUp에서 인증을 완료하고 세부 정보 입력 페이지로 이동합니다.
+  ///
+  /// #### Parameters
+  ///
+  /// - [BuildContext] context: BuildContext
+  ///
+  void pushRouteSignUpDetailPage(BuildContext context) {
+    context.push('/onboarding/signup/detail');
   }
 }

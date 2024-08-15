@@ -93,7 +93,7 @@ class SignUpPage extends ConsumerWidget {
                     ),
                     textFieldController: phoneNumberTextEditingController,
                     onInputValidated: (bool value) {
-                      printd("onInputValidated: $value");
+                      // printd("onInputValidated: $value");
                       ref
                           .read(signUpStateProvider.notifier)
                           .updatePhoneNumberValid(value);

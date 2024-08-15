@@ -9,7 +9,7 @@ class UserDetailInfoModel {
   final Image? profileImage;
 
   @HiveField(1)
-  final String userNickName;
+  final String userID;
 
   @HiveField(2)
   final String userPhoneNumber;
@@ -17,10 +17,14 @@ class UserDetailInfoModel {
   @HiveField(3)
   final String userUID;
 
+  @HiveField(4)
+  final String userNickname;
+
   UserDetailInfoModel({
     this.profileImage,
-    required this.userNickName,
+    required this.userID,
     required this.userPhoneNumber,
     required this.userUID,
+    required this.userNickname,
   });
 }

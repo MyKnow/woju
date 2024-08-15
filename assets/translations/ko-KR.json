@@ -33,7 +33,8 @@
             },
             "detail" : {
                 "title": "프로필 작성",
-                "name": "이름"
+                "userID": "사용하실 아이디를 입력해주세요",
+                "userIDCheck": "중복 확인"
             }
         },
         "skip": "건너뛰기"

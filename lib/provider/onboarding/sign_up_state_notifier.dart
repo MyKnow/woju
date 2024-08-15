@@ -120,11 +120,11 @@ extension SignUpAction on SignUpStateNotifier {
     }
 
     // 국가 코드 추가
-    phoneNumber = "${phoneNumberDetail.dialCode}$phoneNumber";
-    printd("전화번호: $phoneNumber");
+    final codedPhoneNumber = "${phoneNumberDetail.dialCode}$phoneNumber";
+    printd("전화번호: $codedPhoneNumber");
 
     await _firebaseAuth.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
+      phoneNumber: codedPhoneNumber,
       verificationCompleted: (PhoneAuthCredential credential) async {
         printd("인증 성공");
         await _firebaseAuth.signInWithCredential(credential);
@@ -178,6 +178,7 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   Future<bool> verifyAuthCode() async {
     final String authCode = getSignUpModel.authCode ?? "";
+    final String phoneNumber = getPhoneNumberWithoutHyphen(); // 전화번호에 - 제거
     printd("verifyAuthCode: $authCode");
     if (authCode.isEmpty) {
       printd("인증번호 입력 필요");
@@ -196,7 +197,7 @@ extension SignUpAction on SignUpStateNotifier {
       printd("인증 성공: ${result.user?.phoneNumber}");
 
       // 백엔드로 인증 정보 전송하여 가입 유무 확인
-      return checkSignUp(getSignUpModel.phoneNumber, result.user?.uid ?? "");
+      return checkSignUp(phoneNumber, result.user?.uid ?? "");
     } catch (e) {
       printd("인증 실패: $e");
       updateError(SignUpError.authCodeInvalid);
@@ -305,26 +306,36 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   Future<bool> checkSignUp(String? phoneNumber, String? uid) async {
     final json = {
+      "userUID": uid,
       "userPhoneNumber": phoneNumber,
-      "uid": uid,
     };
 
     // 백엔드로 전화번호 및 uid 전송
-    final response = await HttpService.post("/check-exist-user", json);
+    try {
+      final response =
+          await HttpService.post("/user/check-phonenumber-available", json);
 
-    if (response.statusCode != 200) {
-      final data = jsonDecode(response.body);
-      if (data["exist"] == true) {
-        printd("회원가입된 사용자");
-        updateError(SignUpError.alreadySignedUp);
+      printd("checkSignUp: ${response.statusCode}");
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data["exist"] == true) {
+          printd("회원가입된 사용자");
+          updateError(SignUpError.alreadySignedUp);
+          showToastMessage();
+          return false;
+        } else {
+          printd("회원가입되지 않은 사용자");
+          return true;
+        }
+      } else {
+        printd("회원가입 여부 확인 실패");
+        updateError(SignUpError.serverError);
         showToastMessage();
         return false;
-      } else {
-        printd("회원가입되지 않은 사용자");
-        return true;
       }
-    } else {
-      printd("회원가입 여부 확인 실패");
+    } catch (e) {
+      printd("회원가입 여부 확인 실패 (json Error): $e");
       updateError(SignUpError.serverError);
       showToastMessage();
       return false;
@@ -354,6 +365,19 @@ extension SignUpAction on SignUpStateNotifier {
           .read(onboardingStateProvider.notifier)
           .pushRouteSignUpDetailPage(context);
     };
+  }
+
+  /// ### 전화번호에 -를 제거하여 String 반환하는 메서드
+  ///
+  /// 전화번호에 -를 제거하여 String을 반환한다.
+  ///
+  /// #### Returns
+  ///
+  /// [String] 전화번호
+  ///
+  String getPhoneNumberWithoutHyphen() {
+    final phoneNumber = ref.read(phoneNumberTextEditingControllerProvider).text;
+    return phoneNumber.replaceAll("-", "");
   }
 }
 

@@ -17,6 +17,7 @@ final userDetailInfoStateProvider =
 
 class UserDetailInfoStateNotifier extends StateNotifier<UserDetailInfoModel?> {
   final Box<UserDetailInfoModel> _box;
+  final String _boxName = HiveBox.userDetailInfoBox.name;
 
   // 초기 상태를 불러오거나 기본값을 설정
   UserDetailInfoStateNotifier(this._box) : super(null) {
@@ -31,7 +32,7 @@ class UserDetailInfoStateNotifier extends StateNotifier<UserDetailInfoModel?> {
   /// ref.read(userDetailInfoStateProvider.notifier).update(newState);
   /// ```
   void update(UserDetailInfoModel newState) async {
-    await _box.put(HiveBox.userDetailInfoBox.name, newState);
+    await _box.put(_boxName, newState);
     state = newState;
   }
 
@@ -39,7 +40,7 @@ class UserDetailInfoStateNotifier extends StateNotifier<UserDetailInfoModel?> {
   ///
   /// box에서 userDetailInfoState를 삭제하고 상태를 초기화합니다.
   void delete() async {
-    await _box.delete(HiveBox.userDetailInfoBox.name);
+    await _box.delete(_boxName);
     state = null;
   }
 
@@ -48,8 +49,8 @@ class UserDetailInfoStateNotifier extends StateNotifier<UserDetailInfoModel?> {
   /// box에서 userDetailInfoState를 불러옵니다.
   ///
   Future<UserDetailInfoModel?> read() async {
-    await Hive.openBox<UserDetailInfoModel>(HiveBox.userDetailInfoBox.name);
-    state = _box.get(HiveBox.userDetailInfoBox.name, defaultValue: null);
+    await Hive.openBox<UserDetailInfoModel>(_boxName);
+    state = _box.get(_boxName, defaultValue: null);
 
     return state;
   }

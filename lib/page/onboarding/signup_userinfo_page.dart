@@ -14,7 +14,43 @@ class SignupUserinfoPage extends ConsumerWidget {
       ),
       body: SingleChildScrollView(
         child: Column(
-          children: <Widget>[],
+          children: <Widget>[
+            const SizedBox(
+              height: 20,
+              width: double.infinity,
+            ),
+            // 프로필 사진 설정
+            const CircleAvatar(
+              radius: 100,
+            ),
+            const SizedBox(
+              height: 20,
+              width: double.infinity,
+            ),
+            // 닉네임 입력
+            Container(
+              margin: const EdgeInsets.all(20),
+              child: TextField(
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(30)),
+                  ),
+                  labelText: "onboarding.signUp.detail.nickname".tr(),
+                  suffix: TextButton(
+                    onPressed: () {
+                      // TODO : 서버에서 닉네임 중복 체크
+                    },
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      fixedSize: const Size(100, 50),
+                    ),
+                    child: const Text("onboarding.signUp.detail.nickname.check")
+                        .tr(),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

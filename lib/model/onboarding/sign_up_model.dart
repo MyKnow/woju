@@ -1,3 +1,5 @@
+import 'package:image_picker/image_picker.dart';
+
 enum SignUpError {
   phoneNumberEmpty,
   phoneNumberInvalid,
@@ -74,6 +76,9 @@ class SignUpModel {
   final String dialCode;
   final String userID;
   final String password;
+  final XFile? profileImage;
+  final String userNickName;
+  final bool? gender;
   final String? authCode;
   final SignUpError? error;
   final String? verificationId;
@@ -86,6 +91,7 @@ class SignUpModel {
   final bool isIDAvailable;
   final bool isPasswordAvailable;
   final bool isPasswordVisible;
+  final bool isUserNickNameValid;
 
   SignUpModel({
     required this.phoneNumber,
@@ -93,6 +99,9 @@ class SignUpModel {
     required this.dialCode,
     this.userID = "",
     this.password = "",
+    this.userNickName = "",
+    this.profileImage,
+    this.gender,
     this.authCode,
     this.error,
     this.verificationId,
@@ -105,6 +114,7 @@ class SignUpModel {
     this.isIDAvailable = false,
     this.isPasswordAvailable = false,
     this.isPasswordVisible = false,
+    this.isUserNickNameValid = false,
   });
 
   SignUpModel copyWith({
@@ -113,6 +123,9 @@ class SignUpModel {
     String? dialCode,
     String? userID,
     String? password,
+    XFile? profileImage,
+    String? userNickName,
+    bool? gender,
     String? authCode,
     SignUpError? error,
     String? verificationId,
@@ -125,6 +138,8 @@ class SignUpModel {
     bool? isIDAvailable,
     bool? isPasswordAvailable,
     bool? isPasswordVisible,
+    bool? isUserNickNameValid,
+    bool? isProfileImageSetToDefault,
   }) {
     return SignUpModel(
       phoneNumber: phoneNumber ?? this.phoneNumber,
@@ -132,6 +147,12 @@ class SignUpModel {
       dialCode: dialCode ?? this.dialCode,
       userID: userID ?? this.userID,
       password: password ?? this.password,
+      profileImage:
+          (isProfileImageSetToDefault != null && isProfileImageSetToDefault)
+              ? null
+              : profileImage ?? this.profileImage,
+      userNickName: userNickName ?? this.userNickName,
+      gender: gender ?? this.gender,
       authCode: authCode ?? this.authCode,
       error: error ?? this.error,
       verificationId: verificationId ?? this.verificationId,
@@ -144,6 +165,7 @@ class SignUpModel {
       isIDAvailable: isIDAvailable ?? this.isIDAvailable,
       isPasswordAvailable: isPasswordAvailable ?? this.isPasswordAvailable,
       isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
+      isUserNickNameValid: isUserNickNameValid ?? this.isUserNickNameValid,
     );
   }
 

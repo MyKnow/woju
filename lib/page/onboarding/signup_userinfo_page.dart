@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+
 import 'package:woju/provider/onboarding/sign_up_state_notifier.dart';
 
 class SignupUserinfoPage extends ConsumerWidget {
@@ -15,13 +18,6 @@ class SignupUserinfoPage extends ConsumerWidget {
       appBar: AppBar(
         title: const Text("onboarding.signUp.detail.title").tr(),
         centerTitle: false,
-        actions: [
-          if (signUp.isIDAvailable)
-            TextButton(
-              onPressed: ref.read(signUpStateProvider.notifier).modifyIDButton,
-              child: const Text("onboarding.signUp.detail.modifyUserID").tr(),
-            ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -31,148 +27,94 @@ class SignupUserinfoPage extends ConsumerWidget {
               width: double.infinity,
             ),
             // 프로필 사진 설정
-            const CircleAvatar(
-              radius: 100,
+            // 그림자 효과를 주기 위해 Container로 감싸고 BoxDecoration을 사용
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 3,
+                    blurRadius: 7,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: InkWell(
+                onTap: () {
+                  showMaterialModalBottomSheet(
+                    context: context,
+                    builder: (context) => Container(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          InkWell(
+                            onTap: () async {
+                              await ref
+                                  .read(signUpStateProvider.notifier)
+                                  .pickImage(null, context);
+                            },
+                            child: ListTile(
+                              title: const Text(
+                                      "onboarding.signUp.detail.profileImage.default")
+                                  .tr(),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () async {
+                              await ref
+                                  .read(signUpStateProvider.notifier)
+                                  .pickImage(true, context);
+                            },
+                            child: ListTile(
+                              title: const Text(
+                                      "onboarding.signUp.detail.profileImage.fromGallery")
+                                  .tr(),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () async {
+                              await ref
+                                  .read(signUpStateProvider.notifier)
+                                  .pickImage(false, context);
+                            },
+                            child: ListTile(
+                              title: const Text(
+                                      "onboarding.signUp.detail.profileImage.fromCamera")
+                                  .tr(),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 50,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+                borderRadius: BorderRadius.circular(100),
+                child: CircleAvatar(
+                  radius: 100,
+                  child: (signUp.profileImage == null)
+                      ? const Icon(
+                          CupertinoIcons.person_crop_circle,
+                          size: 100,
+                          semanticLabel:
+                              "onboarding.signUp.detail.profileImage.default",
+                        )
+                      : // 이미지가 있을 경우 원형 이미지로 표시
+                      CircleAvatar(
+                          radius: 100,
+                          backgroundImage: FileImage(
+                            File(signUp.profileImage!.path),
+                          ),
+                        ),
+                ),
+              ),
             ),
             const SizedBox(
               height: 40,
               width: double.infinity,
-            ),
-            // 아이디 입력
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 10,
-                    offset: Offset(0, 5),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.all(8),
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              child: TextFormField(
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                  ),
-                  labelText: (signUp.isIDAvailable)
-                      ? "onboarding.signUp.detail.userIDAvailable".tr()
-                      : "onboarding.signUp.detail.userID".tr(),
-                  suffix: Consumer(
-                    builder: (context, ref, child) {
-                      return Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextButton(
-                              onPressed: ref
-                                  .read(signUpStateProvider.notifier)
-                                  .checkAvailableIDButton(),
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                              ),
-                              child: (signUp.isIDAvailable)
-                                  ? const Text(
-                                          "onboarding.signUp.detail.userIDAvailableSimple")
-                                      .tr()
-                                  : const Text(
-                                          "onboarding.signUp.detail.userIDCheck")
-                                      .tr())
-                        ],
-                      );
-                    },
-                  ),
-                ),
-                keyboardType: TextInputType.streetAddress,
-                autofillHints: const <String>[AutofillHints.newUsername],
-                onChanged: (value) {
-                  ref.read(signUpStateProvider.notifier).updateUserID(value);
-                },
-                inputFormatters: [
-                  // 소문자, 숫자만 입력 가능
-                  FilteringTextInputFormatter.allow(RegExp(r'[a-z0-9]')),
-                  // 최대 20자까지 입력 가능
-                  LengthLimitingTextInputFormatter(20),
-                ],
-                validator:
-                    ref.read(signUpStateProvider.notifier).userIDValidation,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                enabled: !signUp.isIDAvailable,
-              ),
-            ),
-            const SizedBox(
-              height: 40,
-              width: double.infinity,
-            ),
-            // 아이디 입력
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 10,
-                    offset: Offset(0, 5),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.all(8),
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              child: TextFormField(
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                  ),
-                  labelText: (signUp.isIDAvailable)
-                      ? "onboarding.signUp.detail.userIDAvailable".tr()
-                      : "onboarding.signUp.detail.userID".tr(),
-                  suffix: Consumer(
-                    builder: (context, ref, child) {
-                      return Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextButton(
-                              onPressed: ref
-                                  .read(signUpStateProvider.notifier)
-                                  .checkAvailableIDButton(),
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                              ),
-                              child: (signUp.isIDAvailable)
-                                  ? const Text(
-                                          "onboarding.signUp.detail.userIDAvailableSimple")
-                                      .tr()
-                                  : const Text(
-                                          "onboarding.signUp.detail.userIDCheck")
-                                      .tr())
-                        ],
-                      );
-                    },
-                  ),
-                ),
-                keyboardType: TextInputType.streetAddress,
-                autofillHints: const <String>[AutofillHints.newUsername],
-                onChanged: (value) {
-                  ref.read(signUpStateProvider.notifier).updateUserID(value);
-                },
-                inputFormatters: [
-                  // 소문자, 숫자만 입력 가능
-                  FilteringTextInputFormatter.allow(RegExp(r'[a-z0-9]')),
-                  // 최대 20자까지 입력 가능
-                  LengthLimitingTextInputFormatter(20),
-                ],
-                validator:
-                    ref.read(signUpStateProvider.notifier).userIDValidation,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                enabled: !signUp.isIDAvailable,
-              ),
             ),
           ],
         ),

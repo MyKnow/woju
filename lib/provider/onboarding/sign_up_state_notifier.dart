@@ -5,11 +5,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:woju/model/onboarding/sign_up_model.dart';
 import 'package:woju/provider/onboarding/onboarding_state_notifier.dart';
 import 'package:woju/service/debug_service.dart';
 import 'package:woju/service/http_service.dart';
+import 'package:woju/service/image_picker_service.dart';
 import 'package:woju/service/toast_message_service.dart';
 
 /// ### 회원가입 페이지의 StateNotifier Provider
@@ -90,6 +92,28 @@ class SignUpStateNotifier extends StateNotifier<SignUpModel> {
 
   void updatePasswordAvailable(bool isPasswordAvailable) {
     state = state.copyWith(isPasswordAvailable: isPasswordAvailable);
+  }
+
+  void updateNickName(String nickName) {
+    state = state.copyWith(userNickName: nickName);
+  }
+
+  void updateProfileImage(XFile? profileImage) {
+    if (profileImage == null) {
+      printd("profileImage is null");
+      state =
+          state.copyWith(profileImage: null, isProfileImageSetToDefault: true);
+      return;
+    }
+    state = state.copyWith(profileImage: profileImage);
+  }
+
+  void updateGender(bool gender) {
+    state = state.copyWith(gender: gender);
+  }
+
+  void updateNickNameValid(bool isNickNameValid) {
+    state = state.copyWith(isUserNickNameValid: isNickNameValid);
   }
 
   SignUpModel get getSignUpModel => state;
@@ -661,7 +685,36 @@ extension SignUpAction on SignUpStateNotifier {
 ///
 /// - 유저 정보 입력 페이지에서 사용되는 Action을 확장한다.
 ///
-extension SignUpUserInfoAction on SignUpStateNotifier {}
+extension SignUpUserInfoAction on SignUpStateNotifier {
+  /// ### ImagePickerService를 통해 이미지를 가져오는 메서드
+  ///
+  /// - 이미지를 가져오는 메서드
+  ///
+  /// #### Parameters
+  ///
+  /// - [bool] isGallery: 갤러리에서 이미지를 가져올지 여부 (true: 갤러리, false: 카메라)
+  /// - [BuildContext] context: BuildContext
+  ///
+  /// #### Returns
+  ///
+  /// - [VoidCallback] 이미지 가져오기 메서드
+  ///
+  Future<void> pickImage(bool? isGallery, BuildContext context) async {
+    Navigator.pop(context);
+    if (isGallery == null) {
+      printd("isGallery is null");
+      updateProfileImage(null);
+      return;
+    }
+    final XFile? image = isGallery
+        ? await ImagePickerService().pickImageForGallery()
+        : await ImagePickerService().pickImageForCamera();
+
+    if (image != null) {
+      updateProfileImage(image);
+    }
+  }
+}
 
 /// ### 회원가입 페이지의 포커스 상태 Provider
 ///

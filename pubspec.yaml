@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   accessibility_tools: ^2.2.1
+  country_code_picker: ^3.0.0
   cupertino_icons: ^1.0.8
   easy_localization: ^3.0.7
   firebase_auth: ^4.20.0
@@ -23,7 +24,6 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   http: ^1.2.2
-  intl_phone_number_input: ^0.7.4
 
 dev_dependencies:
   flutter_test:

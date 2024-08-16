@@ -1,9 +1,9 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import 'package:woju/model/onboarding/sign_up_model.dart';
 import 'package:woju/provider/onboarding/onboarding_state_notifier.dart';
@@ -65,7 +65,17 @@ class SignUpStateNotifier extends StateNotifier<SignUpModel> {
     state = state.copyWith(userUid: uid);
   }
 
-  PhoneNumber get getPhoneNumberObject => state.getPhoneNumberObject;
+  void updateIDValid(bool isIDValid) {
+    state = state.copyWith(isIDValid: isIDValid);
+  }
+
+  void updateUserID(String userID) {
+    state = state.copyWith(userID: userID);
+  }
+
+  void updateIDAvailable(bool isIDAvailable) {
+    state = state.copyWith(isIDAvailable: isIDAvailable);
+  }
 
   SignUpModel get getSignUpModel => state;
 }
@@ -73,24 +83,6 @@ class SignUpStateNotifier extends StateNotifier<SignUpModel> {
 /// ### 회원가입 페이지의 Action을 확장하는 Extension
 ///
 extension SignUpAction on SignUpStateNotifier {
-  /// ### 인증번호를 전송하는 메서드
-  ///
-  /// - [PhoneNumber]을 통해 전화번호를 가져와 인증번호를 전송한다.
-  ///
-  /// #### Parameters
-  ///
-  /// [String] phoneNumber: 전화번호
-  ///
-  void sendAuthCode(String phoneNumberFromController) async {
-    printd("sendAuthCodeWith : $phoneNumberFromController");
-    PhoneNumber newPhoneNumberObject = PhoneNumber(
-      phoneNumber: phoneNumberFromController,
-      isoCode: getSignUpModel.isoCode,
-      dialCode: getSignUpModel.dialCode,
-    );
-    await signInWithPhoneNumber(newPhoneNumberObject);
-  }
-
   /// ### 전화번호로 인증번호를 전송하는 메서드
   ///
   /// - [PhoneNumber]을 통해 전화번호를 가져와 인증번호를 전송한다.
@@ -99,28 +91,22 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   /// [PhoneNumber] phoneNumberDetail: 전화번호 정보
   ///
-  Future<void> signInWithPhoneNumber(PhoneNumber phoneNumberDetail) async {
-    String phoneNumber = phoneNumberDetail.phoneNumber ?? "";
-    final String isoCode = phoneNumberDetail.isoCode ?? "";
-    if (phoneNumber.isEmpty) {
+  Future<void> verifyPhoneNumber() async {
+    final nowPhoneNumber = getPhoneNumberWithoutHyphen();
+    final nowDialCode = getSignUpModel.dialCode;
+    if (nowPhoneNumber.isEmpty) {
       printd("전화번호 입력 필요");
       updateError(SignUpError.phoneNumberEmpty);
       return;
     }
-    if (isoCode.isEmpty) {
+    if (nowDialCode.isEmpty) {
       printd("국가 코드 입력 필요");
       updateError(SignUpError.isoCodeEmpty);
       return;
     }
 
-    if (phoneNumber.contains("-")) {
-      printd("전화번호에 - 제거");
-      phoneNumber = phoneNumber.replaceAll("-", "");
-      printd("전화번호: $phoneNumber");
-    }
-
     // 국가 코드 추가
-    final codedPhoneNumber = "${phoneNumberDetail.dialCode}$phoneNumber";
+    final codedPhoneNumber = "$nowDialCode$nowPhoneNumber";
     printd("전화번호: $codedPhoneNumber");
 
     await _firebaseAuth.verifyPhoneNumber(
@@ -194,6 +180,7 @@ extension SignUpAction on SignUpStateNotifier {
       );
       final result = await _firebaseAuth.signInWithCredential(credential);
       printd("인증 성공: ${result.user?.uid}");
+      updateUserUid(result.user?.uid ?? "");
       printd("인증 성공: ${result.user?.phoneNumber}");
 
       // 백엔드로 인증 정보 전송하여 가입 유무 확인
@@ -247,7 +234,7 @@ extension SignUpAction on SignUpStateNotifier {
     }
     return () {
       printd("sendAuthCodeButton");
-      sendAuthCode(phoneNumber);
+      verifyPhoneNumber();
     };
   }
 
@@ -292,7 +279,7 @@ extension SignUpAction on SignUpStateNotifier {
     return () {
       printd("resendAuthCodeButton");
       updateAuthCodeSent(false);
-      sendAuthCode(phoneNumber);
+      verifyPhoneNumber();
     };
   }
 
@@ -304,9 +291,9 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   /// [bool] 회원가입 여부
   ///
-  Future<bool> checkSignUp(String? phoneNumber, String? uid) async {
+  Future<bool> checkSignUp(String? phoneNumber, String? verificationID) async {
     final json = {
-      "userUID": uid,
+      "userVerificationID": verificationID,
       "userPhoneNumber": phoneNumber,
     };
 
@@ -376,8 +363,190 @@ extension SignUpAction on SignUpStateNotifier {
   /// [String] 전화번호
   ///
   String getPhoneNumberWithoutHyphen() {
-    final phoneNumber = ref.read(phoneNumberTextEditingControllerProvider).text;
+    final phoneNumber = getSignUpModel.phoneNumber;
     return phoneNumber.replaceAll("-", "");
+  }
+
+  /// ### 전화번호 입력 필드 Validation 메서드
+  ///
+  /// 전화번호 입력 필드의 Validation을 진행한다.
+  ///
+  /// #### Parameters
+  ///
+  /// [String] phoneNumber: 전화번호
+  ///
+  /// #### Returns
+  ///
+  /// [String?] 에러 메시지
+  ///
+  /// - 에러가 없으면 null 반환
+  ///
+  String? phoneNumberValidation(String? phoneNumber) {
+    if (phoneNumber == null || phoneNumber.isEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        updatePhoneNumberValid(false);
+      });
+      return "onboarding.signUp.error.phoneNumberEmpty".tr();
+    } else if (phoneNumber.length < 5 || phoneNumber.length > 15) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        updatePhoneNumberValid(false);
+      });
+      return "onboarding.signUp.error.phoneNumberInvalid".tr();
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        updatePhoneNumberValid(true);
+      });
+      return null;
+    }
+  }
+}
+
+/// ### 회원가입 페이지의 유저 정보 입력 Action을 확장하는 Extension
+///
+/// - 유저 정보 입력 페이지에서 사용되는 Action을 확장한다.
+///
+extension SignUpUserInfoAction on SignUpStateNotifier {
+  /// ### 유저 ID 입력 필드 Validation 메서드
+  ///
+  /// - 유저 ID 입력 필드의 Validation을 진행한다.
+  ///
+  /// #### Parameters
+  ///
+  /// - [String] userID: 유저 ID
+  ///
+  /// #### Returns
+  ///
+  /// - [String?] 에러 메시지
+  ///
+  /// - 에러가 없으면 null 반환
+  ///
+  String? userIDValidation(String? userID) {
+    String? isError;
+    if (userID == null || userID.isEmpty) {
+      isError = "onboarding.signUp.detail.error.userIDEmpty".tr();
+    } else if (userID.length < 4) {
+      isError = "onboarding.signUp.detail.error.userIDShort".tr();
+    } else if (userID.length > 20) {
+      isError = "onboarding.signUp.detail.error.userIDLong".tr();
+    }
+
+    // 소문자가 제일 앞에 위치해야 함
+    if (RegExp(r'^[a-z]').firstMatch(userID ?? "")?.start != 0) {
+      isError =
+          "onboarding.signUp.detail.error.userIDInvalidAlphabetFirst".tr();
+    }
+    // 소문자, 숫자만 입력 가능
+    if (!RegExp(r'^[a-z0-9]*$').hasMatch(userID ?? "")) {
+      isError = "onboarding.signUp.detail.error.userIDInvalid".tr();
+    }
+    // 소문자가 4개 이상 포함되어야 함
+    if (RegExp(r'[a-z]').allMatches(userID ?? "").length < 4) {
+      isError = "onboarding.signUp.detail.error.userIDInvalidAlphabet".tr();
+    }
+
+    // 유효성 검사 통과
+    // TODO : userID valid check
+    if (isError == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        updateIDValid(true);
+      });
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        updateIDValid(false);
+      });
+    }
+    return isError;
+  }
+
+  /// ### ID 사용 가능 여부 메서드
+  ///
+  /// - 사용자가 입력한 ID가 중복되는지 서버의 DB와 비교하여 확인한다.
+  ///
+  /// #### Returns
+  ///
+  /// - [bool] ID 사용 가능 여부
+  ///
+  /// - 사용 가능하면 true, 중복되면 false 반환
+  ///
+  Future<bool> checkAvailableID() async {
+    final json = {
+      "userID": getSignUpModel.userID,
+      "userUID": getSignUpModel.userUid,
+    };
+
+    // 백엔드로 ID 전송
+    try {
+      final response =
+          await HttpService.post("/user/check-userid-available", json);
+
+      printd("checkDuplicateID: ${response.statusCode}");
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data["isAvailable"] == true) {
+          printd("사용 가능한 ID");
+          return true;
+        } else {
+          printd("사용 불가능한 ID");
+          updateError(SignUpError.userIDNotAvailable);
+          showToastMessage();
+          return false;
+        }
+      } else {
+        printd("ID 중복 여부 확인 실패");
+        updateError(SignUpError.serverError);
+        return false;
+      }
+    } catch (e) {
+      printd("ID 중복 여부 확인 실패 (json Error): $e");
+      updateError(SignUpError.serverError);
+      showToastMessage();
+      return false;
+    }
+  }
+
+  /// ### 중복 ID 확인 메서드 버튼 활성화 여부 메서드
+  ///
+  /// 사용자가 ID 중복 확인 버튼을 누를 수 있는 지 확인하고, 확인을 진행한다.
+  ///
+  /// #### Returns
+  ///
+  /// Function: 중복 ID 확인 메서드
+  ///
+  VoidCallback? checkAvailableIDButton() {
+    if (getSignUpModel.isIDAvailable) {
+      return null;
+    }
+
+    if (getSignUpModel.userID.isEmpty) {
+      return null;
+    }
+
+    if (getSignUpModel.userUid == null || getSignUpModel.userUid!.isEmpty) {
+      return null;
+    }
+
+    return () async {
+      printd("checkAvailableIDButton");
+      final bool isAvailable = await checkAvailableID();
+      if (isAvailable) {
+        updateIDAvailable(true);
+      } else {
+        updateIDAvailable(false);
+        updateError(SignUpError.userIDNotAvailable);
+        showToastMessage();
+      }
+    };
+  }
+
+  /// ### ID 변경 메서드
+  ///
+  /// 사용자가 ID를 변경하기 위해 버튼을 누르면 실행된다.
+  ///
+  void modifyIDButton() {
+    printd("isIDAvailable: ${getSignUpModel.isIDAvailable}");
+
+    updateIDAvailable(false);
   }
 }
 

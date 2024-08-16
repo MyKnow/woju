@@ -3,16 +3,25 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:woju/provider/onboarding/sign_up_state_notifier.dart';
 
 class SignupUserinfoPage extends ConsumerWidget {
   const SignupUserinfoPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final signUp = ref.watch(signUpStateProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text("onboarding.signUp.detail.title").tr(),
         centerTitle: false,
+        actions: [
+          if (signUp.isIDAvailable)
+            TextButton(
+              onPressed: ref.read(signUpStateProvider.notifier).modifyIDButton,
+              child: const Text("onboarding.signUp.detail.modifyUserID").tr(),
+            ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -26,7 +35,7 @@ class SignupUserinfoPage extends ConsumerWidget {
               radius: 100,
             ),
             const SizedBox(
-              height: 20,
+              height: 40,
               width: double.infinity,
             ),
             // 아이디 입력
@@ -50,59 +59,49 @@ class SignupUserinfoPage extends ConsumerWidget {
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 10,
                   ),
-                  labelText: "onboarding.signUp.detail.userID".tr(),
-                  suffix: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextButton(
-                        onPressed: () {},
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                        ),
-                        child:
-                            const Text("onboarding.signUp.detail.userIDCheck")
-                                .tr(),
-                      ),
-                    ],
+                  labelText: (signUp.isIDAvailable)
+                      ? "onboarding.signUp.detail.userIDAvailable".tr()
+                      : "onboarding.signUp.detail.userID".tr(),
+                  suffix: Consumer(
+                    builder: (context, ref, child) {
+                      return Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton(
+                              onPressed: ref
+                                  .read(signUpStateProvider.notifier)
+                                  .checkAvailableIDButton(),
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.zero,
+                              ),
+                              child: (signUp.isIDAvailable)
+                                  ? const Text(
+                                          "onboarding.signUp.detail.userIDAvailableSimple")
+                                      .tr()
+                                  : const Text(
+                                          "onboarding.signUp.detail.userIDCheck")
+                                      .tr())
+                        ],
+                      );
+                    },
                   ),
                 ),
                 keyboardType: TextInputType.streetAddress,
-                autofillHints: const <String>[AutofillHints.oneTimeCode],
-                onChanged: (value) {},
+                autofillHints: const <String>[AutofillHints.newUsername],
+                onChanged: (value) {
+                  ref.read(signUpStateProvider.notifier).updateUserID(value);
+                },
                 inputFormatters: [
                   // 소문자, 숫자만 입력 가능
                   FilteringTextInputFormatter.allow(RegExp(r'[a-z0-9]')),
                   // 최대 20자까지 입력 가능
                   LengthLimitingTextInputFormatter(20),
                 ],
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "onboarding.signUp.detail.userIDEmpty".tr();
-                  } else if (value.length < 4) {
-                    return "onboarding.signUp.detail.userIDShort".tr();
-                  } else if (value.length > 20) {
-                    return "onboarding.signUp.detail.userIDLong".tr();
-                  }
-                  // 소문자, 숫자만 입력 가능
-                  if (!RegExp(r'^[a-z0-9]*$').hasMatch(value)) {
-                    return "onboarding.signUp.detail.userIDInvalid".tr();
-                  }
-
-                  // 소문자가 4개 이상 포함되어야 함
-                  if (RegExp(r'[a-z]').allMatches(value).length < 4) {
-                    return "onboarding.signUp.detail.userIDInvalid".tr();
-                  }
-
-                  // 중복된 아이디 체크
-                  // TODO: 중복된 아이디 체크
-
-                  // 유효성 검사 통과
-                  // TODO : userID valid check
-                  return null;
-                },
+                validator:
+                    ref.read(signUpStateProvider.notifier).userIDValidation,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                // enabled: !signUp.authCompleted,
+                enabled: !signUp.isIDAvailable,
               ),
             ),
           ],

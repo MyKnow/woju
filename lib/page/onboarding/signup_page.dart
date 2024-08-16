@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:country_code_picker/country_code_picker.dart';
 
 import 'package:woju/provider/onboarding/sign_up_state_notifier.dart';
 import 'package:woju/service/debug_service.dart';
@@ -23,27 +23,16 @@ class SignUpPage extends ConsumerWidget {
         title: const Text("onboarding.signUp.title").tr(),
         centerTitle: false,
         actions: [
-          // TODO : Delete
-          IconButton(
-            onPressed: () {
-              ref.read(signUpStateProvider.notifier).updateAuthCompleted(true);
-            },
-            icon: Icon(CupertinoIcons.arrow_right),
-          ),
-          Container(
-            margin: const EdgeInsets.only(right: 8),
-            child: (signUp.authCodeSent)
-                ? IconButton(
-                    onPressed: () {
-                      ref
-                          .read(signUpStateProvider.notifier)
-                          .changePhoneNumber();
-                    },
-                    icon: const Icon(CupertinoIcons.refresh_bold),
-                    tooltip: "onboarding.signUp.changePhoneNumber".tr(),
-                  )
-                : const SizedBox(),
-          ),
+          if (signUp.authCodeSent)
+            Container(
+                margin: const EdgeInsets.only(right: 8),
+                child: IconButton(
+                  onPressed: () {
+                    ref.read(signUpStateProvider.notifier).changePhoneNumber();
+                  },
+                  icon: const Icon(CupertinoIcons.refresh_bold),
+                  tooltip: "onboarding.signUp.changePhoneNumber".tr(),
+                )),
         ],
       ),
       body: SingleChildScrollView(
@@ -66,17 +55,48 @@ class SignUpPage extends ConsumerWidget {
                   ),
                   padding: const EdgeInsets.all(8),
                   margin: const EdgeInsets.symmetric(horizontal: 20),
-                  child: InternationalPhoneNumberInput(
-                    initialValue: PhoneNumber(
-                      phoneNumber: signUp.phoneNumber,
-                      isoCode: signUp.isoCode,
-                      dialCode: signUp.dialCode,
-                    ),
-                    formatInput: true,
-                    inputDecoration: InputDecoration(
+                  child: TextFormField(
+                    decoration: InputDecoration(
                       border: InputBorder.none,
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 10,
+                      ),
+                      prefix: CountryCodePicker(
+                        onChanged: (countryCode) {
+                          if (countryCode.code == null &&
+                              countryCode.dialCode == null) {
+                            printd("countryCode is null");
+                            return;
+                          } else {
+                            final dialCode = countryCode.dialCode as String;
+                            final code = countryCode.code as String;
+
+                            printd("countryCode: $code, dialCode: $dialCode");
+
+                            ref
+                                .read(signUpStateProvider.notifier)
+                                .updateIsoCode(code);
+
+                            ref
+                                .read(signUpStateProvider.notifier)
+                                .updateDialCode(dialCode);
+                          }
+                        },
+                        initialSelection: 'KR',
+                        favorite: const ['KR', 'US'],
+                        showCountryOnly: false,
+                        showOnlyCountryWhenClosed: false,
+                        alignLeft: false,
+                        padding: EdgeInsets.zero,
+                        flagWidth: 24,
+                        searchDecoration: InputDecoration(
+                          labelText: "onboarding.signUp.searchCountry".tr(),
+                        ),
+                        showDropDownButton: true,
+                        boxDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        closeIcon: const Icon(CupertinoIcons.clear),
                       ),
                       suffix: TextButton(
                         onPressed: ref
@@ -87,46 +107,33 @@ class SignUpPage extends ConsumerWidget {
                         style: TextButton.styleFrom(
                           padding: EdgeInsets.zero,
                         ),
-                        child: const Text("onboarding.signUp.sendCode").tr(),
+                        child: (signUp.authCodeSent)
+                            ? const Text(
+                                    "onboarding.signUp.phoneNumberVerified")
+                                .tr()
+                            : const Text("onboarding.signUp.sendCode").tr(),
                       ),
                       labelText: "onboarding.signUp.phoneNumber".tr(),
                     ),
-                    textFieldController: phoneNumberTextEditingController,
-                    onInputValidated: (bool value) {
-                      // printd("onInputValidated: $value");
-                      ref
-                          .read(signUpStateProvider.notifier)
-                          .updatePhoneNumberValid(value);
-                    },
-                    isEnabled: !signUp.authCodeSent,
-                    validator: (String? value) {
-                      printd("validator: $value");
-                      if (signUp.isPhoneNumberValid) {
-                        return null;
-                      } else {
-                        return "onboarding.signUp.error.phoneNumberInvalid"
-                            .tr();
-                      }
-                    },
+                    controller: phoneNumberTextEditingController,
+                    enableSuggestions: !signUp.authCodeSent,
+                    validator: ref
+                        .read(signUpStateProvider.notifier)
+                        .phoneNumberValidation,
                     focusNode: focus[0],
-                    autoValidateMode: AutovalidateMode.onUserInteraction,
-                    onInputChanged: (PhoneNumber number) {
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    onChanged: (value) {
                       ref
                           .read(signUpStateProvider.notifier)
-                          .updateIsoCode(number.isoCode ?? "");
-                      ref
-                          .read(signUpStateProvider.notifier)
-                          .updateDialCode(number.dialCode ?? "");
+                          .updatePhoneNumber(value);
                     },
-                    selectorConfig: const SelectorConfig(
-                      selectorType: PhoneInputSelectorType.DIALOG,
-                    ),
                     keyboardType: TextInputType.number,
-                    keyboardAction: TextInputAction.done,
-                    searchBoxDecoration: InputDecoration(
-                      hintText: "onboarding.signUp.searchCountry".tr(),
-                    ),
-                    spaceBetweenSelectorAndTextField: 0,
+                    textInputAction: TextInputAction.done,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(15),
+                    ],
+                    enabled: !signUp.authCodeSent,
                   ),
                 );
               },
@@ -171,17 +178,20 @@ class SignUpPage extends ConsumerWidget {
                           child: const Text("onboarding.signUp.authCodeResend")
                               .tr(),
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: 10),
                         TextButton(
-                          onPressed: ref
-                              .read(signUpStateProvider.notifier)
-                              .verifyAuthCodeButton(),
-                          style: TextButton.styleFrom(
-                            padding: EdgeInsets.zero,
-                          ),
-                          child: const Text("onboarding.signUp.authCodeVerify")
-                              .tr(),
-                        ),
+                            onPressed: ref
+                                .read(signUpStateProvider.notifier)
+                                .verifyAuthCodeButton(),
+                            style: TextButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                            ),
+                            child: (!signUp.authCompleted)
+                                ? const Text("onboarding.signUp.authCodeVerify")
+                                    .tr()
+                                : const Text(
+                                        "onboarding.signUp.authCodeVerified")
+                                    .tr()),
                       ],
                     ),
                   ),

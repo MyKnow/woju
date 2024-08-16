@@ -9,7 +9,16 @@ enum SignUpError {
   serverError,
   alreadySignedUp,
   userIDNotAvailable,
+  userIDShort,
+  userIDLong,
+  userIDAlphabetFirst,
+  userIDInvalid,
+  userIDInvalidAlphabet,
   userIDEmpty,
+  passwordEmpty,
+  passwordShort,
+  passwordLong,
+  passwordInvalid,
 }
 
 extension SignUpErrorExtenstion on SignUpError {
@@ -35,8 +44,26 @@ extension SignUpErrorExtenstion on SignUpError {
         return "onboarding.signUp.error.alreadySignedUp";
       case SignUpError.userIDNotAvailable:
         return "onboarding.signUp.error.userIDNotAvailable";
+      case SignUpError.userIDShort:
+        return "onboarding.signUp.error.userIDShort";
+      case SignUpError.userIDLong:
+        return "onboarding.signUp.error.userIDLong";
+      case SignUpError.userIDAlphabetFirst:
+        return "onboarding.signUp.error.userIDAlphabetFirst";
+      case SignUpError.userIDInvalid:
+        return "onboarding.signUp.error.userIDInvalid";
+      case SignUpError.userIDInvalidAlphabet:
+        return "onboarding.signUp.error.userIDInvalidAlphabet";
       case SignUpError.userIDEmpty:
         return "onboarding.signUp.error.userIDEmpty";
+      case SignUpError.passwordEmpty:
+        return "onboarding.signUp.error.passwordEmpty";
+      case SignUpError.passwordShort:
+        return "onboarding.signUp.error.passwordShort";
+      case SignUpError.passwordLong:
+        return "onboarding.signUp.error.passwordLong";
+      case SignUpError.passwordInvalid:
+        return "onboarding.signUp.error.passwordInvalid";
     }
   }
 }
@@ -46,6 +73,7 @@ class SignUpModel {
   final String isoCode;
   final String dialCode;
   final String userID;
+  final String password;
   final String? authCode;
   final SignUpError? error;
   final String? verificationId;
@@ -56,12 +84,15 @@ class SignUpModel {
   final bool authCompleted;
   final bool isIDValid;
   final bool isIDAvailable;
+  final bool isPasswordAvailable;
+  final bool isPasswordVisible;
 
   SignUpModel({
     required this.phoneNumber,
     required this.isoCode,
     required this.dialCode,
     this.userID = "",
+    this.password = "",
     this.authCode,
     this.error,
     this.verificationId,
@@ -72,6 +103,8 @@ class SignUpModel {
     this.authCompleted = false,
     this.isIDValid = false,
     this.isIDAvailable = false,
+    this.isPasswordAvailable = false,
+    this.isPasswordVisible = false,
   });
 
   SignUpModel copyWith({
@@ -79,6 +112,7 @@ class SignUpModel {
     String? isoCode,
     String? dialCode,
     String? userID,
+    String? password,
     String? authCode,
     SignUpError? error,
     String? verificationId,
@@ -89,12 +123,15 @@ class SignUpModel {
     bool? authCompleted,
     bool? isIDValid,
     bool? isIDAvailable,
+    bool? isPasswordAvailable,
+    bool? isPasswordVisible,
   }) {
     return SignUpModel(
       phoneNumber: phoneNumber ?? this.phoneNumber,
       isoCode: isoCode ?? this.isoCode,
       dialCode: dialCode ?? this.dialCode,
       userID: userID ?? this.userID,
+      password: password ?? this.password,
       authCode: authCode ?? this.authCode,
       error: error ?? this.error,
       verificationId: verificationId ?? this.verificationId,
@@ -105,6 +142,8 @@ class SignUpModel {
       authCompleted: authCompleted ?? this.authCompleted,
       isIDValid: isIDValid ?? this.isIDValid,
       isIDAvailable: isIDAvailable ?? this.isIDAvailable,
+      isPasswordAvailable: isPasswordAvailable ?? this.isPasswordAvailable,
+      isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
     );
   }
 

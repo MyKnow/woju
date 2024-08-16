@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,12 @@ import 'package:woju/service/debug_service.dart';
 import 'package:woju/service/http_service.dart';
 import 'package:woju/service/toast_message_service.dart';
 
+/// ### 회원가입 페이지의 StateNotifier Provider
+///
+/// - 회원가입 페이지의 상태를 관리한다.
+///
+/// - 회원가입 페이지의 Action을 확장하는 Extension을 포함한다.
+///
 final signUpStateProvider =
     StateNotifierProvider.autoDispose<SignUpStateNotifier, SignUpModel>(
   (ref) => SignUpStateNotifier(ref),
@@ -65,10 +72,6 @@ class SignUpStateNotifier extends StateNotifier<SignUpModel> {
     state = state.copyWith(userUid: uid);
   }
 
-  void updateIDValid(bool isIDValid) {
-    state = state.copyWith(isIDValid: isIDValid);
-  }
-
   void updateUserID(String userID) {
     state = state.copyWith(userID: userID);
   }
@@ -77,12 +80,53 @@ class SignUpStateNotifier extends StateNotifier<SignUpModel> {
     state = state.copyWith(isIDAvailable: isIDAvailable);
   }
 
+  void updatePassword(String password) {
+    state = state.copyWith(password: password);
+  }
+
+  void updatePasswordVisible(bool isPasswordVisible) {
+    state = state.copyWith(isPasswordVisible: isPasswordVisible);
+  }
+
+  void updatePasswordAvailable(bool isPasswordAvailable) {
+    state = state.copyWith(isPasswordAvailable: isPasswordAvailable);
+  }
+
   SignUpModel get getSignUpModel => state;
 }
 
 /// ### 회원가입 페이지의 Action을 확장하는 Extension
 ///
 extension SignUpAction on SignUpStateNotifier {
+  /// ### CountryCodePicker onChanged 메서드
+  ///
+  /// - 국가 코드를 변경하면 실행된다.
+  ///
+  /// #### Parameters
+  ///
+  /// - [CountryCode] countryCode: 국가 코드
+  ///
+  /// #### Returns
+  ///
+  /// - Function: 국가 코드 변경 메서드
+  ///
+  VoidCallback? onCountryCodeChanged(CountryCode countryCode) {
+    if (countryCode.code == null && countryCode.dialCode == null) {
+      printd("countryCode is null");
+      return null;
+    }
+    return () {
+      final dialCode = countryCode.dialCode as String;
+      final code = countryCode.code as String;
+
+      printd("countryCode: $code, dialCode: $dialCode");
+
+      updateIsoCode(code);
+
+      updateDialCode(dialCode);
+    };
+  }
+
   /// ### 전화번호로 인증번호를 전송하는 메서드
   ///
   /// - [PhoneNumber]을 통해 전화번호를 가져와 인증번호를 전송한다.
@@ -216,6 +260,10 @@ extension SignUpAction on SignUpStateNotifier {
       final bool isVerified = await verifyAuthCode();
       if (isVerified) {
         updateAuthCompleted(true);
+        ref.read(signUpAuthFocusProvider.notifier).requestFocusUserID();
+      } else {
+        updateAuthCompleted(false);
+        ref.read(signUpAuthFocusProvider.notifier).requestFocusAuthCode();
       }
     };
   }
@@ -228,7 +276,7 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   /// Function: 인증번호 전송 메서드
   ///
-  VoidCallback? sendAuthCodeButton(String phoneNumber) {
+  VoidCallback? sendAuthCodeButton() {
     if (!getSignUpModel.isPhoneNumberValid || getSignUpModel.authCodeSent) {
       return null;
     }
@@ -249,7 +297,7 @@ extension SignUpAction on SignUpStateNotifier {
   void showToastMessage() {
     final String? errorMessage = getSignUpModel.error?.message;
     if (errorMessage != null) {
-      ToastMessageService.show(errorMessage);
+      ToastMessageService.show(errorMessage.tr());
     }
   }
 
@@ -272,7 +320,7 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   /// Function: 인증번호 재전송 메서드
   ///
-  VoidCallback? resendAuthCodeButton(String phoneNumber) {
+  VoidCallback? resendAuthCodeButton() {
     if (!getSignUpModel.authCodeSent || getSignUpModel.authCompleted) {
       return null;
     }
@@ -280,6 +328,7 @@ extension SignUpAction on SignUpStateNotifier {
       printd("resendAuthCodeButton");
       updateAuthCodeSent(false);
       verifyPhoneNumber();
+      ref.read(signUpAuthFocusProvider.notifier).requestFocusAuthCode();
     };
   }
 
@@ -343,7 +392,9 @@ extension SignUpAction on SignUpStateNotifier {
   /// [VoidCallback] 다음 페이지 이동 버튼 활성화 여부 확인 메서드
   ///
   VoidCallback? nextButton(BuildContext context) {
-    if (!getSignUpModel.authCompleted) {
+    if (!getSignUpModel.authCompleted ||
+        !getSignUpModel.isIDAvailable ||
+        !getSignUpModel.isPasswordAvailable) {
       return null;
     }
     return () {
@@ -383,29 +434,34 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   String? phoneNumberValidation(String? phoneNumber) {
     if (phoneNumber == null || phoneNumber.isEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        updatePhoneNumberValid(false);
-      });
-      return "onboarding.signUp.error.phoneNumberEmpty".tr();
+      return SignUpError.phoneNumberEmpty.message.tr();
     } else if (phoneNumber.length < 5 || phoneNumber.length > 15) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        updatePhoneNumberValid(false);
-      });
-      return "onboarding.signUp.error.phoneNumberInvalid".tr();
+      return SignUpError.phoneNumberInvalid.message.tr();
     } else {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        updatePhoneNumberValid(true);
-      });
       return null;
     }
   }
-}
 
-/// ### 회원가입 페이지의 유저 정보 입력 Action을 확장하는 Extension
-///
-/// - 유저 정보 입력 페이지에서 사용되는 Action을 확장한다.
-///
-extension SignUpUserInfoAction on SignUpStateNotifier {
+  /// ### 전화번호 입력 필드 메서드
+  ///
+  /// 사용자가 전화번호를 입력할 때마다 실행된다.
+  ///
+  /// #### Parameters
+  ///
+  /// [String] phoneNumber: 전화번호
+  ///
+  void phoneNumberOnChange(String phoneNumber) {
+    printd("updatePhoneNumber: $phoneNumber");
+    updatePhoneNumber(phoneNumber);
+    final String? error = phoneNumberValidation(phoneNumber);
+
+    if (error == null) {
+      updatePhoneNumberValid(true);
+    } else {
+      updatePhoneNumberValid(false);
+    }
+  }
+
   /// ### 유저 ID 입력 필드 Validation 메서드
   ///
   /// - 유저 ID 입력 필드의 Validation을 진행한다.
@@ -423,38 +479,27 @@ extension SignUpUserInfoAction on SignUpStateNotifier {
   String? userIDValidation(String? userID) {
     String? isError;
     if (userID == null || userID.isEmpty) {
-      isError = "onboarding.signUp.detail.error.userIDEmpty".tr();
+      isError = SignUpError.userIDEmpty.message.tr();
     } else if (userID.length < 4) {
-      isError = "onboarding.signUp.detail.error.userIDShort".tr();
+      isError = SignUpError.userIDShort.message.tr();
     } else if (userID.length > 20) {
-      isError = "onboarding.signUp.detail.error.userIDLong".tr();
+      isError = SignUpError.userIDLong.message.tr();
     }
 
     // 소문자가 제일 앞에 위치해야 함
     if (RegExp(r'^[a-z]').firstMatch(userID ?? "")?.start != 0) {
-      isError =
-          "onboarding.signUp.detail.error.userIDInvalidAlphabetFirst".tr();
+      isError = SignUpError.userIDAlphabetFirst.message.tr();
     }
     // 소문자, 숫자만 입력 가능
     if (!RegExp(r'^[a-z0-9]*$').hasMatch(userID ?? "")) {
-      isError = "onboarding.signUp.detail.error.userIDInvalid".tr();
+      isError = SignUpError.userIDInvalid.message.tr();
     }
     // 소문자가 4개 이상 포함되어야 함
     if (RegExp(r'[a-z]').allMatches(userID ?? "").length < 4) {
-      isError = "onboarding.signUp.detail.error.userIDInvalidAlphabet".tr();
+      isError = SignUpError.userIDInvalidAlphabet.message.tr();
     }
 
     // 유효성 검사 통과
-    // TODO : userID valid check
-    if (isError == null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        updateIDValid(true);
-      });
-    } else {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        updateIDValid(false);
-      });
-    }
     return isError;
   }
 
@@ -518,7 +563,7 @@ extension SignUpUserInfoAction on SignUpStateNotifier {
       return null;
     }
 
-    if (getSignUpModel.userID.isEmpty) {
+    if (userIDValidation(getSignUpModel.userID) != null) {
       return null;
     }
 
@@ -531,10 +576,12 @@ extension SignUpUserInfoAction on SignUpStateNotifier {
       final bool isAvailable = await checkAvailableID();
       if (isAvailable) {
         updateIDAvailable(true);
+        ref.read(signUpAuthFocusProvider.notifier).requestFocusUserPassword();
       } else {
         updateIDAvailable(false);
         updateError(SignUpError.userIDNotAvailable);
         showToastMessage();
+        ref.read(signUpAuthFocusProvider.notifier).requestFocusUserID();
       }
     };
   }
@@ -548,12 +595,73 @@ extension SignUpUserInfoAction on SignUpStateNotifier {
 
     updateIDAvailable(false);
   }
+
+  /// ### 비밀번호 입력 필드 Validation 메서드
+  ///
+  /// - 비밀번호 입력 필드의 Validation을 진행한다.
+  ///
+  /// #### Returns
+  ///
+  /// - [String?] 에러 메시지
+  ///
+  /// - 에러가 없으면 null 반환
+  ///
+  String? passwordValidation(String? password) {
+    String? isError;
+    if (password == null || password.isEmpty) {
+      isError = SignUpError.passwordEmpty.message.tr();
+    } else if (password.length < 8) {
+      isError = SignUpError.passwordShort.message.tr();
+    } else if (password.length > 30) {
+      isError = SignUpError.passwordLong.message.tr();
+    }
+
+    // 비밀번호는 대문자 또는 소문자, 그리고 숫자와 특수문자를 포함해야 함
+    if (!RegExp(
+            r'^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,30}$')
+        .hasMatch(password ?? "")) {
+      isError = SignUpError.passwordInvalid.message.tr();
+    }
+
+    // 유효성 검사 통과
+    return isError;
+  }
+
+  /// ### 비밀번호 가시성 변경 메서드
+  ///
+  /// 사용자가 비밀번호 가시성을 변경하기 위해 버튼을 누르면 실행된다.
+  ///
+  void changePasswordVisibilityButton() {
+    printd("changePasswordVisibility");
+    updatePasswordVisible(!getSignUpModel.isPasswordVisible);
+  }
+
+  /// ### 비밀번호 입력 필드 메서드
+  ///
+  /// 사용자가 비밀번호를 입력할 때마다 실행된다.
+  ///
+  /// #### Parameters
+  ///
+  /// [String] password: 비밀번호
+  ///
+  void passwordOnChange(String password) {
+    printd("updatePassword: $password");
+    updatePassword(password);
+    final String? error = passwordValidation(password);
+
+    if (error == null) {
+      updatePasswordAvailable(true);
+    } else {
+      updatePasswordAvailable(false);
+    }
+  }
 }
 
-/// ### 회원가입 페이지의 전화번호 입력 컨트롤러 Provider
-final phoneNumberTextEditingControllerProvider =
-    StateProvider.autoDispose<TextEditingController>(
-        (ref) => TextEditingController());
+/// ### 회원가입 페이지의 유저 정보 입력 Action을 확장하는 Extension
+///
+/// - 유저 정보 입력 페이지에서 사용되는 Action을 확장한다.
+///
+extension SignUpUserInfoAction on SignUpStateNotifier {}
 
 /// ### 회원가입 페이지의 포커스 상태 Provider
 ///
@@ -569,7 +677,8 @@ final signUpAuthFocusProvider =
 /// - 전화번호 입력 필드와 인증번호 입력 필드의 포커스를 관리한다.
 ///
 class SignUpAuthFocusNotifier extends StateNotifier<List<FocusNode>> {
-  SignUpAuthFocusNotifier() : super([FocusNode(), FocusNode()]);
+  SignUpAuthFocusNotifier()
+      : super([FocusNode(), FocusNode(), FocusNode(), FocusNode()]);
 
   void requestFocusPhoneNumber() {
     state[0].requestFocus();
@@ -579,11 +688,27 @@ class SignUpAuthFocusNotifier extends StateNotifier<List<FocusNode>> {
     state[1].requestFocus();
   }
 
+  void requestFocusUserID() {
+    state[2].requestFocus();
+  }
+
+  void requestFocusUserPassword() {
+    state[3].requestFocus();
+  }
+
   void unfocusPhoneNumber() {
     state[0].unfocus();
   }
 
   void unfocusAuthCode() {
     state[1].unfocus();
+  }
+
+  void unfocusUserID() {
+    state[2].unfocus();
+  }
+
+  void unfocusUserPassword() {
+    state[3].unfocus();
   }
 }

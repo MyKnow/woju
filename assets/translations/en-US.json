@@ -1,40 +1,63 @@
 {
     "onboarding": {
         "description": {
-            "1": "Connect with people you've crossed paths with",
-            "2": "Chat with people nearby in real-time",
-            "3": "Talk to strangers before sleep"
+            "1": "Connect with passing relationships",
+            "2": "Communicate with people nearby in real time",
+            "3": "Chat with strangers before bed"
         },
         "startWithPhoneNumber": "Start with phone number",
-        "signIn": "Sign In",
+        "signIn": "Sign in",
         "signUp" : {
-            "title": "Sign Up",
-            "description": "Sign up to access more features",
-            "email": "Email",
-            "password": "Password",
-            "confirmPassword": "Confirm Password",
-            "searchCountry": "Search country by English or code",
+            "title": "Sign up",
+            "phoneNumber": "Enter your phone number",
+            "phoneNumberVerified" : "Verification completed",
+            "phoneNumberAvailable" : "Phone number available",
+            "confirmPassword": "Confirm password",
+            "searchCountry": "Search for a country",
             "next": "Next",
-            "sendCode": "Send Code",
-            "authCode": "Enter auth code",
-            "authCodeVerify": "Verify",
-            "changePhoneNumber": "Change Number",
+            "sendCode": "Send code",
+            "authCode": "Enter verification code",
+            "authCodeVerify": "Verify code",
+            "authCodeVerified": "Verification completed",
+            "changePhoneNumber": "Change number",
             "authCodeResend": "Resend",
-            "error" : {
+            "password": "Enter your password",
+            "passwordRule": "Please enter a password of at least 8 characters",
+            "passwordAvailable": "Password available",
+            "userID": "Enter your user ID",
+            "userIDCheck": "Check duplication",
+            "userIDAvailable": "User ID available",
+            "userIDAvailableSimple": "Available",
+            "modifyUserID": "Change ID",
+            "error": {
                 "phoneNumberEmpty" : "Please enter your phone number",
                 "phoneNumberInvalid" : "Please enter a valid phone number",
                 "isoCodeEmpty" : "Please select a country",
-                "authCodeEmpty" : "Please enter the auth code",
-                "authCodeInvalid" : "Please enter a valid auth code",
-                "authCodeTimeout" : "Auth code has expired. Please request again",
-                "authCodeNotSent" : "Auth code could not be sent. Please try again",
-                "serverError" : "Server error occurred. Please try again",
-                "alreadySignedUp" : "This Phone number is already signed up"
+                "authCodeEmpty" : "Please enter the verification code",
+                "authCodeInvalid" : "Please enter a valid verification code",
+                "authCodeTimeout" : "The verification code has expired. Please request again",
+                "authCodeNotSent" : "Unable to send verification code. Please try again",
+                "serverError" : "A server error has occurred. Please try again",
+                "alreadySignedUp" : "Phone number already registered",
+                "passwordEmpty" : "Please enter your password",
+                "passwordShort" : "Password must be at least 8 characters",
+                "passwordLong" : "Password must be less than 20 characters",
+                "passwordInvalid" : "Password must contain letters, numbers, and special characters",
+                "userIDEmpty" : "Please enter your user ID",
+                "userIDInvalid" : "User ID can only contain letters and numbers",
+                "userIDInvalidAlphabet" : "User ID must contain at least 4 lowercase letters",
+                "userIDInvalidAlphabetFirst" : "User ID must start with a letter",
+                "userIDShort" : "User ID must be at least 4 characters",
+                "userIDLong" : "User ID must be less than 20 characters",
+                "userIDExists" : "User ID already exists"
+            },
+            "detail" : {
+                "title": "Profile creation"
             }
         },
         "skip": "Skip"
     },
     "accessibility": {
-        "hideKeyboard": "Hide Keyboard"
+        "hideKeyboard": "Hide keyboard"
     }
 }

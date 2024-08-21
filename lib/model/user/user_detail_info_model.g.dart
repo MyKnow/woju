@@ -20,15 +20,18 @@ class UserDetailInfoModelAdapter extends TypeAdapter<UserDetailInfoModel> {
       profileImage: fields[0] as Image?,
       userID: fields[1] as String,
       userPhoneNumber: fields[2] as String,
-      userUID: fields[3] as String,
-      userNickname: fields[4] as String,
+      dialCode: fields[3] as String,
+      userUID: fields[4] as String,
+      userNickName: fields[5] as String,
+      userGender: fields[6] as Gender,
+      userBirthDate: fields[7] as DateTime,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserDetailInfoModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.profileImage)
       ..writeByte(1)
@@ -36,9 +39,15 @@ class UserDetailInfoModelAdapter extends TypeAdapter<UserDetailInfoModel> {
       ..writeByte(2)
       ..write(obj.userPhoneNumber)
       ..writeByte(3)
-      ..write(obj.userUID)
+      ..write(obj.dialCode)
       ..writeByte(4)
-      ..write(obj.userNickname);
+      ..write(obj.userUID)
+      ..writeByte(5)
+      ..write(obj.userNickName)
+      ..writeByte(6)
+      ..write(obj.userGender)
+      ..writeByte(7)
+      ..write(obj.userBirthDate);
   }
 
   @override

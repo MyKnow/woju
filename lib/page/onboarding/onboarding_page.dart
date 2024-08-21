@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_onboarding_slider/flutter_onboarding_slider.dart';
+import 'package:go_router/go_router.dart';
 import 'package:woju/provider/onboarding/onboarding_state_notifier.dart';
 
 class OnboardingPage extends ConsumerWidget {
@@ -25,9 +26,9 @@ class OnboardingPage extends ConsumerWidget {
         skipTextButton: const Text('onboarding.skip').tr(),
         skipIcon: Icon(CupertinoIcons.arrow_right,
             semanticLabel: "onboarding.skip".tr()),
-        trailing: const Text('onboarding.signIn').tr(),
+        trailing: const Text('onboarding.signIn.title').tr(),
         trailingFunction: () {
-          // TODO : Help Page
+          context.push("/onboarding/signin");
         },
         background: [
           // Image.asset('assets/slide_1.png'),

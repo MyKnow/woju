@@ -1,10 +1,12 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:woju/model/app_state_model.dart';
-import 'package:woju/model/onboarding/user_detail_info_model.dart';
+import 'package:woju/model/user/user_detail_info_model.dart';
+import 'package:woju/model/user/user_gender_model.dart';
 
 enum HiveBox {
   onboardingStateBox,
   userDetailInfoBox,
+  genderBox,
 }
 
 extension HiveBoxExt on HiveBox {
@@ -14,6 +16,8 @@ extension HiveBoxExt on HiveBox {
         return 'onboardingStateBox';
       case HiveBox.userDetailInfoBox:
         return 'userDetailInfoBox';
+      case HiveBox.genderBox:
+        return 'genderBox';
     }
   }
 
@@ -26,6 +30,8 @@ extension HiveBoxExt on HiveBox {
       case HiveBox.userDetailInfoBox:
         Hive.registerAdapter(UserDetailInfoModelAdapter());
         break;
+      case HiveBox.genderBox:
+        Hive.registerAdapter(GenderAdapter());
     }
   }
 
@@ -38,6 +44,8 @@ extension HiveBoxExt on HiveBox {
       case HiveBox.userDetailInfoBox:
         await Hive.openBox<UserDetailInfoModel>(name);
         break;
+      case HiveBox.genderBox:
+        await Hive.openBox<Gender>(name);
     }
   }
 }

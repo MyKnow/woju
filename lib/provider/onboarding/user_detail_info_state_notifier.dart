@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:woju/model/hive_box_enum.dart';
-import 'package:woju/model/onboarding/user_detail_info_model.dart';
+import 'package:woju/model/user/user_detail_info_model.dart';
 
 /// ### 유저 세부 정보 상태를 관리하는 StateNotifier
 ///

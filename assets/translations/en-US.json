@@ -6,32 +6,40 @@
             "3": "Chat with strangers before bed"
         },
         "startWithPhoneNumber": "Start with phone number",
-        "signIn": "Sign in",
+        "signIn": {
+            "title": "Sign In",
+            "signInWithPhoneNumber" : "Sign in with phone number",
+            "signInWithID" : "Sign in with ID",
+            "inputUserID": "Please enter your ID",
+            "inputPhoneNumber": "Please enter your phone number",
+            "inputPassword": "Please enter your password",
+            "forgotPassword": "Forgot password?",
+            "signIn": "Sign In"
+        },
         "signUp" : {
-            "title": "Sign up",
-            "phoneNumber": "Enter your phone number",
-            "phoneNumberVerified" : "Verification completed",
-            "phoneNumberAvailable" : "Phone number available",
+            "title": "Sign Up",
+            "signin" : "Already have an account?",
+            "phoneNumber": "Please enter your phone number",
+            "phoneNumberVerified" : "Verified",
+            "phoneNumberAvailable" : "Available phone number",
             "confirmPassword": "Confirm password",
-            "searchCountry": "Search for a country",
+            "searchCountry": "You can search for a country",
             "next": "Next",
             "sendCode": "Send code",
-            "authCode": "Enter verification code",
+            "authCode": "Please enter the verification code",
             "authCodeVerify": "Verify code",
-            "authCodeVerified": "Verification completed",
+            "authCodeVerified": "Verified",
             "changePhoneNumber": "Change number",
             "authCodeResend": "Resend",
-            "password": "Enter your password",
+            "password": "Please enter your password",
             "passwordRule": "Please enter a password of at least 8 characters",
-            "passwordAvailable": "Password available",
-            "userID": "Enter your user ID",
+            "passwordAvailable": "Available password",
+            "userID": "Please enter your ID",
             "userIDCheck": "Check duplication",
-            "userIDAvailable": "User ID available",
+            "userIDAvailable": "Available ID",
             "userIDAvailableSimple": "Available",
             "modifyUserID": "Change ID",
             "error": {
-                "phoneNumberEmpty" : "Please enter your phone number",
-                "phoneNumberInvalid" : "Please enter a valid phone number",
                 "isoCodeEmpty" : "Please select a country",
                 "authCodeEmpty" : "Please enter the verification code",
                 "authCodeInvalid" : "Please enter a valid verification code",
@@ -42,22 +50,77 @@
                 "passwordEmpty" : "Please enter your password",
                 "passwordShort" : "Password must be at least 8 characters",
                 "passwordLong" : "Password must be less than 20 characters",
-                "passwordInvalid" : "Password must contain letters, numbers, and special characters",
-                "userIDEmpty" : "Please enter your user ID",
-                "userIDInvalid" : "User ID can only contain letters and numbers",
-                "userIDInvalidAlphabet" : "User ID must contain at least 4 lowercase letters",
-                "userIDInvalidAlphabetFirst" : "User ID must start with a letter",
-                "userIDShort" : "User ID must be at least 4 characters",
-                "userIDLong" : "User ID must be less than 20 characters",
-                "userIDExists" : "User ID already exists"
+                "passwordInvalid" : "Password must include letters, numbers, and special characters",
+                "signupFailure": "Failed to sign up"
             },
             "detail" : {
-                "title": "Profile creation"
+                "title": "Profile",
+                "profileImage" : {
+                    "default": "Change to default image",
+                    "fromGallery": "Select from gallery",
+                    "fromCamera": "Take a photo"
+                },
+                "done": "Sign Up",
+                "nickname": "Please enter your nickname",
+                "nicknameValid": "Available nickname",
+                "gender": {
+                    "title": "Please select your gender",
+                    "private": "Private",
+                    "man": "Man",
+                    "woman" : "Woman",
+                    "other" : "Other"
+                },
+                "birth": "Please enter your birthdate",
+                "error": {
+                    "nicknameEmpty" : "Please enter your nickname",
+                    "nicknameShort" : "Nickname must be at least 2 characters",
+                    "nicknameLong" : "Nickname must be less than 20 characters",
+                    "nicknameInvalid" : "Invalid nickname"
+                }
             }
         },
         "skip": "Skip"
     },
     "accessibility": {
-        "hideKeyboard": "Hide keyboard"
+        "hideKeyboardButton": "Hide keyboard button",
+        "hidePasswordFieldButton": "Hide password field button",
+        "showPasswordFieldButton": "Show password field button"
+    },
+    "status" : {
+        "server" : {
+            "error" : "A server error has occurred. Please try again",
+            "online" : "Connected to server",
+            "offline" : "Disconnected from server",
+            "connecting" : "Connecting to server"
+        },
+        "phoneNumber" : {
+            "lengthInvalid" : "Please enter a phone number between 5 and 15 digits",
+            "invalid" : "Invalid phone number",
+            "countryCodeEmpty" : "Please enter the country code",
+            "available" : "Available phone number",
+            "notAvailable" : "Phone number already in use",
+            "valid" : "Valid phone number format",
+            "empty" : "Please enter your phone number"
+        },
+        "userID" : {
+            "empty" :"Please enter your ID",
+            "validForSignUp" : "Available ID",
+            "validForSignIn" : "Valid ID format",
+            "invalid" : "ID can only contain letters and numbers",
+            "invalidAlphabet" : "ID must contain at least 4 lowercase letters",
+            "invalidAlphabetFirst" : "ID must start with a letter",
+            "alphabetFirst" : "ID must start with a letter",
+            "short" : "ID must be at least 4 characters",
+            "long" : "ID must be less than 20 characters",
+            "exists" : "ID already in use",
+            "notAvailable" : "Unavailable ID"
+        },
+        "gender" : {
+            "title" : "Please select your gender",
+            "man" : "Man",
+            "woman" : "Woman",
+            "other" : "Other",
+            "private" : "Private"
+        }
     }
 }

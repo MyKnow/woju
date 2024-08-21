@@ -6,9 +6,19 @@
             "3": "자기 전, 낯선 이와 이야기를 나눠보세요"
         },
         "startWithPhoneNumber": "전화번호로 시작하기",
-        "signIn": "로그인",
+        "signIn": {
+            "title": "로그인",
+            "signInWithPhoneNumber" : "전화번호로 로그인",
+            "signInWithID" : "아이디로 로그인",
+            "inputUserID": "아이디를 입력해주세요",
+            "inputPhoneNumber": "전화번호를 입력해주세요",
+            "inputPassword": "비밀번호를 입력해주세요",
+            "forgotPassword": "비밀번호를 잊으셨나요?",
+            "signIn": "로그인"
+        },
         "signUp" : {
             "title": "회원가입",
+            "signin" : "이미 계정이 있으신가요?",
             "phoneNumber": "전화번호를 입력해주세요",
             "phoneNumberVerified" : "인증 완료",
             "phoneNumberAvailable" : "사용 가능한 전화번호입니다",
@@ -30,8 +40,6 @@
             "userIDAvailableSimple": "사용 가능",
             "modifyUserID": "아이디 변경",
             "error": {
-                "phoneNumberEmpty" : "전화번호를 입력해주세요",
-                "phoneNumberInvalid" : "올바른 전화번호를 입력해주세요",
                 "isoCodeEmpty" : "국가를 선택해주세요",
                 "authCodeEmpty" : "인증번호를 입력해주세요",
                 "authCodeInvalid" : "올바른 인증번호를 입력해주세요",
@@ -43,21 +51,76 @@
                 "passwordShort" : "비밀번호는 8자 이상으로 입력해주세요",
                 "passwordLong" : "비밀번호는 20자 이하로 입력해주세요",
                 "passwordInvalid" : "비밀번호는 영문, 숫자, 특수문자를 포함해야 합니다",
-                "userIDEmpty" : "아이디를 입력해주세요",
-                "userIDInvalid" : "아이디는 영문, 숫자만 사용할 수 있습니다",
-                "userIDInvalidAlphabet" : "아이디는 영문 소문자가 4자 이상 포함되어야 합니다",
-                "userIDInvalidAlphabetFirst" : "아이디는 영문으로 시작해야 합니다",
-                "userIDShort" : "아이디는 4자 이상이어야 합니다",
-                "userIDLong" : "아이디는 20자 이하로 입력해주세요",
-                "userIDExists" : "이미 사용중인 아이디입니다"
+                "signupFailure": "회원가입에 실패했습니다"
             },
             "detail" : {
-                "title": "프로필 작성"
+                "title": "프로필 작성",
+                "profileImage" : {
+                    "default": "기본 이미지로 변경",
+                    "fromGallery": "갤러리에서 선택",
+                    "fromCamera": "카메라로 촬영"
+                },
+                "done": "회원가입",
+                "nickname": "닉네임을 입력해주세요",
+                "nicknameValid": "사용 가능한 닉네임입니다",
+                "gender": {
+                    "title": "성별을 선택해주세요",
+                    "private": "비공개",
+                    "man": "남성",
+                    "woman" : "여성",
+                    "other" : "기타"
+                },
+                "birth": "생년월일을 입력해주세요",
+                "error": {
+                    "nicknameEmpty" : "닉네임을 입력해주세요",
+                    "nicknameShort" : "닉네임은 2자 이상으로 입력해주세요",
+                    "nicknameLong" : "닉네임은 20자 이하로 입력해주세요",
+                    "nicknameInvalid" : "사용 불가능한 닉네임입니다"
+                }
             }
         },
         "skip": "건너뛰기"
     },
     "accessibility": {
-        "hideKeyboard": "키보드 숨기기"
+        "hideKeyboardButton": "키보드 숨기기 버튼",
+        "hidePasswordFieldButton": "비밀번호 숨기기 버튼",
+        "showPasswordFieldButton": "비밀번호 보이기 버튼"
+    },
+    "status" : {
+        "server" : {
+            "error" : "서버 오류가 발생했습니다. 다시 시도해주세요",
+            "online" : "서버와 연결되었습니다",
+            "offline" : "서버와 연결이 끊어졌습니다",
+            "connecting" : "서버와 연결 중"
+        },
+        "phoneNumber" : {
+            "lengthInvalid" : "전화번호는 5~15자리로 입력해주세요",
+            "invalid" : "사용할 수 없는 전화번호입니다",
+            "countryCodeEmpty" : "국가 코드를 입력해주세요",
+            "available" : "사용 가능한 전화번호입니다",
+            "notAvailable" : "이미 사용중인 전화번호입니다",
+            "valid" : "올바른 전화번호 형식입니다",
+            "empty" : "전화번호를 입력해주세요"
+        },
+        "userID" : {
+            "empty" :"아이디를 입력해주세요",
+            "validForSignUp" : "사용 가능한 아이디입니다",
+            "validForSignIn" : "올바른 형식의 아이디입니다",
+            "invalid" : "아이디는 영문, 숫자만 사용할 수 있습니다",
+            "invalidAlphabet" : "아이디는 영문 소문자가 4자 이상 포함되어야 합니다",
+            "invalidAlphabetFirst" : "아이디는 영문으로 시작해야 합니다",
+            "alphabetFirst" : "아이디는 영문으로 시작해야 합니다",
+            "short" : "아이디는 4자 이상이어야 합니다",
+            "long" : "아이디는 20자 이하로 입력해주세요",
+            "exists" : "이미 사용중인 아이디입니다",
+            "notAvailable" : "사용할 수 없는 아이디입니다"
+        },
+        "gender" : {
+            "title" : "성별을 선택해주세요",
+            "man" : "남성",
+            "woman" : "여성",
+            "other" : "기타",
+            "private" : "비공개"
+        }
     }
 }

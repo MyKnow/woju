@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:woju/service/debug_service.dart';
 
 class HttpService {
   static String baseUrl = dotenv.env['API_URL'] ?? '';
@@ -20,10 +19,8 @@ class HttpService {
       body: jsonEncode(body),
     );
 
-    if (response.statusCode != 200) {
-      printd("statusCode: ${response.statusCode}");
-      throw Exception('Failed to load data');
-    }
+    // connection failed 대비
+
     return response;
   }
 
@@ -34,10 +31,7 @@ class HttpService {
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
-    if (response.statusCode != 200) {
-      printd("statusCode: ${response.statusCode}");
-      throw Exception('Failed to load data');
-    }
+
     return response;
   }
 }

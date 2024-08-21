@@ -5,11 +5,17 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:woju/model/onboarding/sign_up_model.dart';
+import 'package:woju/model/server_state_model.dart';
+import 'package:woju/model/user/user_gender_model.dart';
+import 'package:woju/model/user/user_id_model.dart';
+import 'package:woju/model/user/user_phone_model.dart';
 import 'package:woju/provider/onboarding/onboarding_state_notifier.dart';
 import 'package:woju/service/debug_service.dart';
+import 'package:woju/service/device_info_service.dart';
 import 'package:woju/service/http_service.dart';
 import 'package:woju/service/image_picker_service.dart';
 import 'package:woju/service/toast_message_service.dart';
@@ -42,15 +48,20 @@ class SignUpStateNotifier extends StateNotifier<SignUpModel> {
     state = state.copyWith(phoneNumber: phoneNumber);
   }
 
-  void updateIsoCode(String isoCode) {
-    state = state.copyWith(isoCode: isoCode);
+  void updatePhoneNumberAvailable(bool? isPhoneNumberValid) {
+    if (isPhoneNumberValid == null) {
+      printd("isPhoneNumberValid is null");
+      state = state.copyWith(isPhoneNumberAvailableSetToDefault: true);
+      return;
+    }
+    state = state.copyWith(isPhoneNumberAvailable: isPhoneNumberValid);
   }
 
-  void updateDialCode(String dialCode) {
-    state = state.copyWith(dialCode: dialCode);
+  void updateCountryCode(String isoCode, String dialCode) {
+    state = state.copyWith(isoCode: isoCode, dialCode: dialCode);
   }
 
-  void updateError(SignUpError? error) {
+  void updateError(String? error) {
     state = state.copyWith(error: error);
   }
 
@@ -60,10 +71,6 @@ class SignUpStateNotifier extends StateNotifier<SignUpModel> {
 
   void updateResendToken(int? resendToken) {
     state = state.copyWith(resendToken: resendToken);
-  }
-
-  void updatePhoneNumberValid(bool isPhoneNumberValid) {
-    state = state.copyWith(isPhoneNumberValid: isPhoneNumberValid);
   }
 
   void updateAuthCompleted(bool authCompleted) {
@@ -108,12 +115,18 @@ class SignUpStateNotifier extends StateNotifier<SignUpModel> {
     state = state.copyWith(profileImage: profileImage);
   }
 
-  void updateGender(bool gender) {
+  void updateGender(Gender gender) {
     state = state.copyWith(gender: gender);
   }
 
-  void updateNickNameValid(bool isNickNameValid) {
-    state = state.copyWith(isUserNickNameValid: isNickNameValid);
+  void updateBirthDate(DateTime? birthDate) {
+    state = state.copyWith(birthDate: birthDate);
+  }
+
+  /// ### 에러 상태 초기화 메서드
+  ///
+  void errorReset() {
+    updateError(null);
   }
 
   SignUpModel get getSignUpModel => state;
@@ -145,31 +158,26 @@ extension SignUpAction on SignUpStateNotifier {
 
       printd("countryCode: $code, dialCode: $dialCode");
 
-      updateIsoCode(code);
-
-      updateDialCode(dialCode);
+      updateCountryCode(code, dialCode);
     };
   }
 
   /// ### 전화번호로 인증번호를 전송하는 메서드
   ///
-  /// - [PhoneNumber]을 통해 전화번호를 가져와 인증번호를 전송한다.
-  ///
-  /// #### Parameters
-  ///
-  /// [PhoneNumber] phoneNumberDetail: 전화번호 정보
+  /// - State에서 [getPhoneNumberWithFormat]을 통해 전화번호를 가져와 인증번호를 전송한다.
   ///
   Future<void> verifyPhoneNumber() async {
-    final nowPhoneNumber = getPhoneNumberWithoutHyphen();
-    final nowDialCode = getSignUpModel.dialCode;
-    if (nowPhoneNumber.isEmpty) {
+    final nowPhoneNumber =
+        getSignUpModel.userPhoneModel.getPhoneNumberWithFormat();
+    final nowDialCode = getSignUpModel.userPhoneModel.dialCode;
+    if (nowPhoneNumber == null || nowPhoneNumber.isEmpty) {
       printd("전화번호 입력 필요");
-      updateError(SignUpError.phoneNumberEmpty);
+      updateError(PhoneNumberStatus.phoneNumberLengthInvalid.toMessage);
       return;
     }
     if (nowDialCode.isEmpty) {
       printd("국가 코드 입력 필요");
-      updateError(SignUpError.isoCodeEmpty);
+      updateError(PhoneNumberStatus.countrycodeEmpty.toMessage);
       return;
     }
 
@@ -186,17 +194,18 @@ extension SignUpAction on SignUpStateNotifier {
       verificationFailed: (FirebaseAuthException e) {
         if (e.code == 'invalid-phone-number') {
           printd('전화번호 형식이 잘못되었습니다.');
-          updateError(SignUpError.phoneNumberInvalid);
+          updateError(PhoneNumberStatus.phoneNumberInvalid.toMessage);
           showToastMessage();
           return;
         }
         printd('인증 실패: ${e.message}');
-        updateError(SignUpError.authCodeNotSent);
+        updateError(SignUpError.authCodeNotSent.toMessage);
         showToastMessage();
       },
       codeSent: (String verificationId, int? resendToken) {
         printd('인증번호 전송됨');
         updateAuthCodeSent(true);
+        updatePhoneNumber(nowPhoneNumber);
         printd("verificationId: $verificationId");
         printd("resendToken: $resendToken");
         updateVerificationId(verificationId);
@@ -205,17 +214,11 @@ extension SignUpAction on SignUpStateNotifier {
       },
       codeAutoRetrievalTimeout: (String verificationId) {
         printd('인증번호 입력 시간 초과');
-        updateError(SignUpError.authCodeTimeout);
+        updateError(SignUpError.authCodeTimeout.toMessage);
         showToastMessage();
       },
       forceResendingToken: getSignUpModel.resendToken,
     );
-  }
-
-  /// ### 에러 상태 초기화 메서드
-  ///
-  void errorReset() {
-    updateError(null);
   }
 
   /// ### 인증번호 확인 메서드
@@ -232,11 +235,10 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   Future<bool> verifyAuthCode() async {
     final String authCode = getSignUpModel.authCode ?? "";
-    final String phoneNumber = getPhoneNumberWithoutHyphen(); // 전화번호에 - 제거
     printd("verifyAuthCode: $authCode");
     if (authCode.isEmpty) {
       printd("인증번호 입력 필요");
-      updateError(SignUpError.authCodeEmpty);
+      updateError(SignUpError.authCodeEmpty.toMessage);
       showToastMessage();
       return false;
     }
@@ -252,10 +254,10 @@ extension SignUpAction on SignUpStateNotifier {
       printd("인증 성공: ${result.user?.phoneNumber}");
 
       // 백엔드로 인증 정보 전송하여 가입 유무 확인
-      return checkSignUp(phoneNumber, result.user?.uid ?? "");
+      return checkSignUp();
     } catch (e) {
       printd("인증 실패: $e");
-      updateError(SignUpError.authCodeInvalid);
+      updateError(SignUpError.authCodeInvalid.toMessage);
       showToastMessage();
       return false;
     }
@@ -301,7 +303,8 @@ extension SignUpAction on SignUpStateNotifier {
   /// Function: 인증번호 전송 메서드
   ///
   VoidCallback? sendAuthCodeButton() {
-    if (!getSignUpModel.isPhoneNumberValid || getSignUpModel.authCodeSent) {
+    if (!getSignUpModel.userPhoneModel.isPhoneNumberValid ||
+        getSignUpModel.authCodeSent) {
       return null;
     }
     return () {
@@ -319,7 +322,7 @@ extension SignUpAction on SignUpStateNotifier {
   /// Function: Toast 메시지 출력 메서드
   ///
   void showToastMessage() {
-    final String? errorMessage = getSignUpModel.error?.message;
+    final String? errorMessage = getSignUpModel.error;
     if (errorMessage != null) {
       ToastMessageService.show(errorMessage.tr());
     }
@@ -364,10 +367,11 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   /// [bool] 회원가입 여부
   ///
-  Future<bool> checkSignUp(String? phoneNumber, String? verificationID) async {
+  Future<bool> checkSignUp() async {
     final json = {
-      "userVerificationID": verificationID,
-      "userPhoneNumber": phoneNumber,
+      "userDeviceID": await DeviceInfoService.getDeviceId(),
+      "userPhoneNumber": getSignUpModel.userPhoneModel.phoneNumber,
+      "dialCode": getSignUpModel.userPhoneModel.dialCode,
     };
 
     // 백엔드로 전화번호 및 uid 전송
@@ -379,24 +383,35 @@ extension SignUpAction on SignUpStateNotifier {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        if (data["exist"] == true) {
+        if (data["isAvailable"] == false) {
           printd("회원가입된 사용자");
-          updateError(SignUpError.alreadySignedUp);
+          updatePhoneNumberAvailable(false);
+          updateError(PhoneNumberStatus.phoneNumberNotAvailable.toMessage);
           showToastMessage();
           return false;
         } else {
           printd("회원가입되지 않은 사용자");
+          updatePhoneNumberAvailable(true);
           return true;
         }
+      } else if (response.statusCode == 400) {
+        printd("이미 가입된 사용자");
+        updatePhoneNumberAvailable(false);
+        updateError(PhoneNumberStatus.phoneNumberNotAvailable.toMessage);
+        showToastMessage();
+        changePhoneNumber();
+        return false;
       } else {
-        printd("회원가입 여부 확인 실패");
-        updateError(SignUpError.serverError);
+        printd("회원가입 여부 확인 실패 : ${response.statusCode}");
+        updatePhoneNumberAvailable(null);
+        updateError(ServerStatus.error.toMessage);
         showToastMessage();
         return false;
       }
     } catch (e) {
       printd("회원가입 여부 확인 실패 (json Error): $e");
-      updateError(SignUpError.serverError);
+      updatePhoneNumberAvailable(null);
+      updateError(ServerStatus.error.toMessage);
       showToastMessage();
       return false;
     }
@@ -417,8 +432,8 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   VoidCallback? nextButton(BuildContext context) {
     if (!getSignUpModel.authCompleted ||
-        !getSignUpModel.isIDAvailable ||
-        !getSignUpModel.isPasswordAvailable) {
+        !getSignUpModel.userIDModel.isIDAvailable ||
+        !getSignUpModel.userPasswordModel.isPasswordAvailable) {
       return null;
     }
     return () {
@@ -427,43 +442,6 @@ extension SignUpAction on SignUpStateNotifier {
           .read(onboardingStateProvider.notifier)
           .pushRouteSignUpDetailPage(context);
     };
-  }
-
-  /// ### 전화번호에 -를 제거하여 String 반환하는 메서드
-  ///
-  /// 전화번호에 -를 제거하여 String을 반환한다.
-  ///
-  /// #### Returns
-  ///
-  /// [String] 전화번호
-  ///
-  String getPhoneNumberWithoutHyphen() {
-    final phoneNumber = getSignUpModel.phoneNumber;
-    return phoneNumber.replaceAll("-", "");
-  }
-
-  /// ### 전화번호 입력 필드 Validation 메서드
-  ///
-  /// 전화번호 입력 필드의 Validation을 진행한다.
-  ///
-  /// #### Parameters
-  ///
-  /// [String] phoneNumber: 전화번호
-  ///
-  /// #### Returns
-  ///
-  /// [String?] 에러 메시지
-  ///
-  /// - 에러가 없으면 null 반환
-  ///
-  String? phoneNumberValidation(String? phoneNumber) {
-    if (phoneNumber == null || phoneNumber.isEmpty) {
-      return SignUpError.phoneNumberEmpty.message.tr();
-    } else if (phoneNumber.length < 5 || phoneNumber.length > 15) {
-      return SignUpError.phoneNumberInvalid.message.tr();
-    } else {
-      return null;
-    }
   }
 
   /// ### 전화번호 입력 필드 메서드
@@ -477,101 +455,6 @@ extension SignUpAction on SignUpStateNotifier {
   void phoneNumberOnChange(String phoneNumber) {
     printd("updatePhoneNumber: $phoneNumber");
     updatePhoneNumber(phoneNumber);
-    final String? error = phoneNumberValidation(phoneNumber);
-
-    if (error == null) {
-      updatePhoneNumberValid(true);
-    } else {
-      updatePhoneNumberValid(false);
-    }
-  }
-
-  /// ### 유저 ID 입력 필드 Validation 메서드
-  ///
-  /// - 유저 ID 입력 필드의 Validation을 진행한다.
-  ///
-  /// #### Parameters
-  ///
-  /// - [String] userID: 유저 ID
-  ///
-  /// #### Returns
-  ///
-  /// - [String?] 에러 메시지
-  ///
-  /// - 에러가 없으면 null 반환
-  ///
-  String? userIDValidation(String? userID) {
-    String? isError;
-    if (userID == null || userID.isEmpty) {
-      isError = SignUpError.userIDEmpty.message.tr();
-    } else if (userID.length < 4) {
-      isError = SignUpError.userIDShort.message.tr();
-    } else if (userID.length > 20) {
-      isError = SignUpError.userIDLong.message.tr();
-    }
-
-    // 소문자가 제일 앞에 위치해야 함
-    if (RegExp(r'^[a-z]').firstMatch(userID ?? "")?.start != 0) {
-      isError = SignUpError.userIDAlphabetFirst.message.tr();
-    }
-    // 소문자, 숫자만 입력 가능
-    if (!RegExp(r'^[a-z0-9]*$').hasMatch(userID ?? "")) {
-      isError = SignUpError.userIDInvalid.message.tr();
-    }
-    // 소문자가 4개 이상 포함되어야 함
-    if (RegExp(r'[a-z]').allMatches(userID ?? "").length < 4) {
-      isError = SignUpError.userIDInvalidAlphabet.message.tr();
-    }
-
-    // 유효성 검사 통과
-    return isError;
-  }
-
-  /// ### ID 사용 가능 여부 메서드
-  ///
-  /// - 사용자가 입력한 ID가 중복되는지 서버의 DB와 비교하여 확인한다.
-  ///
-  /// #### Returns
-  ///
-  /// - [bool] ID 사용 가능 여부
-  ///
-  /// - 사용 가능하면 true, 중복되면 false 반환
-  ///
-  Future<bool> checkAvailableID() async {
-    final json = {
-      "userID": getSignUpModel.userID,
-      "userUID": getSignUpModel.userUid,
-    };
-
-    // 백엔드로 ID 전송
-    try {
-      final response =
-          await HttpService.post("/user/check-userid-available", json);
-
-      printd("checkDuplicateID: ${response.statusCode}");
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        if (data["isAvailable"] == true) {
-          printd("사용 가능한 ID");
-          return true;
-        } else {
-          printd("사용 불가능한 ID");
-          updateError(SignUpError.userIDNotAvailable);
-          showToastMessage();
-          return false;
-        }
-      } else {
-        printd("ID 중복 여부 확인 실패");
-        updateError(SignUpError.serverError);
-        return false;
-      }
-    } catch (e) {
-      printd("ID 중복 여부 확인 실패 (json Error): $e");
-      updateError(SignUpError.serverError);
-      showToastMessage();
-      return false;
-    }
   }
 
   /// ### 중복 ID 확인 메서드 버튼 활성화 여부 메서드
@@ -583,27 +466,34 @@ extension SignUpAction on SignUpStateNotifier {
   /// Function: 중복 ID 확인 메서드
   ///
   VoidCallback? checkAvailableIDButton() {
-    if (getSignUpModel.isIDAvailable) {
+    if (getSignUpModel.userIDModel.isIDAvailable) {
+      printd("isIDAvailable: ${getSignUpModel.userIDModel.isIDAvailable}");
       return null;
     }
 
-    if (userIDValidation(getSignUpModel.userID) != null) {
+    if (UserIDModel.validateID(getSignUpModel.userIDModel.userID) !=
+        UserIDStatus.userIDValid) {
+      printd(
+          "validateID: ${UserIDModel.validateID(getSignUpModel.userIDModel.userID)}");
       return null;
     }
 
     if (getSignUpModel.userUid == null || getSignUpModel.userUid!.isEmpty) {
+      printd("userUid is null");
       return null;
     }
 
     return () async {
       printd("checkAvailableIDButton");
-      final bool isAvailable = await checkAvailableID();
-      if (isAvailable) {
+      final isAvailable = await UserIDModel.checkAvailableID(
+          getSignUpModel.userIDModel.userID, getSignUpModel.userUid);
+
+      if (isAvailable == UserIDStatus.userIDAvailable) {
         updateIDAvailable(true);
         ref.read(signUpAuthFocusProvider.notifier).requestFocusUserPassword();
       } else {
         updateIDAvailable(false);
-        updateError(SignUpError.userIDNotAvailable);
+        updateError(UserIDStatus.userIDNotAvailable.toMessage);
         showToastMessage();
         ref.read(signUpAuthFocusProvider.notifier).requestFocusUserID();
       }
@@ -615,40 +505,9 @@ extension SignUpAction on SignUpStateNotifier {
   /// 사용자가 ID를 변경하기 위해 버튼을 누르면 실행된다.
   ///
   void modifyIDButton() {
-    printd("isIDAvailable: ${getSignUpModel.isIDAvailable}");
+    printd("isIDAvailable: ${getSignUpModel.userIDModel.isIDAvailable}");
 
     updateIDAvailable(false);
-  }
-
-  /// ### 비밀번호 입력 필드 Validation 메서드
-  ///
-  /// - 비밀번호 입력 필드의 Validation을 진행한다.
-  ///
-  /// #### Returns
-  ///
-  /// - [String?] 에러 메시지
-  ///
-  /// - 에러가 없으면 null 반환
-  ///
-  String? passwordValidation(String? password) {
-    String? isError;
-    if (password == null || password.isEmpty) {
-      isError = SignUpError.passwordEmpty.message.tr();
-    } else if (password.length < 8) {
-      isError = SignUpError.passwordShort.message.tr();
-    } else if (password.length > 30) {
-      isError = SignUpError.passwordLong.message.tr();
-    }
-
-    // 비밀번호는 대문자 또는 소문자, 그리고 숫자와 특수문자를 포함해야 함
-    if (!RegExp(
-            r'^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,30}$')
-        .hasMatch(password ?? "")) {
-      isError = SignUpError.passwordInvalid.message.tr();
-    }
-
-    // 유효성 검사 통과
-    return isError;
   }
 
   /// ### 비밀번호 가시성 변경 메서드
@@ -657,7 +516,7 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   void changePasswordVisibilityButton() {
     printd("changePasswordVisibility");
-    updatePasswordVisible(!getSignUpModel.isPasswordVisible);
+    updatePasswordVisible(!getSignUpModel.userPasswordModel.isPasswordVisible);
   }
 
   /// ### 비밀번호 입력 필드 메서드
@@ -671,13 +530,6 @@ extension SignUpAction on SignUpStateNotifier {
   void passwordOnChange(String password) {
     printd("updatePassword: $password");
     updatePassword(password);
-    final String? error = passwordValidation(password);
-
-    if (error == null) {
-      updatePasswordAvailable(true);
-    } else {
-      updatePasswordAvailable(false);
-    }
   }
 }
 
@@ -714,6 +566,152 @@ extension SignUpUserInfoAction on SignUpStateNotifier {
       updateProfileImage(image);
     }
   }
+
+  /// ### 닉네임 입력 필드 메서드
+  ///
+  /// - 사용자가 닉네임을 입력할 때마다 실행된다.
+  ///
+  /// #### Parameters
+  ///
+  /// - [String] nickName: 닉네임
+  ///
+  void nickNameOnChange(String nickName) {
+    printd("updateNickName: $nickName");
+    updateNickName(nickName);
+  }
+
+  /// ### 완료 버튼 활성화 여부 확인 메서드
+  ///
+  /// - 회원가입 페이지에서 완료 버튼을 누를 수 있는 지 확인하고, 확인을 진행한다.
+  ///
+  /// #### Returns
+  ///
+  /// - [VoidCallback] 완료 버튼 활성화 여부 확인 메서드
+  ///
+  /// - 완료 버튼을 누를 수 있으면 로그인 페이지로 이동한다.
+  ///
+  VoidCallback? completeButton(BuildContext context) {
+    if (!getSignUpModel.userPhoneModel.isPhoneNumberValid ||
+        getSignUpModel.userPhoneModel.dialCode.isEmpty ||
+        getSignUpModel.userUid == null ||
+        !getSignUpModel.userIDModel.isIDAvailable ||
+        !getSignUpModel.userPasswordModel.isPasswordAvailable ||
+        !getSignUpModel.userNickNameModel.isNicknameValid) {
+      return null;
+    }
+    return () async {
+      printd("completeButton");
+
+      final result = await signUp();
+
+      if (result != null) {
+        updateError(result.toMessage);
+        showToastMessage();
+        return;
+      }
+
+      // signup에 사용한 provider를 모두 dispose
+      ref.read(signUpStateProvider.notifier).dispose();
+      ref.read(signUpAuthFocusProvider.notifier).dispose();
+
+      if (context.mounted) {
+        context.go('/signin');
+      }
+    };
+  }
+
+  /// ### 완료 시 서버로 회원가입 정보 전송 메서드
+  ///
+  /// - 회원가입 정보를 서버로 전송한다.
+  ///
+  /// #### Returns
+  ///
+  /// - [SignUpError?] 에러 메시지
+  ///
+  /// - 회원가입 성공 시 null, 실패 시 에러 메시지 반환
+  ///
+  Future<SignUpError?> signUp() async {
+    final json = {
+      "userDeviceID": await DeviceInfoService.getDeviceId(),
+      "userUID": getSignUpModel.userUid,
+      "userPhoneNumber":
+          getSignUpModel.userPhoneModel.getPhoneNumberWithFormat(),
+      "dialCode": getSignUpModel.userPhoneModel.dialCode,
+      "userID": getSignUpModel.userIDModel.userID,
+      "userPassword": getSignUpModel.userPasswordModel.userPassword,
+      "userProfileImage": await getSignUpModel.profileImage?.readAsBytes(),
+      "userNickName": getSignUpModel.userNickNameModel.nickname,
+      "userGender": getSignUpModel.gender.value,
+      "userBirthDate": getSignUpModel.birthDate.toIso8601String(),
+    };
+
+    // 백엔드로 회원가입 정보 전송
+    try {
+      final response = await HttpService.post("/user/signup", json);
+
+      printd("signUp: ${response.statusCode}");
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data["isSuccess"] == true) {
+          printd("회원가입 성공");
+          return null;
+        } else {
+          printd("회원가입 실패");
+          return SignUpError.signUpFailure;
+        }
+      } else {
+        printd("회원가입 실패 : ${response.statusCode}");
+
+        if (response.statusCode == 400) {
+          return SignUpError.signUpFailure;
+        } else {
+          return SignUpError.serverError;
+        }
+      }
+    } catch (e) {
+      printd("회원가입 실패 (json Error): $e");
+      return SignUpError.serverError;
+    }
+  }
+
+  /// ### 회원가입 페이지의 성별 선택 메서드
+  ///
+  /// - 사용자가 성별을 선택할 때마다 실행된다.
+  ///
+  /// #### Parameters
+  ///
+  /// [int] 성별: 0 - 비공개, 1 - 남성, 2 - 여성, 3 - 기타
+  ///
+  /// #### Returns
+  ///
+  /// [VoidCallback] 성별 선택 메서드
+  ///
+  void genderSelect(Gender? gender) {
+    if (gender == null) {
+      return;
+    }
+    printd("Gender: $gender");
+    updateGender(gender);
+  }
+
+  /// ### 생년월일 선택 메서드
+  ///
+  /// - 사용자가 생년월일을 선택할 때마다 실행된다.
+  ///
+  /// #### Parameters
+  ///
+  /// - [DateTime] birthDate: 생년월일
+  ///
+  /// #### Returns
+  ///
+  /// - [VoidCallback] 생년월일 선택 메서드
+  ///
+  void birthDateSelect(DateTime birthDate) {
+    printd("birthDate: $birthDate");
+    updateBirthDate(birthDate);
+    printd("birthDate: ${getSignUpModel.birthDate}");
+  }
 }
 
 /// ### 회원가입 페이지의 포커스 상태 Provider
@@ -731,7 +729,8 @@ final signUpAuthFocusProvider =
 ///
 class SignUpAuthFocusNotifier extends StateNotifier<List<FocusNode>> {
   SignUpAuthFocusNotifier()
-      : super([FocusNode(), FocusNode(), FocusNode(), FocusNode()]);
+      : super(
+            [FocusNode(), FocusNode(), FocusNode(), FocusNode(), FocusNode()]);
 
   void requestFocusPhoneNumber() {
     state[0].requestFocus();
@@ -749,6 +748,10 @@ class SignUpAuthFocusNotifier extends StateNotifier<List<FocusNode>> {
     state[3].requestFocus();
   }
 
+  void requestFocusNickName() {
+    state[4].requestFocus();
+  }
+
   void unfocusPhoneNumber() {
     state[0].unfocus();
   }
@@ -763,5 +766,9 @@ class SignUpAuthFocusNotifier extends StateNotifier<List<FocusNode>> {
 
   void unfocusUserPassword() {
     state[3].unfocus();
+  }
+
+  void unfocusNickName() {
+    state[4].unfocus();
   }
 }

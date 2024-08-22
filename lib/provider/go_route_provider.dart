@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:woju/model/onboarding/sign_in_model.dart';
+import 'package:woju/page/home/home_page.dart';
 
 import 'package:woju/page/onboarding/onboarding_page.dart';
 import 'package:woju/page/onboarding/signin_page.dart';
 import 'package:woju/page/onboarding/signup_page.dart';
 import 'package:woju/page/onboarding/signup_userinfo_page.dart';
-import 'package:woju/provider/onboarding/onboarding_state_notifier.dart';
+import 'package:woju/provider/app_state_notifier.dart';
 import 'package:woju/service/debug_service.dart';
 
 class RouterObserver extends NavigatorObserver {
@@ -35,7 +37,8 @@ class RouterObserver extends NavigatorObserver {
 }
 
 final goRouterProvider = Provider<GoRouter>((ref) {
-  final onboardingState = ref.watch(onboardingStateProvider);
+  final signInStatus =
+      ref.watch(appStateProvider.select((state) => state.signInStatus));
   return GoRouter(
     initialLocation: '/',
     observers: [RouterObserver()],
@@ -51,15 +54,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       printd("Current Path: $nowPath");
 
       // 로그인 상태가 아닐 때
-      if (!onboardingState.isSignIn) {
+      if (signInStatus != SignInStatus.loginSuccess) {
         // 온보딩 하위 경로에 있지 않다면 온보딩으로 리다이렉트
         if (!nowPath.contains('/onboarding')) {
           return '/onboarding';
         }
-      }
-
-      // 로그인 상태일 때
-      if (onboardingState.isSignIn) {
+      } else {
         // 온보딩 하위 경로에 있다면 홈으로 리다이렉트
         if (nowPath.contains('/onboarding')) {
           return '/';
@@ -72,15 +72,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       _buildNoTransitionRoute(
         path: '/',
         builder: (context, state) {
-          return Scaffold(
-            body: Center(
-              child: ElevatedButton(
-                  onPressed: () {
-                    ref.read(onboardingStateProvider.notifier).delete();
-                  },
-                  child: Text("Delete Onboarding State")),
-            ),
-          );
+          return HomePage();
         },
         text: '홈',
       ),

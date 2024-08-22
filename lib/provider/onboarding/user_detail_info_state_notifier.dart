@@ -49,7 +49,6 @@ class UserDetailInfoStateNotifier extends StateNotifier<UserDetailInfoModel?> {
   /// box에서 userDetailInfoState를 불러옵니다.
   ///
   Future<UserDetailInfoModel?> read() async {
-    await Hive.openBox<UserDetailInfoModel>(_boxName);
     state = _box.get(_boxName, defaultValue: null);
 
     return state;

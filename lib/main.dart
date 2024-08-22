@@ -22,6 +22,8 @@ void main() async {
 
   for (var box in HiveBox.values) {
     box.registerAdapter();
+  }
+  for (var box in HiveBox.values) {
     await box.openBox();
   }
 

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_onboarding_slider/flutter_onboarding_slider.dart';
 import 'package:go_router/go_router.dart';
-import 'package:woju/provider/onboarding/onboarding_state_notifier.dart';
+import 'package:woju/provider/app_state_notifier.dart';
 
 class OnboardingPage extends ConsumerWidget {
   const OnboardingPage({super.key});
@@ -19,9 +19,7 @@ class OnboardingPage extends ConsumerWidget {
           backgroundColor: Theme.of(context).primaryColor,
         ),
         onFinish: () {
-          ref
-              .read(onboardingStateProvider.notifier)
-              .pushRouteSignUpPage(context);
+          ref.read(appStateProvider.notifier).pushRouteSignUpPage(context);
         },
         skipTextButton: const Text('onboarding.skip').tr(),
         skipIcon: Icon(CupertinoIcons.arrow_right,

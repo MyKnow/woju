@@ -1,27 +1,14 @@
 enum PasswordStatus {
-  passwordEmpty,
-  passwordShort,
-  passwordLong,
-  passwordInvalid,
-  passwordValid,
+  empty,
+  short,
+  long,
+  invalid,
+  valid,
 }
 
 extension PasswordErrorExtension on PasswordStatus {
   String? get toMessage {
-    switch (this) {
-      case PasswordStatus.passwordEmpty:
-        return "onboarding.signUp.error.passwordEmpty";
-      case PasswordStatus.passwordShort:
-        return "onboarding.signUp.error.passwordShort";
-      case PasswordStatus.passwordLong:
-        return "onboarding.signUp.error.passwordLong";
-      case PasswordStatus.passwordInvalid:
-        return "onboarding.signUp.error.passwordInvalid";
-      case PasswordStatus.passwordValid:
-        return null;
-      default:
-        return null;
-    }
+    return "status.password.${toString().split('.').last}";
   }
 }
 
@@ -39,7 +26,7 @@ class UserPasswordModel {
     this.passwordError,
     this.isPasswordVisible = false,
   }) : isPasswordAvailable =
-            validatePassword(userPassword) == PasswordStatus.passwordValid;
+            validatePassword(userPassword) == PasswordStatus.valid;
 
   UserPasswordModel copyWith({
     String? password,
@@ -55,19 +42,19 @@ class UserPasswordModel {
 
   static PasswordStatus validatePassword(String? password) {
     if (password == null) {
-      return PasswordStatus.passwordEmpty;
+      return PasswordStatus.empty;
     }
 
     if (password.isEmpty) {
-      return PasswordStatus.passwordEmpty;
+      return PasswordStatus.empty;
     } else if (password.length < minLength) {
-      return PasswordStatus.passwordShort;
+      return PasswordStatus.short;
     } else if (password.length > maxLength) {
-      return PasswordStatus.passwordLong;
+      return PasswordStatus.long;
     } else if (!isPasswordValid(password)) {
-      return PasswordStatus.passwordInvalid;
+      return PasswordStatus.invalid;
     }
-    return PasswordStatus.passwordValid;
+    return PasswordStatus.valid;
   }
 
   static bool isPasswordValid(String password) {

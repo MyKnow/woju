@@ -13,7 +13,7 @@ import 'package:woju/model/server_state_model.dart';
 import 'package:woju/model/user/user_gender_model.dart';
 import 'package:woju/model/user/user_id_model.dart';
 import 'package:woju/model/user/user_phone_model.dart';
-import 'package:woju/provider/onboarding/onboarding_state_notifier.dart';
+import 'package:woju/provider/app_state_notifier.dart';
 import 'package:woju/service/debug_service.dart';
 import 'package:woju/service/device_info_service.dart';
 import 'package:woju/service/http_service.dart';
@@ -372,6 +372,7 @@ extension SignUpAction on SignUpStateNotifier {
       "userDeviceID": await DeviceInfoService.getDeviceId(),
       "userPhoneNumber": getSignUpModel.userPhoneModel.phoneNumber,
       "dialCode": getSignUpModel.userPhoneModel.dialCode,
+      "isoCode": getSignUpModel.userPhoneModel.isoCode,
     };
 
     // 백엔드로 전화번호 및 uid 전송
@@ -438,9 +439,7 @@ extension SignUpAction on SignUpStateNotifier {
     }
     return () {
       printd("nextButton");
-      ref
-          .read(onboardingStateProvider.notifier)
-          .pushRouteSignUpDetailPage(context);
+      ref.read(appStateProvider.notifier).pushRouteSignUpDetailPage(context);
     };
   }
 
@@ -593,6 +592,7 @@ extension SignUpUserInfoAction on SignUpStateNotifier {
   VoidCallback? completeButton(BuildContext context) {
     if (!getSignUpModel.userPhoneModel.isPhoneNumberValid ||
         getSignUpModel.userPhoneModel.dialCode.isEmpty ||
+        getSignUpModel.userPhoneModel.isoCode.isEmpty ||
         getSignUpModel.userUid == null ||
         !getSignUpModel.userIDModel.isIDAvailable ||
         !getSignUpModel.userPasswordModel.isPasswordAvailable ||
@@ -610,12 +610,8 @@ extension SignUpUserInfoAction on SignUpStateNotifier {
         return;
       }
 
-      // signup에 사용한 provider를 모두 dispose
-      ref.read(signUpStateProvider.notifier).dispose();
-      ref.read(signUpAuthFocusProvider.notifier).dispose();
-
       if (context.mounted) {
-        context.go('/signin');
+        context.go('/onboarding/signin');
       }
     };
   }
@@ -637,6 +633,7 @@ extension SignUpUserInfoAction on SignUpStateNotifier {
       "userPhoneNumber":
           getSignUpModel.userPhoneModel.getPhoneNumberWithFormat(),
       "dialCode": getSignUpModel.userPhoneModel.dialCode,
+      "isoCode": getSignUpModel.userPhoneModel.isoCode,
       "userID": getSignUpModel.userIDModel.userID,
       "userPassword": getSignUpModel.userPasswordModel.userPassword,
       "userProfileImage": await getSignUpModel.profileImage?.readAsBytes(),

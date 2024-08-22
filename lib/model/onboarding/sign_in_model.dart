@@ -2,20 +2,16 @@ import 'package:woju/model/user/user_id_model.dart';
 import 'package:woju/model/user/user_password_model.dart';
 import 'package:woju/model/user/user_phone_model.dart';
 
-enum SignInError {
-  invalidLoginInfo,
-  invalidUserID,
-  serverError,
+enum SignInStatus {
+  loginFailedForInvalidLoginInfo,
+  loginFailedForServer,
+  loginSuccess,
+  logout,
 }
 
-extension SignInErrorExtension on SignInError {
+extension SignInStatusExtension on SignInStatus {
   String get toMessage {
-    switch (this) {
-      case SignInError.invalidLoginInfo:
-        return "onboarding.signIn.error.invalidLoginInfo";
-      default:
-        return "onboarding.signIn.error.serverError";
-    }
+    return "status.signIn.${toString().split('.').last}";
   }
 }
 
@@ -37,6 +33,7 @@ class SignInModel {
     UserPasswordModel? userPasswordModel,
     UserIDModel? userIDModel,
     bool? loginWithPhoneNumber,
+    SignInStatus? signInStatus,
   }) {
     return SignInModel(
       userPhoneModel: userPhoneModel ?? this.userPhoneModel,

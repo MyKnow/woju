@@ -47,10 +47,6 @@
                 "authCodeNotSent" : "인증번호를 전송할 수 없습니다. 다시 시도해주세요",
                 "serverError" : "서버 오류가 발생했습니다. 다시 시도해주세요",
                 "alreadySignedUp" : "이미 가입된 전화번호입니다.",
-                "passwordEmpty" : "비밀번호를 입력해주세요",
-                "passwordShort" : "비밀번호는 8자 이상으로 입력해주세요",
-                "passwordLong" : "비밀번호는 20자 이하로 입력해주세요",
-                "passwordInvalid" : "비밀번호는 영문, 숫자, 특수문자를 포함해야 합니다",
                 "signupFailure": "회원가입에 실패했습니다"
             },
             "detail" : {
@@ -70,13 +66,7 @@
                     "woman" : "여성",
                     "other" : "기타"
                 },
-                "birth": "생년월일을 입력해주세요",
-                "error": {
-                    "nicknameEmpty" : "닉네임을 입력해주세요",
-                    "nicknameShort" : "닉네임은 2자 이상으로 입력해주세요",
-                    "nicknameLong" : "닉네임은 20자 이하로 입력해주세요",
-                    "nicknameInvalid" : "사용 불가능한 닉네임입니다"
-                }
+                "birth": "생년월일을 입력해주세요"
             }
         },
         "skip": "건너뛰기"
@@ -115,12 +105,32 @@
             "exists" : "이미 사용중인 아이디입니다",
             "notAvailable" : "사용할 수 없는 아이디입니다"
         },
+        "password" : {
+            "empty" : "비밀번호를 입력해주세요",
+            "valid" : "사용 가능한 비밀번호입니다",
+            "invalid" : "비밀번호는 특수문자, 영문, 숫자를 포함해야 합니다",
+            "short" : "비밀번호는 8자 이상으로 입력해주세요",
+            "long" : "비밀번호는 20자 이하로 입력해주세요"
+        },
         "gender" : {
             "title" : "성별을 선택해주세요",
             "man" : "남성",
             "woman" : "여성",
             "other" : "기타",
             "private" : "비공개"
+        },
+        "nickname" : {
+            "title" : "닉네임을 입력해주세요",
+            "empty" : "닉네임을 입력해주세요",
+            "short" : "닉네임은 2자 이상으로 입력해주세요",
+            "long" : "닉네임은 20자 이하로 입력해주세요",
+            "invalid" : "사용 불가능한 닉네임입니다",
+            "valid" : "사용 가능한 닉네임입니다"
+        },
+        "signIn" : {
+            "loginFailedForInvalidLoginInfo" : "아이디 또는 비밀번호가 올바르지 않습니다",
+            "loginFailedForServer" : "로그인에 실패했습니다. 다시 시도해주세요",
+            "loginSuccess" : "로그인에 성공했습니다"
         }
     }
 }

@@ -277,7 +277,7 @@ class SignupUserinfoPage extends ConsumerWidget {
         context,
         ref,
         signUpNotifier.completeButton(context),
-        "onboarding.signUp.detail.complete",
+        "onboarding.signUp.detail.done",
       ),
     );
   }

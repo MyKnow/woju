@@ -1,33 +1,34 @@
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:woju/model/onboarding/sign_in_model.dart';
 
-part 'app_state_model.g.dart';
+enum AppError {
+  none,
+  bootError,
+  autoSignInError,
+}
 
-@HiveType(typeId: 0)
-class OnboardingState {
-  @HiveField(0)
-  final bool isSignIn;
+class AppState {
+  final SignInStatus signInStatus;
+  final bool isBootComplete;
+  final AppError appError;
 
-  @HiveField(1)
-  final bool isAuthCompleted;
-
-  OnboardingState({
-    this.isSignIn = false,
-    required this.isAuthCompleted,
+  AppState({
+    this.signInStatus = SignInStatus.logout,
+    this.isBootComplete = false,
+    this.appError = AppError.none,
   });
 
-  OnboardingState copyWith({
-    bool? isSignIn,
-    bool? isAuthCompleted,
+  AppState copyWith({
+    SignInStatus? isSignIn,
+    bool? isBootComplete,
+    AppError? appError,
   }) {
-    return OnboardingState(
-      isSignIn: isSignIn ?? this.isSignIn,
-      isAuthCompleted: isAuthCompleted ?? this.isAuthCompleted,
+    return AppState(
+      signInStatus: isSignIn ?? this.signInStatus,
+      isBootComplete: isBootComplete ?? this.isBootComplete,
+      appError: appError ?? this.appError,
     );
   }
 
   // default value
-  static OnboardingState get initialState => OnboardingState(
-        isSignIn: false,
-        isAuthCompleted: false,
-      );
+  static AppState get initialState => AppState();
 }

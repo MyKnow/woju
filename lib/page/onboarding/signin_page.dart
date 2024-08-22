@@ -226,7 +226,7 @@ class SignInPage extends ConsumerWidget {
                             final result =
                                 UserPasswordModel.validatePassword(value);
 
-                            if (result != PasswordStatus.passwordValid) {
+                            if (result != PasswordStatus.valid) {
                               return result.toMessage?.tr();
                             }
 

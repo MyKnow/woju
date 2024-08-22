@@ -307,7 +307,7 @@ class SignUpPage extends ConsumerWidget {
                               if (result == UserIDStatus.userIDValid) {
                                 return null;
                               } else {
-                                return result.toMessage;
+                                return result.toMessage.tr();
                               }
                             },
                             autovalidateMode:
@@ -420,7 +420,7 @@ class SignUpPage extends ConsumerWidget {
                           final result = UserPasswordModel.validatePassword(
                               signUp.userPasswordModel.userPassword);
 
-                          if (result == PasswordStatus.passwordValid) {
+                          if (result == PasswordStatus.valid) {
                             return null;
                           } else {
                             return result.toMessage?.tr();

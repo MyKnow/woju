@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:woju/model/app_state_model.dart';
 import 'package:woju/model/onboarding/sign_in_model.dart';
+import 'package:woju/page/error/router_error_page.dart';
 import 'package:woju/page/error/server_error_page.dart';
 import 'package:woju/page/home/home_page.dart';
 
@@ -44,6 +45,9 @@ final goRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/',
     observers: [RouterObserver()],
+    errorPageBuilder: (context, state) {
+      return const NoTransitionPage(child: RouterErrorPage());
+    },
     redirect: (context, state) {
       // 현재 경로가 null이라면 null 반환
       if (state.fullPath == null || state.fullPath == '') {

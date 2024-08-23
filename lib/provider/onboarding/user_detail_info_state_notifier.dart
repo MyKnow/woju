@@ -31,7 +31,7 @@ class UserDetailInfoStateNotifier extends StateNotifier<UserDetailInfoModel?> {
   /// ```dart
   /// ref.read(userDetailInfoStateProvider.notifier).update(newState);
   /// ```
-  void update(UserDetailInfoModel newState) async {
+  Future<void> update(UserDetailInfoModel newState) async {
     await _box.put(_boxName, newState);
     state = newState;
   }
@@ -39,7 +39,7 @@ class UserDetailInfoStateNotifier extends StateNotifier<UserDetailInfoModel?> {
   /// ### 유저 세부 정보 상태를 초기화
   ///
   /// box에서 userDetailInfoState를 삭제하고 상태를 초기화합니다.
-  void delete() async {
+  Future<void> delete() async {
     await _box.delete(_boxName);
     state = null;
   }

@@ -1,10 +1,10 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:woju/model/app_state_model.dart';
 import 'package:woju/model/onboarding/sign_in_model.dart';
+import 'package:woju/page/error/server_error_page.dart';
 import 'package:woju/page/home/home_page.dart';
 
 import 'package:woju/page/onboarding/onboarding_page.dart';
@@ -39,6 +39,8 @@ class RouterObserver extends NavigatorObserver {
 final goRouterProvider = Provider<GoRouter>((ref) {
   final signInStatus =
       ref.watch(appStateProvider.select((state) => state.signInStatus));
+  final errorState =
+      ref.watch(appStateProvider.select((state) => state.appError));
   return GoRouter(
     initialLocation: '/',
     observers: [RouterObserver()],
@@ -52,6 +54,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       final nowPath = state.fullPath as String;
       // 현재 경로
       printd("Current Path: $nowPath");
+
+      if (errorState == AppError.serverError) {
+        return '/error/server';
+      } else if (errorState == AppError.autoSignInError) {
+        return '/onboarding/signin';
+      }
 
       // 로그인 상태가 아닐 때
       if (signInStatus != SignInStatus.loginSuccess) {
@@ -72,7 +80,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       _buildNoTransitionRoute(
         path: '/',
         builder: (context, state) {
-          return HomePage();
+          return const HomePage();
         },
         text: '홈',
       ),
@@ -105,6 +113,26 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               return const SignInPage();
             },
             text: '로그인',
+          ),
+        ],
+      ),
+      _buildNestedRoute(
+        path: '/error',
+        builder: (context, state) {
+          return const Scaffold(
+            body: Center(
+              child: Text('에러 페이지'),
+            ),
+          );
+        },
+        text: '에러',
+        routes: [
+          _buildNoTransitionRoute(
+            path: 'server',
+            builder: (context, state) {
+              return const ServerErrorPage();
+            },
+            text: '서버 에러',
           ),
         ],
       ),

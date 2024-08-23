@@ -1,4 +1,5 @@
 import 'package:image_picker/image_picker.dart';
+import 'package:woju/model/user/user_auth_model.dart';
 import 'package:woju/model/user/user_gender_model.dart';
 import 'package:woju/model/user/user_id_model.dart';
 import 'package:woju/model/user/user_nickname_model.dart';
@@ -41,32 +42,22 @@ class SignUpModel {
   final UserPasswordModel userPasswordModel;
   final UserIDModel userIDModel;
   final UserNicknameModel userNickNameModel;
-  final String? userUid;
+  final UserAuthModel userAuthModel;
   final XFile? profileImage;
   final Gender gender;
   final DateTime birthDate;
-  final String? authCode;
   final String? error;
-  final String? verificationId;
-  final int? resendToken;
-  final bool authCodeSent;
-  final bool authCompleted;
 
   SignUpModel({
     required this.userPhoneModel,
     required this.userPasswordModel,
     required this.userIDModel,
     required this.userNickNameModel,
+    required this.userAuthModel,
     required this.birthDate,
     this.profileImage,
     this.gender = Gender.private,
-    this.authCode,
     this.error,
-    this.verificationId,
-    this.userUid,
-    this.resendToken,
-    this.authCodeSent = false,
-    this.authCompleted = false,
   });
 
   SignUpModel copyWith({
@@ -75,12 +66,7 @@ class SignUpModel {
     String? isoCode,
     bool? isPhoneNumberAvailable,
     bool? isPhoneNumberAvailableSetToDefault,
-    int? resendToken,
-    bool? authCodeSent,
-    bool? authCompleted,
-    String? verificationId,
-    String? userUid,
-    String? authCode,
+    UserAuthModel? userAuthModel,
     String? password,
     bool? isPasswordAvailable,
     bool? isPasswordVisible,
@@ -115,19 +101,14 @@ class SignUpModel {
       userNickNameModel: userNickNameModel.copyWith(
         nickname: userNickName,
       ),
+      userAuthModel: userAuthModel ?? this.userAuthModel,
       profileImage:
           (isProfileImageSetToDefault != null && isProfileImageSetToDefault)
               ? null
               : profileImage ?? this.profileImage,
       gender: gender ?? this.gender,
       birthDate: birthDate ?? this.birthDate,
-      authCode: authCode ?? this.authCode,
       error: error ?? this.error,
-      verificationId: verificationId ?? this.verificationId,
-      userUid: userUid ?? this.userUid,
-      resendToken: resendToken ?? this.resendToken,
-      authCodeSent: authCodeSent ?? this.authCodeSent,
-      authCompleted: authCompleted ?? this.authCompleted,
     );
   }
 
@@ -136,6 +117,7 @@ class SignUpModel {
       userPhoneModel: UserPhoneModel.initial(),
       userPasswordModel: UserPasswordModel.initial(),
       userIDModel: UserIDModel.initial(),
+      userAuthModel: UserAuthModel.initial(),
       userNickNameModel: UserNicknameModel.initial(),
       birthDate: DateTime(2000),
     );

@@ -2,8 +2,9 @@ import 'package:woju/model/onboarding/sign_in_model.dart';
 
 enum AppError {
   none,
-  bootError,
   autoSignInError,
+  bootError,
+  serverError,
 }
 
 class AppState {
@@ -18,12 +19,12 @@ class AppState {
   });
 
   AppState copyWith({
-    SignInStatus? isSignIn,
+    SignInStatus? signInStatus,
     bool? isBootComplete,
     AppError? appError,
   }) {
     return AppState(
-      signInStatus: isSignIn ?? this.signInStatus,
+      signInStatus: signInStatus ?? this.signInStatus,
       isBootComplete: isBootComplete ?? this.isBootComplete,
       appError: appError ?? this.appError,
     );

@@ -1,16 +1,14 @@
-import 'dart:convert';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:woju/model/app_state_model.dart';
 
 import 'package:woju/model/onboarding/sign_in_model.dart';
 import 'package:woju/model/secure_model.dart';
-import 'package:woju/model/user/user_detail_info_model.dart';
 import 'package:woju/provider/app_state_notifier.dart';
 import 'package:woju/provider/onboarding/user_detail_info_state_notifier.dart';
-import 'package:woju/service/http_service.dart';
+import 'package:woju/service/api/sign_in_service.dart';
+import 'package:woju/service/debug_service.dart';
+import 'package:woju/service/api/http_service.dart';
 import 'package:woju/service/secure_storage_service.dart';
 
 final signInStateProvider =
@@ -130,6 +128,7 @@ extension SignInModelExtension on SignInStateNotifier {
   ///
   void phoneNumberOnChange(String phoneNumber) {
     updatePhoneNumber(phoneNumber);
+    printd("phoneNumber: ${getSignInModel.userPhoneModel.phoneNumber}");
   }
 
   /// ### 비밀번호 입력 OnChange 메소드
@@ -192,9 +191,24 @@ extension SignInModelExtension on SignInStateNotifier {
       // 로그인이 가능한 상태가 아니므로 null 반환
       return null;
     }
+
     return () async {
       // 로그인 버튼 클릭 시 호출할 콜백 함수
-      final result = await login();
+      printd("loginButtonOnClick");
+      printd("phoneNumber: ${getSignInModel.userPhoneModel.phoneNumber}");
+      printd("password: ${getSignInModel.userPasswordModel.userPassword}");
+      printd("dialCode: ${getSignInModel.userPhoneModel.dialCode}");
+      printd("isoCode: ${getSignInModel.userPhoneModel.isoCode}");
+      printd("userID: ${getSignInModel.userIDModel.userID}");
+
+      final result = await SignInService.login(
+        getSignInModel.userPhoneModel.phoneNumber,
+        getSignInModel.userPasswordModel.userPassword,
+        getSignInModel.userPhoneModel.dialCode,
+        getSignInModel.userPhoneModel.isoCode,
+        getSignInModel.userIDModel.userID,
+        ref,
+      );
 
       if (result == SignInStatus.loginSuccess) {
         // 로그인 성공 시 로그인 상태 업데이트하여 goRouterProvider가 리다이렉트하도록 함
@@ -210,54 +224,6 @@ extension SignInModelExtension on SignInStateNotifier {
         );
       }
     };
-  }
-
-  /// ### 로그인 수행 함수
-  ///
-  /// #### Notes
-  ///
-  /// - 사용자가 로그인 버튼을 클릭하면 호출됩니다.
-  /// - [SignInModel]에 저장된 사용자 정보를 서버로 전송합니다.
-  ///
-  /// #### Returns
-  ///
-  /// [Future<SignInStatus>] : 로그인 성공 여부 (loginSuccess: 성공, loginFailedForInvalidLoginInfo: 로그인 정보 오류, loginFailedForServer: 서버 오류)
-  ///
-  Future<SignInStatus> login() async {
-    if (!canLogin) {
-      return SignInStatus.loginFailedForInvalidLoginInfo;
-    }
-    final json = {
-      "userPheonNumber": getSignInModel.userPhoneModel.phoneNumber,
-      "diaCode": getSignInModel.userPhoneModel.dialCode,
-      "isoCode": getSignInModel.userPhoneModel.isoCode,
-      "userID": getSignInModel.userIDModel.userID,
-      "userPassword": getSignInModel.userPasswordModel.userPassword,
-    };
-
-    // 서버로 사용자 정보 전송
-    final response = await HttpService.post('/user/login', json);
-
-    // 로그인 성공 여부 반환
-    if (response.statusCode == 200) {
-      final decodedJson = jsonDecode(response.body);
-      final userDetailInfo =
-          UserDetailInfoModel.fromJson(decodedJson['userInfo']);
-
-      // UserDetailInfoModel 업데이트
-      ref.read(userDetailInfoStateProvider.notifier).update(userDetailInfo);
-
-      // SecureStorage에 사용자 비밀번호 저장
-      final noneNullPassword =
-          getSignInModel.userPasswordModel.userPassword as String;
-      SecureStorageService.writeSecureData(
-          SecureModel.userPassword, noneNullPassword);
-      return SignInStatus.loginSuccess;
-    } else if (response.statusCode == 400) {
-      return SignInStatus.loginFailedForInvalidLoginInfo;
-    } else {
-      return SignInStatus.loginFailedForServer;
-    }
   }
 
   /// ### 탈퇴 버튼 클릭
@@ -284,7 +250,7 @@ extension SignInModelExtension on SignInStateNotifier {
       } else {
         // 탈퇴 실패 시 에러 메시지 표시
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text("status.signIn.withdrawalFailed"),
           ),
         );
@@ -319,38 +285,20 @@ extension SignInModelExtension on SignInStateNotifier {
     }
   }
 
-  /// ### 자동 로그인 수행 함수
+  /// ### 로그아웃 수행 함수
   ///
   /// #### Notes
   ///
-  /// - 저장된 유저 정보를 바탕으로 자동 로그인을 수행하고, 로그인 상태를 업데이트합니다.
+  /// - 로그아웃을 수행하고, 로그인 상태를 업데이트합니다.
   ///
-  Future<void> autoSignIn() async {
-    // UserDetailInfoModel을 불러옴
-    final userDetailInfo = ref.read(userDetailInfoStateProvider);
-    final passwordFromSecureStorage =
-        await SecureStorageService.readSecureData(SecureModel.userPassword);
+  void logout() async {
+    // 자동 로그인을 위한 SecureStorage 데이터 삭제
+    await SecureStorageService.deleteSecureData(SecureModel.userPassword);
 
-    // UserDetailInfoModel이나 passwordFromSecureStorage가 없다면 AppState를 업데이트
-    if (userDetailInfo == null || passwordFromSecureStorage == null) {
-      updateSignInStatus(SignInStatus.logout);
-      ref
-          .read(appStateProvider.notifier)
-          .updateAppError(AppError.autoSignInError);
-      return;
-    }
+    // UserDetailInfoModel 업데이트
+    await ref.read(userDetailInfoStateProvider.notifier).delete();
 
-    // UserDetailInfoModel이 있다면 현재 상태를 업데이트
-    updateUserID(userDetailInfo.userID);
-    updatePassword(passwordFromSecureStorage);
-    updateCountryCode(userDetailInfo.dialCode, userDetailInfo.isoCode);
-    updateUserID(userDetailInfo.userID);
-
-    final result = await login();
-
-    if (result == SignInStatus.loginSuccess) {
-      // 자동 로그인 성공 시 로그인 상태 업데이트하여 goRouterProvider가 리다이렉트하도록 함
-      updateSignInStatus(result);
-    }
+    // 로그인 상태 업데이트
+    updateSignInStatus(SignInStatus.logout);
   }
 }

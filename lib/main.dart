@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:accessibility_tools/accessibility_tools.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -12,7 +13,9 @@ import 'package:woju/model/hive_box_enum.dart';
 import 'package:woju/provider/go_route_provider.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
   await dotenv.load(fileName: ".env");
   await Hive.initFlutter();
   await EasyLocalization.ensureInitialized();

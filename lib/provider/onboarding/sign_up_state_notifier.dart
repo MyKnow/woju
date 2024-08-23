@@ -10,13 +10,14 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:woju/model/onboarding/sign_up_model.dart';
 import 'package:woju/model/server_state_model.dart';
+import 'package:woju/model/user/user_auth_model.dart';
 import 'package:woju/model/user/user_gender_model.dart';
 import 'package:woju/model/user/user_id_model.dart';
 import 'package:woju/model/user/user_phone_model.dart';
 import 'package:woju/provider/app_state_notifier.dart';
 import 'package:woju/service/debug_service.dart';
 import 'package:woju/service/device_info_service.dart';
-import 'package:woju/service/http_service.dart';
+import 'package:woju/service/api/http_service.dart';
 import 'package:woju/service/image_picker_service.dart';
 import 'package:woju/service/toast_message_service.dart';
 
@@ -36,14 +37,6 @@ class SignUpStateNotifier extends StateNotifier<SignUpModel> {
   final Ref ref;
   SignUpStateNotifier(this.ref) : super(SignUpModel.initial());
 
-  void updateAuthCode(String authCode) {
-    state = state.copyWith(authCode: authCode);
-  }
-
-  void updateAuthCodeSent(bool authCodeSent) {
-    state = state.copyWith(authCodeSent: authCodeSent);
-  }
-
   void updatePhoneNumber(String phoneNumber) {
     state = state.copyWith(phoneNumber: phoneNumber);
   }
@@ -61,24 +54,34 @@ class SignUpStateNotifier extends StateNotifier<SignUpModel> {
     state = state.copyWith(isoCode: isoCode, dialCode: dialCode);
   }
 
+  void updateUserAuthModel({
+    String? authCode,
+    String? verificationId,
+    String? userUid,
+    int? resendToken,
+    bool? authCodeSent,
+    bool? authCompleted,
+    bool? isClear,
+  }) {
+    if (isClear == true) {
+      state = state.copyWith(
+        userAuthModel: UserAuthModel.initial(),
+      );
+      return;
+    }
+    state = state.copyWith(
+        userAuthModel: state.userAuthModel.copyWith(
+      authCode: authCode ?? state.userAuthModel.authCode,
+      verificationId: verificationId ?? state.userAuthModel.verificationId,
+      userUid: userUid ?? state.userAuthModel.userUid,
+      resendToken: resendToken ?? state.userAuthModel.resendToken,
+      authCodeSent: authCodeSent ?? state.userAuthModel.authCodeSent,
+      authCompleted: authCompleted ?? state.userAuthModel.authCompleted,
+    ));
+  }
+
   void updateError(String? error) {
     state = state.copyWith(error: error);
-  }
-
-  void updateVerificationId(String verificationId) {
-    state = state.copyWith(verificationId: verificationId);
-  }
-
-  void updateResendToken(int? resendToken) {
-    state = state.copyWith(resendToken: resendToken);
-  }
-
-  void updateAuthCompleted(bool authCompleted) {
-    state = state.copyWith(authCompleted: authCompleted);
-  }
-
-  void updateUserUid(String uid) {
-    state = state.copyWith(userUid: uid);
   }
 
   void updateUserID(String userID) {
@@ -204,12 +207,12 @@ extension SignUpAction on SignUpStateNotifier {
       },
       codeSent: (String verificationId, int? resendToken) {
         printd('인증번호 전송됨');
-        updateAuthCodeSent(true);
         updatePhoneNumber(nowPhoneNumber);
-        printd("verificationId: $verificationId");
-        printd("resendToken: $resendToken");
-        updateVerificationId(verificationId);
-        updateResendToken(resendToken);
+        updateUserAuthModel(
+          verificationId: verificationId,
+          resendToken: resendToken,
+          authCodeSent: true,
+        );
         ref.read(signUpAuthFocusProvider.notifier).requestFocusAuthCode();
       },
       codeAutoRetrievalTimeout: (String verificationId) {
@@ -217,7 +220,7 @@ extension SignUpAction on SignUpStateNotifier {
         updateError(SignUpError.authCodeTimeout.toMessage);
         showToastMessage();
       },
-      forceResendingToken: getSignUpModel.resendToken,
+      forceResendingToken: getSignUpModel.userAuthModel.resendToken,
     );
   }
 
@@ -234,7 +237,7 @@ extension SignUpAction on SignUpStateNotifier {
   /// [bool] 인증 성공 여부
   ///
   Future<bool> verifyAuthCode() async {
-    final String authCode = getSignUpModel.authCode ?? "";
+    final String authCode = getSignUpModel.userAuthModel.authCode ?? "";
     printd("verifyAuthCode: $authCode");
     if (authCode.isEmpty) {
       printd("인증번호 입력 필요");
@@ -245,13 +248,13 @@ extension SignUpAction on SignUpStateNotifier {
 
     try {
       final PhoneAuthCredential credential = PhoneAuthProvider.credential(
-        verificationId: getSignUpModel.verificationId ?? "",
+        verificationId: getSignUpModel.userAuthModel.verificationId ?? "",
         smsCode: authCode,
       );
       final result = await _firebaseAuth.signInWithCredential(credential);
       printd("인증 성공: ${result.user?.uid}");
-      updateUserUid(result.user?.uid ?? "");
       printd("인증 성공: ${result.user?.phoneNumber}");
+      updateUserAuthModel(userUid: result.user?.uid);
 
       // 백엔드로 인증 정보 전송하여 가입 유무 확인
       return checkSignUp();
@@ -272,12 +275,13 @@ extension SignUpAction on SignUpStateNotifier {
   /// Function: 인증번호 확인 함수 반환 메서드
   ///
   VoidCallback? verifyAuthCodeButton() {
-    if (!getSignUpModel.authCodeSent || getSignUpModel.authCompleted) {
+    if (!getSignUpModel.userAuthModel.authCodeSent ||
+        getSignUpModel.userAuthModel.authCompleted) {
       return null;
     }
 
-    if (getSignUpModel.authCode == null ||
-        getSignUpModel.authCode!.length < 6) {
+    if (getSignUpModel.userAuthModel.authCode == null ||
+        getSignUpModel.userAuthModel.authCode!.length < 6) {
       return null;
     }
 
@@ -285,10 +289,10 @@ extension SignUpAction on SignUpStateNotifier {
       printd("verifyAuthCodeButton");
       final bool isVerified = await verifyAuthCode();
       if (isVerified) {
-        updateAuthCompleted(true);
+        updateUserAuthModel(authCompleted: true);
         ref.read(signUpAuthFocusProvider.notifier).requestFocusUserID();
       } else {
-        updateAuthCompleted(false);
+        updateUserAuthModel(authCompleted: false);
         ref.read(signUpAuthFocusProvider.notifier).requestFocusAuthCode();
       }
     };
@@ -304,7 +308,7 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   VoidCallback? sendAuthCodeButton() {
     if (!getSignUpModel.userPhoneModel.isPhoneNumberValid ||
-        getSignUpModel.authCodeSent) {
+        getSignUpModel.userAuthModel.authCodeSent) {
       return null;
     }
     return () {
@@ -334,9 +338,7 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   void changePhoneNumber() {
     printd("changePhoneNumber");
-    updateAuthCodeSent(false);
-    updateAuthCompleted(false);
-    updateAuthCode("");
+    updateUserAuthModel(isClear: true);
   }
 
   /// ### 인증번호 재전송 메서드
@@ -348,12 +350,13 @@ extension SignUpAction on SignUpStateNotifier {
   /// Function: 인증번호 재전송 메서드
   ///
   VoidCallback? resendAuthCodeButton() {
-    if (!getSignUpModel.authCodeSent || getSignUpModel.authCompleted) {
+    if (!getSignUpModel.userAuthModel.authCodeSent ||
+        getSignUpModel.userAuthModel.authCompleted) {
       return null;
     }
     return () {
       printd("resendAuthCodeButton");
-      updateAuthCodeSent(false);
+      updateUserAuthModel(authCodeSent: false);
       verifyPhoneNumber();
       ref.read(signUpAuthFocusProvider.notifier).requestFocusAuthCode();
     };
@@ -432,7 +435,7 @@ extension SignUpAction on SignUpStateNotifier {
   /// [VoidCallback] 다음 페이지 이동 버튼 활성화 여부 확인 메서드
   ///
   VoidCallback? nextButton(BuildContext context) {
-    if (!getSignUpModel.authCompleted ||
+    if (!getSignUpModel.userAuthModel.authCompleted ||
         !getSignUpModel.userIDModel.isIDAvailable ||
         !getSignUpModel.userPasswordModel.isPasswordAvailable) {
       return null;
@@ -477,7 +480,8 @@ extension SignUpAction on SignUpStateNotifier {
       return null;
     }
 
-    if (getSignUpModel.userUid == null || getSignUpModel.userUid!.isEmpty) {
+    if (getSignUpModel.userAuthModel.userUid == null ||
+        getSignUpModel.userAuthModel.userUid!.isEmpty) {
       printd("userUid is null");
       return null;
     }
@@ -485,7 +489,8 @@ extension SignUpAction on SignUpStateNotifier {
     return () async {
       printd("checkAvailableIDButton");
       final isAvailable = await UserIDModel.checkAvailableID(
-          getSignUpModel.userIDModel.userID, getSignUpModel.userUid);
+          getSignUpModel.userIDModel.userID,
+          getSignUpModel.userAuthModel.userUid);
 
       if (isAvailable == UserIDStatus.userIDAvailable) {
         updateIDAvailable(true);
@@ -593,7 +598,7 @@ extension SignUpUserInfoAction on SignUpStateNotifier {
     if (!getSignUpModel.userPhoneModel.isPhoneNumberValid ||
         getSignUpModel.userPhoneModel.dialCode.isEmpty ||
         getSignUpModel.userPhoneModel.isoCode.isEmpty ||
-        getSignUpModel.userUid == null ||
+        getSignUpModel.userAuthModel.userUid == null ||
         !getSignUpModel.userIDModel.isIDAvailable ||
         !getSignUpModel.userPasswordModel.isPasswordAvailable ||
         !getSignUpModel.userNickNameModel.isNicknameValid) {
@@ -629,7 +634,7 @@ extension SignUpUserInfoAction on SignUpStateNotifier {
   Future<SignUpError?> signUp() async {
     final json = {
       "userDeviceID": await DeviceInfoService.getDeviceId(),
-      "userUID": getSignUpModel.userUid,
+      "userUID": getSignUpModel.userAuthModel.userUid,
       "userPhoneNumber":
           getSignUpModel.userPhoneModel.getPhoneNumberWithFormat(),
       "dialCode": getSignUpModel.userPhoneModel.dialCode,

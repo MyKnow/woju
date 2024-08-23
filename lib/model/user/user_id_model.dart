@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:woju/service/debug_service.dart';
-import 'package:woju/service/http_service.dart';
+import 'package:woju/service/api/http_service.dart';
 
 enum UserIDStatus {
   userIDEmpty,

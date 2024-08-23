@@ -2,6 +2,15 @@ import 'package:woju/model/user/user_id_model.dart';
 import 'package:woju/model/user/user_password_model.dart';
 import 'package:woju/model/user/user_phone_model.dart';
 
+/// ### 로그인 상태
+///
+/// 로그인 시도 후 상태를 나타냅니다.
+///
+/// - [loginFailedForInvalidLoginInfo] : 로그인을 시도했으나 로그인 정보 오류가 발생한 상태
+/// - [loginFailedForServer] : 로그인을 시도했으나 서버 오류가 발생한 상태
+/// - [loginSuccess] : 로그인을 성공한 상태
+/// - [logout] : 로그인을 시도하지 않았거나, 로그아웃을 실행한 상태
+///
 enum SignInStatus {
   loginFailedForInvalidLoginInfo,
   loginFailedForServer,

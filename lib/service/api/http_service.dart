@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:woju/service/debug_service.dart';
 
 class HttpService {
   static String baseUrl = dotenv.env['API_URL'] ?? '';
@@ -11,17 +12,20 @@ class HttpService {
 
   static Future<http.Response> post(
       String url, Map<String, dynamic> body) async {
-    final response = await http.post(
-      getApiUrl(url),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(body),
-    );
+    try {
+      final response = await http.post(
+        getApiUrl(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(body),
+      );
 
-    // connection failed 대비
-
-    return response;
+      return response;
+    } catch (e) {
+      printd("HttpService.post error: $e");
+      return http.Response('{"error": "$e"}', 500);
+    }
   }
 
   static Future<http.Response> get(String url) async {

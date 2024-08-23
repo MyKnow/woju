@@ -85,10 +85,10 @@ class SignUpPage extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           closeIcon: const Icon(CupertinoIcons.clear),
-                          enabled: !signUp.authCompleted,
+                          enabled: !signUp.userAuthModel.authCompleted,
                         ),
                         labelText: signUp.userPhoneModel.labelText(
-                          signUp.authCompleted,
+                          signUp.userAuthModel.authCompleted,
                         ),
                       ),
                       validator: (value) {
@@ -117,7 +117,7 @@ class SignUpPage extends ConsumerWidget {
                       autofillHints: const <String>[
                         AutofillHints.telephoneNumberNational,
                       ],
-                      enabled: !signUp.authCodeSent,
+                      enabled: !signUp.userAuthModel.authCodeSent,
                     ),
                   ),
                   Container(
@@ -128,7 +128,7 @@ class SignUpPage extends ConsumerWidget {
                   SizedBox(
                     height: 70,
                     width: 70,
-                    child: (signUp.authCodeSent)
+                    child: (signUp.userAuthModel.authCodeSent)
                         ? TextButton(
                             onPressed: () {
                               ref
@@ -168,7 +168,8 @@ class SignUpPage extends ConsumerWidget {
             const SizedBox(height: 20),
 
             // 인증코드 요청 시 입력한 전화번호로 전송된 인증코드 입력창 표시
-            if (signUp.authCodeSent && !signUp.authCompleted)
+            if (signUp.userAuthModel.authCodeSent &&
+                !signUp.userAuthModel.authCompleted)
               Column(
                 children: [
                   // 인증코드 요청 시 true로 변경
@@ -192,7 +193,8 @@ class SignUpPage extends ConsumerWidget {
                         contentPadding: const EdgeInsets.symmetric(
                           horizontal: 10,
                         ),
-                        labelText: "onboarding.signUp.authCode".tr(),
+                        labelText:
+                            "onboarding.signUp.userAuthModel.authCode".tr(),
                         suffix: Row(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -207,9 +209,9 @@ class SignUpPage extends ConsumerWidget {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                               ),
-                              child:
-                                  const Text("onboarding.signUp.authCodeResend")
-                                      .tr(),
+                              child: const Text(
+                                      "onboarding.signUp.userAuthModel.authCodeResend")
+                                  .tr(),
                             ),
                             const SizedBox(width: 10),
                             TextButton(
@@ -222,12 +224,12 @@ class SignUpPage extends ConsumerWidget {
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
-                                child: (!signUp.authCompleted)
+                                child: (!signUp.userAuthModel.authCompleted)
                                     ? const Text(
-                                            "onboarding.signUp.authCodeVerify")
+                                            "onboarding.signUp.userAuthModel.authCodeVerify")
                                         .tr()
                                     : const Text(
-                                            "onboarding.signUp.authCodeVerified")
+                                            "onboarding.signUp.userAuthModel.authCodeVerified")
                                         .tr()),
                           ],
                         ),
@@ -237,13 +239,13 @@ class SignUpPage extends ConsumerWidget {
                       onChanged: (value) {
                         ref
                             .read(signUpStateProvider.notifier)
-                            .updateAuthCode(value);
+                            .updateUserAuthModel(authCode: value);
                       },
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                         LengthLimitingTextInputFormatter(6),
                       ],
-                      enabled: !signUp.authCompleted,
+                      enabled: !signUp.userAuthModel.authCompleted,
                       focusNode: focus[1],
                     ),
                   ),
@@ -252,7 +254,7 @@ class SignUpPage extends ConsumerWidget {
               ),
 
             // 인증 완료 시 아이디 입력창 표시
-            if (signUp.authCompleted)
+            if (signUp.userAuthModel.authCompleted)
               Column(
                 children: [
                   Container(

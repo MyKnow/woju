@@ -8,7 +8,6 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:woju/provider/onboarding/sign_up_state_notifier.dart';
-import 'package:woju/provider/theme_state_notififer.dart';
 import 'package:woju/theme/widget/bottom_floating_button.dart';
 import 'package:woju/theme/widget/custom_text.dart';
 import 'package:woju/theme/widget/custom_text_button.dart';
@@ -22,7 +21,7 @@ class SignUpPage extends ConsumerWidget {
     final signUp = ref.watch(signUpStateProvider);
     final signUpNotifier = ref.read(signUpStateProvider.notifier);
     final focus = ref.watch(signUpAuthFocusProvider);
-    final theme = ref.watch(themeStateNotifierProvider.notifier).theme;
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: const CustomText("onboarding.signUp.title", isTitle: true),

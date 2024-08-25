@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:woju/provider/onboarding/sign_in_state_notifier.dart';
-import 'package:woju/provider/theme_state_notififer.dart';
 import 'package:woju/theme/widget/bottom_floating_button.dart';
 import 'package:woju/theme/widget/custom_text.dart';
 import 'package:woju/theme/widget/custom_text_button.dart';
@@ -19,7 +18,7 @@ class SignInPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final signIn = ref.watch(signInStateProvider);
     final signInNotifier = ref.watch(signInStateProvider.notifier);
-    final theme = ref.watch(themeStateNotifierProvider.notifier).theme;
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(

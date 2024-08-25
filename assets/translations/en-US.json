@@ -14,7 +14,13 @@
             "inputPhoneNumber": "Please enter your phone number",
             "inputPassword": "Please enter your password",
             "forgotPassword": "Forgot password?",
-            "signIn": "Sign In"
+            "signIn": "Sign In",
+            "resetPassword" : {
+                "title": "Reset Password",
+                "done" : "Reset Done",
+                "error" : "A server error occurred. Please try again",
+                "success" : "Password reset successful.\nPlease log in with your new password"
+            }
         },
         "signUp" : {
             "title": "Sign Up",
@@ -35,16 +41,6 @@
             "userIDAvailable": "ID available",
             "userIDAvailableSimple": "Available",
             "modifyUserID": "Change ID",
-            "error": {
-                "isoCodeEmpty" : "Please select a country",
-                "authCodeEmpty" : "Please enter the verification code",
-                "authCodeInvalid" : "Please enter a valid verification code",
-                "authCodeTimeout" : "The verification code has expired. Please request again",
-                "authCodeNotSent" : "Unable to send verification code. Please try again",
-                "serverError" : "A server error occurred. Please try again",
-                "alreadySignedUp" : "Phone number already registered",
-                "signupFailure": "Failed to sign up"
-            },
             "detail" : {
                 "title": "Profile",
                 "profileImage" : {
@@ -53,6 +49,7 @@
                     "fromCamera": "Take a photo"
                 },
                 "done": "Sign Up",
+                "signUpSuccess": "Sign up successful",
                 "nickname": "Please enter your nickname",
                 "nicknameValid": "Nickname available",
                 "gender": {
@@ -75,6 +72,7 @@
     "status" : {
         "authcode" : {
             "label": "Please enter the verification code",
+            "invalid": "Please enter a 6-digit verification code",
             "verify": "Verify",
             "verified": "Verified",
             "resend": "Resend"
@@ -85,17 +83,19 @@
             "offline" : "Disconnected from the server",
             "connecting" : "Connecting to the server"
         },
-        "phoneNumber" : {
+        "PhoneNumberStatus" : {
             "lengthInvalid" : "Please enter a phone number between 5 and 15 digits",
             "invalid" : "Invalid phone number",
             "countryCodeEmpty" : "Please enter the country code",
             "available" : "Phone number available",
+            "authCompleted" : "Verification completed",
             "notAvailable" : "Phone number already in use",
             "valid" : "Valid phone number format",
             "empty" : "Please enter a phone number"
         },
-        "userID" : {
+        "UserIDStatus" : {
             "empty" :"Please enter your ID",
+            "inputUserID" : "Please enter your ID",
             "validForSignUp" : "ID available",
             "validForSignIn" : "Valid ID format",
             "invalid" : "ID can only contain alphanumeric characters",
@@ -105,14 +105,16 @@
             "short" : "ID must be at least 4 characters long",
             "long" : "Please enter an ID with 20 characters or less",
             "exists" : "ID already in use",
-            "notAvailable" : "ID not available"
+            "notAvailable" : "ID not available",
+            "serverError" : "A server error occurred. Please try again"
         },
-        "password" : {
+        "PasswordStatus" : {
             "empty" : "Please enter your password",
             "valid" : "Password available",
             "invalid" : "Password must contain special characters, alphabetic characters, and numbers",
             "short" : "Please enter a password with at least 8 characters",
-            "long" : "Please enter a password with 20 characters or less"
+            "long" : "Please enter a password with 20 characters or less",
+            "validForSignIn" : "Valid password format"
         },
         "gender" : {
             "title" : "Please select your gender",
@@ -121,7 +123,7 @@
             "other" : "Other",
             "private" : "Private"
         },
-        "nickname" : {
+        "UserNickNameStatus" : {
             "title" : "Please enter your nickname",
             "empty" : "Please enter your nickname",
             "short" : "Please enter a nickname with at least 2 characters",
@@ -129,10 +131,20 @@
             "invalid" : "Invalid nickname",
             "valid" : "Nickname available"
         },
-        "signIn" : {
+        "SignInStatus" : {
             "loginFailedForInvalidLoginInfo" : "Invalid ID or password",
             "loginFailedForServer" : "Failed to sign in. Please try again",
-            "loginSuccess" : "Sign in successful"
+            "loginSuccess" : "Sign in successful",
+            "withDrawalFailed" : "Failed to withdraw. Please try again"
+        },
+        "SignUpError" : {
+            "authCodeEmpty" : "Please enter the verification code",
+            "authCodeInvalid" : "Please enter a valid verification code",
+            "authCodeTimeout" : "The verification code has expired. Please request again",
+            "authCodeNotSent" : "Unable to send verification code. Please try again",
+            "serverError" : "A server error occurred. Please try again",
+            "alreadySignedUp" : "Phone number already registered",
+            "signUpFailure": "Failed to sign up"
         }
     },
     "error" : {
@@ -143,7 +155,16 @@
         "router" : {
             "title" : "Page Error",
             "description" : "The page you are looking for does not exist.",
-            "back" : "Go back"
+            "back" : "Go back to the main page"
         }
+    },
+    "theme" : {
+        "dark" : "Dark Mode",
+        "light" : "Light Mode"
+    },
+    "input" : {
+        "defaultLabel" : "Please enter the content",
+        "defaultHint" : "Please enter the content",
+        "defaultError" : "The entered content is not valid"
     }
 }

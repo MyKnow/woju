@@ -11,7 +11,6 @@ import 'package:toggle_switch/toggle_switch.dart';
 
 import 'package:woju/model/user/user_gender_model.dart';
 import 'package:woju/provider/onboarding/sign_up_state_notifier.dart';
-import 'package:woju/provider/theme_state_notififer.dart';
 import 'package:woju/theme/widget/bottom_floating_button.dart';
 import 'package:woju/theme/widget/custom_container_decoration.dart';
 import 'package:woju/theme/widget/custom_text.dart';
@@ -25,7 +24,7 @@ class SignupUserinfoPage extends ConsumerWidget {
     final signUp = ref.watch(signUpStateProvider);
     final signUpNotifier = ref.read(signUpStateProvider.notifier);
     final focus = ref.watch(signUpAuthFocusProvider);
-    final theme = ref.watch(themeStateNotifierProvider.notifier).theme;
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title:

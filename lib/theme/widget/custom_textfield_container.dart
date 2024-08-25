@@ -66,6 +66,12 @@ class CustomTextfieldContainer extends ConsumerWidget {
         suffixIcon: suffixIcon,
         labelText: (labelText != null) ? (labelText as String) : null,
         hintText: (hintText != null) ? (hintText as String) : null,
+        labelStyle: nowTheme.primaryTextTheme.titleMedium?.copyWith(
+          color: nowTheme.primaryTextTheme.bodyMedium?.color,
+        ),
+        errorStyle: nowTheme.primaryTextTheme.labelMedium?.copyWith(
+          color: Colors.red,
+        ),
       ),
       validator: validator,
       focusNode: focusNode,

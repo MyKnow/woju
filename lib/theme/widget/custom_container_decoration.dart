@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:woju/provider/theme_state_notififer.dart';
 
 class CustomDecorationContainer extends ConsumerWidget {
   final Widget child;
@@ -19,18 +18,18 @@ class CustomDecorationContainer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = ref.watch(themeStateNotifierProvider.notifier).theme;
+    final nowTheme = Theme.of(context);
     return Container(
       width: width,
       height: height,
       padding: padding,
       margin: margin,
       decoration: BoxDecoration(
-        color: theme.cardTheme.color,
+        color: nowTheme.cardTheme.color,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: theme.cardTheme.shadowColor ?? theme.shadowColor,
+            color: nowTheme.cardTheme.shadowColor ?? nowTheme.shadowColor,
             blurRadius: 4,
           ),
         ],

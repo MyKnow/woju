@@ -28,7 +28,7 @@
 //     final auth = ref.watch(authStateProvider);
 //     return Scaffold(
 //       appBar: AppBar(
-//         title: const CustomText("onboarding.signIn.resetPassword.title").tr(),
+//         title: const CustomText("onboarding.signIn.resetPassword.title", isTitle: true),
 //       ),
 //       body: SingleChildScrollView(
 //         child: Column(

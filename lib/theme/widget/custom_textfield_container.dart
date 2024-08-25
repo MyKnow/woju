@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:woju/provider/theme_state_notififer.dart';
 import 'package:woju/theme/widget/custom_container_decoration.dart';
 
 class CustomTextfieldContainer extends ConsumerWidget {
@@ -25,6 +24,7 @@ class CustomTextfieldContainer extends ConsumerWidget {
   final List<Widget> actions;
   final String? initialValue;
   final double verticalDividerHeight;
+  final Function? onFieldSubmitted;
 
   const CustomTextfieldContainer({
     super.key,
@@ -48,11 +48,12 @@ class CustomTextfieldContainer extends ConsumerWidget {
     this.initialValue,
     this.verticalDividerHeight = 60,
     this.actions = const [],
+    this.onFieldSubmitted,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = ref.watch(themeStateNotifierProvider.notifier).theme;
+    final nowTheme = Theme.of(context);
     final TextFormField textFormField = TextFormField(
       decoration: InputDecoration(
         border: InputBorder.none,
@@ -75,9 +76,18 @@ class CustomTextfieldContainer extends ConsumerWidget {
       inputFormatters: inputFormatters,
       autofillHints: autofillHints,
       enabled: enabled,
-      obscureText: obscureText!,
-      style: textStyle ?? theme.primaryTextTheme.bodyMedium,
+      obscureText: obscureText ?? false,
+      style: textStyle ?? nowTheme.primaryTextTheme.bodyMedium,
       initialValue: initialValue,
+      onFieldSubmitted: (value) {
+        if (textInputAction == TextInputAction.next) {
+          focusNode?.nextFocus();
+        } else {
+          focusNode?.unfocus();
+          onFieldSubmitted?.call();
+        }
+      },
+      // keyboardAppearance: nowTheme.brightness,
     );
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),

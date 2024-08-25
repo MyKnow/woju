@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:woju/provider/theme_state_notififer.dart';
 
 class CustomTextButton extends ConsumerWidget {
   final String text;
@@ -27,21 +26,21 @@ class CustomTextButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = ref.watch(themeStateNotifierProvider.notifier).theme;
+    final nowTheme = Theme.of(context);
     return TextButton(
       onPressed: onPressed,
       style: TextButton.styleFrom(
         padding: padding,
         shape: shape,
-        disabledForegroundColor: theme.disabledColor,
+        disabledForegroundColor: nowTheme.disabledColor,
         minimumSize: minimumSize,
       ),
       child: Text(
         text,
         textAlign: TextAlign.center,
         style: textStyle ??
-            theme.primaryTextTheme.bodyMedium?.copyWith(
-              color: theme.primaryColor,
+            nowTheme.primaryTextTheme.bodyLarge?.copyWith(
+              color: nowTheme.primaryColor,
             ),
       ).tr(namedArgs: namedArgs),
     );

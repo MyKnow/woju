@@ -22,10 +22,18 @@ class OnboardingPage extends ConsumerWidget {
         onFinish: () {
           ref.read(appStateProvider.notifier).pushRouteSignUpPage(context);
         },
-        skipTextButton: const CustomText('onboarding.skip', isColorful: true),
+        skipTextButton: const CustomText(
+          'onboarding.skip',
+          isColorful: true,
+          isBold: true,
+        ),
         skipIcon: Icon(CupertinoIcons.arrow_right,
             semanticLabel: "onboarding.skip".tr()),
-        trailing: const CustomText('onboarding.signIn.title', isColorful: true),
+        trailing: const CustomText(
+          'onboarding.signIn.title',
+          isColorful: true,
+          isBold: true,
+        ),
         trailingFunction: () {
           context.push("/onboarding/signin");
         },

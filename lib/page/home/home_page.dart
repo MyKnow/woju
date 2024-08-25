@@ -16,7 +16,7 @@ class HomePage extends ConsumerWidget {
     final signInNotifier = ref.watch(signInStateProvider.notifier);
     return Scaffold(
       appBar: AppBar(
-        title: const CustomText("Home Page"),
+        title: const CustomText("Home Page", isTitle: true),
       ),
       body: Center(
         child: Column(

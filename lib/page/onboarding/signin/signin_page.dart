@@ -23,7 +23,7 @@ class SignInPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: CustomText("onboarding.signIn.title"),
+        title: const CustomText("onboarding.signIn.title", isTitle: true),
         actions: [
           // 로그인 방법 변경
           CustomTextButton(
@@ -89,7 +89,7 @@ class SignInPage extends ConsumerWidget {
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 onChanged: signInNotifier.phoneNumberOnChange,
                 keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.done,
+                textInputAction: TextInputAction.next,
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
                   LengthLimitingTextInputFormatter(15),
@@ -114,7 +114,7 @@ class SignInPage extends ConsumerWidget {
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 onChanged: signInNotifier.userIDOnChange,
                 keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.done,
+                textInputAction: TextInputAction.next,
                 inputFormatters: [
                   // 소문자, 대문자, 숫자만 입력 가능
                   FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]')),
@@ -149,6 +149,8 @@ class SignInPage extends ConsumerWidget {
               validator: signIn.userPasswordModel.validator,
               obscureText: !signIn.userPasswordModel.isPasswordVisible,
               initialValue: signIn.userPasswordModel.userPassword,
+              textInputAction: TextInputAction.done,
+              onFieldSubmitted: signInNotifier.loginButtonOnClick(context),
               actions: [
                 SizedBox(
                   height: 50,

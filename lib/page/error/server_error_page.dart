@@ -11,7 +11,7 @@ class ServerErrorPage extends ConsumerWidget {
     final appStatusNotifier = ref.watch(appStateProvider.notifier);
     return Scaffold(
       appBar: AppBar(
-        title: const CustomText('error.server.title'),
+        title: const CustomText('error.server.title', isTitle: true),
         leading: const SizedBox(),
       ),
       body: PopScope(

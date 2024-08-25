@@ -28,7 +28,8 @@ class SignupUserinfoPage extends ConsumerWidget {
     final theme = ref.watch(themeStateNotifierProvider.notifier).theme;
     return Scaffold(
       appBar: AppBar(
-        title: const CustomText("onboarding.signUp.detail.title"),
+        title:
+            const CustomText("onboarding.signUp.detail.title", isTitle: true),
         centerTitle: false,
       ),
       body: SingleChildScrollView(

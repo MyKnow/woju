@@ -15,7 +15,7 @@ class RouterErrorPageState extends ConsumerState<RouterErrorPage> {
     return Scaffold(
       appBar: AppBar(
         leading: Container(),
-        title: const CustomText('error.router.title'),
+        title: const CustomText('error.router.title', isTitle: true),
       ),
       body: PopScope(
         canPop: false,

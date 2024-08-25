@@ -36,6 +36,7 @@ class BottomFloatingButton {
                 },
                 icon: const Icon(
                   CupertinoIcons.keyboard_chevron_compact_down,
+                  color: Colors.black,
                 ),
                 tooltip: "accessibility.hideKeyboardButton".tr(),
               ),
@@ -50,7 +51,13 @@ class BottomFloatingButton {
                     ?.copyWith(
                   minimumSize: WidgetStateProperty.all(const Size(80, 50)),
                 ),
-                child: CustomText(text),
+                child: CustomText(
+                  text,
+                  style: Theme.of(context)
+                      .primaryTextTheme
+                      .bodyMedium
+                      ?.copyWith(color: Colors.white),
+                ),
               ),
             ),
         ],

@@ -1,0 +1,105 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:woju/provider/theme_state_notififer.dart';
+import 'package:woju/theme/widget/custom_container_decoration.dart';
+
+class CustomTextfieldContainer extends ConsumerWidget {
+  final Widget? prefix;
+  final Widget? prefixIcon;
+  final Widget? suffix;
+  final Widget? suffixIcon;
+  final String? labelText;
+  final String? hintText;
+  final FormFieldValidator? validator;
+  final FocusNode? focusNode;
+  final AutovalidateMode? autovalidateMode;
+  final Function(String)? onChanged;
+  final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
+  final List<TextInputFormatter>? inputFormatters;
+  final Iterable<String>? autofillHints;
+  final bool? enabled;
+  final bool? obscureText;
+  final TextStyle? textStyle;
+  final List<Widget> actions;
+  final String? initialValue;
+  final double verticalDividerHeight;
+
+  const CustomTextfieldContainer({
+    super.key,
+    this.prefix,
+    this.prefixIcon,
+    this.suffix,
+    this.suffixIcon,
+    this.labelText = "input.defaultLabel",
+    this.hintText,
+    this.validator,
+    this.focusNode,
+    this.autovalidateMode,
+    this.onChanged,
+    this.keyboardType = TextInputType.text,
+    this.textInputAction = TextInputAction.next,
+    this.inputFormatters,
+    this.autofillHints,
+    this.enabled = true,
+    this.obscureText = false,
+    this.textStyle,
+    this.initialValue,
+    this.verticalDividerHeight = 60,
+    this.actions = const [],
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.watch(themeStateNotifierProvider.notifier).theme;
+    final TextFormField textFormField = TextFormField(
+      decoration: InputDecoration(
+        border: InputBorder.none,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 10,
+        ),
+        prefix: prefix,
+        prefixIcon: prefixIcon,
+        suffix: suffix,
+        suffixIcon: suffixIcon,
+        labelText: (labelText != null) ? (labelText as String) : null,
+        hintText: (hintText != null) ? (hintText as String) : null,
+      ),
+      validator: validator,
+      focusNode: focusNode,
+      autovalidateMode: autovalidateMode,
+      onChanged: onChanged,
+      keyboardType: keyboardType,
+      textInputAction: textInputAction,
+      inputFormatters: inputFormatters,
+      autofillHints: autofillHints,
+      enabled: enabled,
+      obscureText: obscureText!,
+      style: textStyle ?? theme.primaryTextTheme.bodyMedium,
+      initialValue: initialValue,
+    );
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: CustomDecorationContainer(
+        child: actions.isEmpty
+            ? textFormField
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: 360 - actions.length * 80,
+                    child: textFormField,
+                  ),
+                  // Container(
+                  //   width: 1,
+                  //   height: verticalDividerHeight,
+                  //   color: theme.shadowColor,
+                  // ),
+                  if (actions.isNotEmpty) ...actions,
+                ],
+              ),
+      ),
+    );
+  }
+}

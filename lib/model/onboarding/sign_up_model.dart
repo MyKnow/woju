@@ -1,4 +1,5 @@
 import 'package:image_picker/image_picker.dart';
+import 'package:woju/model/status/status_mixin.dart';
 import 'package:woju/model/user/user_auth_model.dart';
 import 'package:woju/model/user/user_gender_model.dart';
 import 'package:woju/model/user/user_id_model.dart';
@@ -6,7 +7,7 @@ import 'package:woju/model/user/user_nickname_model.dart';
 import 'package:woju/model/user/user_password_model.dart';
 import 'package:woju/model/user/user_phone_model.dart';
 
-enum SignUpError {
+enum SignUpError with StatusMixin {
   authCodeEmpty,
   authCodeInvalid,
   authCodeTimeout,
@@ -14,27 +15,6 @@ enum SignUpError {
   serverError,
   alreadySignedUp,
   signUpFailure,
-}
-
-extension SignUpErrorExtenstion on SignUpError {
-  String get toMessage {
-    switch (this) {
-      case SignUpError.authCodeEmpty:
-        return "onboarding.signUp.error.authCodeEmpty";
-      case SignUpError.authCodeInvalid:
-        return "onboarding.signUp.error.authCodeInvalid";
-      case SignUpError.authCodeTimeout:
-        return "onboarding.signUp.error.authCodeTimeout";
-      case SignUpError.authCodeNotSent:
-        return "onboarding.signUp.error.authCodeNotSent";
-      case SignUpError.serverError:
-        return "onboarding.signUp.error.serverError";
-      case SignUpError.alreadySignedUp:
-        return "onboarding.signUp.error.alreadySignedUp";
-      case SignUpError.signUpFailure:
-        return "onboarding.signUp.error.signUpFailure";
-    }
-  }
 }
 
 class SignUpModel {

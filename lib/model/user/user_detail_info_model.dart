@@ -1,5 +1,6 @@
+import 'dart:typed_data';
+
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:woju/model/user/user_gender_model.dart';
 import 'package:woju/service/debug_service.dart';
 
@@ -8,7 +9,7 @@ part 'user_detail_info_model.g.dart';
 @HiveType(typeId: 1)
 class UserDetailInfoModel {
   @HiveField(0)
-  final XFile? profileImage;
+  final Uint8List? profileImage;
 
   @HiveField(1)
   final String userID;
@@ -48,8 +49,18 @@ class UserDetailInfoModel {
 
   factory UserDetailInfoModel.fromJson(Map<String, dynamic> json) {
     printd("userGender: ${json['userGender']}");
+    printd("profileImage: ${json['userProfileImage']}");
+    final profileImage = json['userProfileImage'];
+
+    printd("profileImage: $profileImage");
+    printd("profileImage data : ${json['userProfileImage']['data']}");
+
+    final decodedData =
+        Uint8List.fromList(List<int>.from(json['userProfileImage']['data']));
+    printd("decodedData: $decodedData");
+
     return UserDetailInfoModel(
-      profileImage: json['profileImage'],
+      profileImage: decodedData,
       userID: json['userID'],
       userPhoneNumber: json['userPhoneNumber'],
       dialCode: json['dialCode'],

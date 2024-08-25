@@ -1,9 +1,9 @@
 {
     "onboarding": {
         "description": {
-            "1": "Connect with passing relationships",
+            "1": "Connect with passing acquaintances",
             "2": "Communicate with people nearby in real time",
-            "3": "Chat with strangers before bed"
+            "3": "Have a conversation with a stranger before bed"
         },
         "startWithPhoneNumber": "Start with phone number",
         "signIn": {
@@ -21,22 +21,18 @@
             "signin" : "Already have an account?",
             "phoneNumber": "Please enter your phone number",
             "phoneNumberVerified" : "Verified",
-            "phoneNumberAvailable" : "Available phone number",
+            "phoneNumberAvailable" : "Phone number available",
             "confirmPassword": "Confirm password",
-            "searchCountry": "You can search for a country",
+            "searchCountry": "Search for a country",
             "next": "Next",
             "sendCode": "Send code",
-            "authCode": "Please enter the verification code",
-            "authCodeVerify": "Verify code",
-            "authCodeVerified": "Verified",
             "changePhoneNumber": "Change number",
-            "authCodeResend": "Resend",
             "password": "Please enter your password",
-            "passwordRule": "Please enter a password of at least 8 characters",
-            "passwordAvailable": "Available password",
+            "passwordRule": "Please enter a password with at least 8 characters",
+            "passwordAvailable": "Password available",
             "userID": "Please enter your ID",
-            "userIDCheck": "Check duplication",
-            "userIDAvailable": "Available ID",
+            "userIDCheck": "Check availability",
+            "userIDAvailable": "ID available",
             "userIDAvailableSimple": "Available",
             "modifyUserID": "Change ID",
             "error": {
@@ -45,12 +41,8 @@
                 "authCodeInvalid" : "Please enter a valid verification code",
                 "authCodeTimeout" : "The verification code has expired. Please request again",
                 "authCodeNotSent" : "Unable to send verification code. Please try again",
-                "serverError" : "A server error has occurred. Please try again",
+                "serverError" : "A server error occurred. Please try again",
                 "alreadySignedUp" : "Phone number already registered",
-                "passwordEmpty" : "Please enter your password",
-                "passwordShort" : "Password must be at least 8 characters",
-                "passwordLong" : "Password must be less than 20 characters",
-                "passwordInvalid" : "Password must include letters, numbers, and special characters",
                 "signupFailure": "Failed to sign up"
             },
             "detail" : {
@@ -62,21 +54,15 @@
                 },
                 "done": "Sign Up",
                 "nickname": "Please enter your nickname",
-                "nicknameValid": "Available nickname",
+                "nicknameValid": "Nickname available",
                 "gender": {
                     "title": "Please select your gender",
                     "private": "Private",
-                    "man": "Man",
-                    "woman" : "Woman",
+                    "man": "Male",
+                    "woman" : "Female",
                     "other" : "Other"
                 },
-                "birth": "Please enter your birthdate",
-                "error": {
-                    "nicknameEmpty" : "Please enter your nickname",
-                    "nicknameShort" : "Nickname must be at least 2 characters",
-                    "nicknameLong" : "Nickname must be less than 20 characters",
-                    "nicknameInvalid" : "Invalid nickname"
-                }
+                "birth": "Please enter your birthdate"
             }
         },
         "skip": "Skip"
@@ -87,40 +73,77 @@
         "showPasswordFieldButton": "Show password field button"
     },
     "status" : {
+        "authcode" : {
+            "label": "Please enter the verification code",
+            "verify": "Verify",
+            "verified": "Verified",
+            "resend": "Resend"
+        },
         "server" : {
-            "error" : "A server error has occurred. Please try again",
-            "online" : "Connected to server",
-            "offline" : "Disconnected from server",
-            "connecting" : "Connecting to server"
+            "error" : "A server error occurred. Please try again",
+            "online" : "Connected to the server",
+            "offline" : "Disconnected from the server",
+            "connecting" : "Connecting to the server"
         },
         "phoneNumber" : {
             "lengthInvalid" : "Please enter a phone number between 5 and 15 digits",
             "invalid" : "Invalid phone number",
             "countryCodeEmpty" : "Please enter the country code",
-            "available" : "Available phone number",
+            "available" : "Phone number available",
             "notAvailable" : "Phone number already in use",
             "valid" : "Valid phone number format",
-            "empty" : "Please enter your phone number"
+            "empty" : "Please enter a phone number"
         },
         "userID" : {
             "empty" :"Please enter your ID",
-            "validForSignUp" : "Available ID",
+            "validForSignUp" : "ID available",
             "validForSignIn" : "Valid ID format",
-            "invalid" : "ID can only contain letters and numbers",
-            "invalidAlphabet" : "ID must contain at least 4 lowercase letters",
-            "invalidAlphabetFirst" : "ID must start with a letter",
-            "alphabetFirst" : "ID must start with a letter",
-            "short" : "ID must be at least 4 characters",
-            "long" : "ID must be less than 20 characters",
+            "invalid" : "ID can only contain alphanumeric characters",
+            "invalidAlphabet" : "ID must contain at least 4 lowercase alphabetic characters",
+            "invalidAlphabetFirst" : "ID must start with an alphabetic character",
+            "alphabetFirst" : "ID must start with an alphabetic character",
+            "short" : "ID must be at least 4 characters long",
+            "long" : "Please enter an ID with 20 characters or less",
             "exists" : "ID already in use",
-            "notAvailable" : "Unavailable ID"
+            "notAvailable" : "ID not available"
+        },
+        "password" : {
+            "empty" : "Please enter your password",
+            "valid" : "Password available",
+            "invalid" : "Password must contain special characters, alphabetic characters, and numbers",
+            "short" : "Please enter a password with at least 8 characters",
+            "long" : "Please enter a password with 20 characters or less"
         },
         "gender" : {
             "title" : "Please select your gender",
-            "man" : "Man",
-            "woman" : "Woman",
+            "man" : "Male",
+            "woman" : "Female",
             "other" : "Other",
             "private" : "Private"
+        },
+        "nickname" : {
+            "title" : "Please enter your nickname",
+            "empty" : "Please enter your nickname",
+            "short" : "Please enter a nickname with at least 2 characters",
+            "long" : "Please enter a nickname with 20 characters or less",
+            "invalid" : "Invalid nickname",
+            "valid" : "Nickname available"
+        },
+        "signIn" : {
+            "loginFailedForInvalidLoginInfo" : "Invalid ID or password",
+            "loginFailedForServer" : "Failed to sign in. Please try again",
+            "loginSuccess" : "Sign in successful"
+        }
+    },
+    "error" : {
+        "server" : {
+            "title" : "Server Error",
+            "description" : "A server error occurred. Please try again later"
+        },
+        "router" : {
+            "title" : "Page Error",
+            "description" : "The page you are looking for does not exist.",
+            "back" : "Go back"
         }
     }
 }

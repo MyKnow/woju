@@ -1,15 +1,20 @@
-import 'package:easy_localization/easy_localization.dart';
+import 'package:country_code_picker/country_code_picker.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:woju/model/onboarding/sign_in_model.dart';
 import 'package:woju/model/secure_model.dart';
+import 'package:woju/model/user/user_id_model.dart';
+import 'package:woju/model/user/user_phone_model.dart';
 import 'package:woju/provider/app_state_notifier.dart';
 import 'package:woju/provider/onboarding/user_detail_info_state_notifier.dart';
-import 'package:woju/service/api/sign_in_service.dart';
+import 'package:woju/service/api/user_service.dart';
 import 'package:woju/service/debug_service.dart';
 import 'package:woju/service/api/http_service.dart';
 import 'package:woju/service/secure_storage_service.dart';
+import 'package:woju/service/toast_message_service.dart';
 
 final signInStateProvider =
     StateNotifierProvider.autoDispose<SignInStateNotifier, SignInModel>(
@@ -57,6 +62,18 @@ class SignInStateNotifier extends StateNotifier<SignInModel> {
     );
   }
 
+  void clearPhoneNumber() {
+    state = state.copyWith(
+      userPhoneModel: UserPhoneModel.initial(),
+    );
+  }
+
+  void clearUserID() {
+    state = state.copyWith(
+      userIDModel: UserIDModel.initial(),
+    );
+  }
+
   /// ### 로그인 상태 업데이트
   ///
   /// #### Notes
@@ -90,6 +107,11 @@ extension SignInModelExtension on SignInStateNotifier {
   /// - [loginWithPhoneNumber] 값이 `false`이면, 아이디로 로그인합니다.
   ///
   void changeLoginButton() {
+    if (getSignInModel.loginWithPhoneNumber) {
+      clearPhoneNumber();
+    } else {
+      clearUserID();
+    }
     changeLoginMethod();
   }
 
@@ -99,17 +121,21 @@ extension SignInModelExtension on SignInStateNotifier {
   ///
   /// - 사용자가 국가 코드를 변경하면 호출됩니다.
   /// - 국가 코드를 변경합니다.
-  /// - [dialCode]는 국가 전화번호 코드입니다.
-  /// - [isoCode]는 국가 코드입니다.
   ///
   /// #### Parameters
   ///
-  /// - `dialCode`: 국가 전화번호 코드
-  /// - `isoCode`: 국가 코드
+  /// - `CountryCode?`: 국가 코드
   ///
-  void countryCodeOnChange(String? dialCode, String? isoCode) {
-    if (dialCode == null || isoCode == null) return;
-    updateCountryCode(dialCode, isoCode);
+  void countryCodeOnChange(CountryCode? countryCode) {
+    if (countryCode == null) {
+      return;
+    } else {
+      if (countryCode.dialCode != null && countryCode.code != null) {
+        final dialCode = countryCode.dialCode as String;
+        final isoCode = countryCode.code as String;
+        updateCountryCode(dialCode, isoCode);
+      }
+    }
   }
 
   /// ### 전화번호 입력 OnChange 메소드
@@ -129,6 +155,7 @@ extension SignInModelExtension on SignInStateNotifier {
   void phoneNumberOnChange(String phoneNumber) {
     updatePhoneNumber(phoneNumber);
     printd("phoneNumber: ${getSignInModel.userPhoneModel.phoneNumber}");
+    printd("id: ${getSignInModel.userIDModel.userID}");
   }
 
   /// ### 비밀번호 입력 OnChange 메소드
@@ -167,6 +194,8 @@ extension SignInModelExtension on SignInStateNotifier {
   ///
   void userIDOnChange(String userID) {
     updateUserID(userID);
+    printd("phoneNumber: ${getSignInModel.userPhoneModel.phoneNumber}");
+    printd("id: ${getSignInModel.userIDModel.userID}");
   }
 
   /// ### 로그인 버튼 클릭
@@ -193,15 +222,7 @@ extension SignInModelExtension on SignInStateNotifier {
     }
 
     return () async {
-      // 로그인 버튼 클릭 시 호출할 콜백 함수
-      printd("loginButtonOnClick");
-      printd("phoneNumber: ${getSignInModel.userPhoneModel.phoneNumber}");
-      printd("password: ${getSignInModel.userPasswordModel.userPassword}");
-      printd("dialCode: ${getSignInModel.userPhoneModel.dialCode}");
-      printd("isoCode: ${getSignInModel.userPhoneModel.isoCode}");
-      printd("userID: ${getSignInModel.userIDModel.userID}");
-
-      final result = await SignInService.login(
+      final result = await UserService.login(
         getSignInModel.userPhoneModel.phoneNumber,
         getSignInModel.userPasswordModel.userPassword,
         getSignInModel.userPhoneModel.dialCode,
@@ -213,15 +234,24 @@ extension SignInModelExtension on SignInStateNotifier {
       if (result == SignInStatus.loginSuccess) {
         // 로그인 성공 시 로그인 상태 업데이트하여 goRouterProvider가 리다이렉트하도록 함
         updateSignInStatus(result);
-      }
+        final user =
+            await ref.read(userDetailInfoStateProvider.notifier).read();
 
-      if (result != SignInStatus.loginSuccess) {
+        final userName = user?.userNickName ?? "";
+
+        if (context.mounted) {
+          ToastMessageService.nativeSnackbar(
+            result.toMessage,
+            context,
+            namedArgs: {"nickname": userName},
+          );
+        }
+      } else {
         // 로그인 실패 시 에러 메시지 표시
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(result.toMessage).tr(),
-          ),
-        );
+        if (context.mounted) {
+          ToastMessageService.nativeSnackbar(result.toMessage, context,
+              isLocalize: false);
+        }
       }
     };
   }
@@ -246,14 +276,18 @@ extension SignInModelExtension on SignInStateNotifier {
 
       if (result) {
         // 탈퇴 성공 시 signInStatus를 logout로 업데이트하여 goRouterProvider가 리다이렉트하도록 함
+        ref.read(userDetailInfoStateProvider.notifier).delete();
+        SecureStorageService.deleteSecureData(SecureModel.userPassword);
         updateSignInStatus(SignInStatus.logout);
       } else {
         // 탈퇴 실패 시 에러 메시지 표시
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("status.signIn.withdrawalFailed"),
-          ),
-        );
+        if (context.mounted) {
+          ToastMessageService.nativeSnackbar(
+            SignInStatus.withDrawalFailed.toMessage,
+            context,
+            isLocalize: false,
+          );
+        }
       }
     };
   }
@@ -270,9 +304,12 @@ extension SignInModelExtension on SignInStateNotifier {
   ///
   Future<bool> withdrawal() async {
     final json = {
-      "userID": getSignInModel.userIDModel.userID,
-      "userPassword": getSignInModel.userPasswordModel.userPassword,
+      "userID": ref.read(userDetailInfoStateProvider)?.userID,
+      "userPassword":
+          await SecureStorageService.readSecureData(SecureModel.userPassword),
     };
+
+    printd("withdrawal: $json");
 
     // 서버로 사용자 정보 전송
     final response = await HttpService.post('/user/withdraw', json);
@@ -300,5 +337,9 @@ extension SignInModelExtension on SignInStateNotifier {
 
     // 로그인 상태 업데이트
     updateSignInStatus(SignInStatus.logout);
+  }
+
+  void resetPasswordButtonOnClick(BuildContext context) {
+    context.push('/onboarding/signin/resetPassword');
   }
 }

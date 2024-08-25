@@ -14,7 +14,13 @@
             "inputPhoneNumber": "전화번호를 입력해주세요",
             "inputPassword": "비밀번호를 입력해주세요",
             "forgotPassword": "비밀번호를 잊으셨나요?",
-            "signIn": "로그인"
+            "signIn": "로그인",
+            "resetPassword" : {
+                "title": "비밀번호 재설정",
+                "done" : "재설정 완료",
+                "error" : "서버 오류가 발생했습니다. 다시 시도해주세요",
+                "success" : "비밀번호 재설정에 성공했습니다.\n새로운 비밀번호로 로그인해주세요"
+            }
         },
         "signUp" : {
             "title": "회원가입",
@@ -26,11 +32,7 @@
             "searchCountry": "국가를 검색할 수 있어요",
             "next": "다음",
             "sendCode": "인증",
-            "authCode": "인증번호를 입력해주세요",
-            "authCodeVerify": "인증번호 확인",
-            "authCodeVerified": "인증 완료",
             "changePhoneNumber": "번호 변경",
-            "authCodeResend": "재전송",
             "password": "비밀번호를 입력해주세요",
             "passwordRule": "8자 이상의 비밀번호를 입력해주세요",
             "passwordAvailable": "사용 가능한 비밀번호입니다",
@@ -39,16 +41,6 @@
             "userIDAvailable": "사용 가능한 아이디입니다",
             "userIDAvailableSimple": "사용 가능",
             "modifyUserID": "아이디 변경",
-            "error": {
-                "isoCodeEmpty" : "국가를 선택해주세요",
-                "authCodeEmpty" : "인증번호를 입력해주세요",
-                "authCodeInvalid" : "올바른 인증번호를 입력해주세요",
-                "authCodeTimeout" : "인증번호가 만료되었습니다. 다시 요청해주세요",
-                "authCodeNotSent" : "인증번호를 전송할 수 없습니다. 다시 시도해주세요",
-                "serverError" : "서버 오류가 발생했습니다. 다시 시도해주세요",
-                "alreadySignedUp" : "이미 가입된 전화번호입니다.",
-                "signupFailure": "회원가입에 실패했습니다"
-            },
             "detail" : {
                 "title": "프로필 작성",
                 "profileImage" : {
@@ -57,6 +49,7 @@
                     "fromCamera": "카메라로 촬영"
                 },
                 "done": "회원가입",
+                "signUpSuccess": "회원가입에 성공했습니다",
                 "nickname": "닉네임을 입력해주세요",
                 "nicknameValid": "사용 가능한 닉네임입니다",
                 "gender": {
@@ -77,23 +70,32 @@
         "showPasswordFieldButton": "비밀번호 보이기 버튼"
     },
     "status" : {
+        "authcode" : {
+            "label": "인증번호를 입력해주세요",
+            "invalid": "6자리의 인증번호를 입력해주세요",
+            "verify": "인증번호 확인",
+            "verified": "인증 완료",
+            "resend": "재전송"
+        },
         "server" : {
             "error" : "서버 오류가 발생했습니다. 다시 시도해주세요",
             "online" : "서버와 연결되었습니다",
             "offline" : "서버와 연결이 끊어졌습니다",
             "connecting" : "서버와 연결 중"
         },
-        "phoneNumber" : {
+        "PhoneNumberStatus" : {
             "lengthInvalid" : "전화번호는 5~15자리로 입력해주세요",
             "invalid" : "사용할 수 없는 전화번호입니다",
             "countryCodeEmpty" : "국가 코드를 입력해주세요",
             "available" : "사용 가능한 전화번호입니다",
+            "authCompleted" : "인증 완료",
             "notAvailable" : "이미 사용중인 전화번호입니다",
             "valid" : "올바른 전화번호 형식입니다",
             "empty" : "전화번호를 입력해주세요"
         },
-        "userID" : {
+        "UserIDStatus" : {
             "empty" :"아이디를 입력해주세요",
+            "inputUserID" : "아이디를 입력해주세요",
             "validForSignUp" : "사용 가능한 아이디입니다",
             "validForSignIn" : "올바른 형식의 아이디입니다",
             "invalid" : "아이디는 영문, 숫자만 사용할 수 있습니다",
@@ -103,14 +105,16 @@
             "short" : "아이디는 4자 이상이어야 합니다",
             "long" : "아이디는 20자 이하로 입력해주세요",
             "exists" : "이미 사용중인 아이디입니다",
-            "notAvailable" : "사용할 수 없는 아이디입니다"
+            "notAvailable" : "사용할 수 없는 아이디입니다",
+            "serverError" : "서버 오류가 발생했습니다. 다시 시도해주세요"
         },
-        "password" : {
+        "PasswordStatus" : {
             "empty" : "비밀번호를 입력해주세요",
             "valid" : "사용 가능한 비밀번호입니다",
             "invalid" : "비밀번호는 특수문자, 영문, 숫자를 포함해야 합니다",
             "short" : "비밀번호는 8자 이상으로 입력해주세요",
-            "long" : "비밀번호는 20자 이하로 입력해주세요"
+            "long" : "비밀번호는 20자 이하로 입력해주세요",
+            "validForSignIn" : "올바른 비밀번호 형식입니다"
         },
         "gender" : {
             "title" : "성별을 선택해주세요",
@@ -119,7 +123,7 @@
             "other" : "기타",
             "private" : "비공개"
         },
-        "nickname" : {
+        "UserNickNameStatus" : {
             "title" : "닉네임을 입력해주세요",
             "empty" : "닉네임을 입력해주세요",
             "short" : "닉네임은 2자 이상으로 입력해주세요",
@@ -127,10 +131,20 @@
             "invalid" : "사용 불가능한 닉네임입니다",
             "valid" : "사용 가능한 닉네임입니다"
         },
-        "signIn" : {
+        "SignInStatus" : {
             "loginFailedForInvalidLoginInfo" : "아이디 또는 비밀번호가 올바르지 않습니다",
             "loginFailedForServer" : "로그인에 실패했습니다. 다시 시도해주세요",
-            "loginSuccess" : "로그인에 성공했습니다"
+            "loginSuccess" : "{nickname}님, 환영합니다",
+            "withDrawalFailed" : "탈퇴에 실패했습니다. 다시 시도해주세요"
+        },
+        "SignUpError" : {
+            "authCodeEmpty" : "인증번호를 입력해주세요",
+            "authCodeInvalid" : "올바른 인증번호를 입력해주세요",
+            "authCodeTimeout" : "인증번호가 만료되었습니다. 다시 요청해주세요",
+            "authCodeNotSent" : "인증번호를 전송할 수 없습니다. 다시 시도해주세요",
+            "serverError" : "서버 오류가 발생했습니다. 다시 시도해주세요",
+            "alreadySignedUp" : "이미 가입된 전화번호입니다.",
+            "signUpFailure": "회원가입에 실패했습니다"
         }
     },
     "error" : {
@@ -141,7 +155,16 @@
         "router" : {
             "title" : "페이지 오류",
             "description" : "현재 존재하지 않는 페이지입니다.",
-            "back" : "뒤로가기"
+            "back" : "메인 페이지로 이동"
         }
+    },
+    "theme" : {
+        "dark" : "다크 모드",
+        "light" : "라이트 모드"
+    },
+    "input" : {
+        "defaultLabel" : "내용을 입력해주세요",
+        "defaultHint" : "내용을 입력해주세요",
+        "defaultError" : "입력한 내용이 올바르지 않습니다"
     }
 }

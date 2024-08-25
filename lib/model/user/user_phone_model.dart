@@ -1,34 +1,17 @@
-import 'package:easy_localization/easy_localization.dart';
-import 'package:woju/service/debug_service.dart';
+import 'package:woju/model/status/status_mixin.dart';
+import 'package:woju/model/text_field_model.dart';
 
-enum PhoneNumberStatus {
-  phoneNumberLengthInvalid,
-  phoneNumberInvalid,
-  phoneNumberValid,
-  phoneNumberNotAvailable,
+enum PhoneNumberStatus with StatusMixin {
+  lengthInvalid,
+  invalid,
+  valid,
+  notAvailable,
+  authCompleted,
+  empty,
   countrycodeEmpty,
 }
 
-extension PhoneNumberValidErrorExtension on PhoneNumberStatus {
-  String? get toMessage {
-    switch (this) {
-      case PhoneNumberStatus.phoneNumberLengthInvalid:
-        return "status.phoneNumber.lengthInvalid";
-      case PhoneNumberStatus.phoneNumberInvalid:
-        return "status.phoneNumber.invalid";
-      case PhoneNumberStatus.phoneNumberValid:
-        return null;
-      case PhoneNumberStatus.countrycodeEmpty:
-        return "status.phoneNumber.countrycodeEmpty";
-      case PhoneNumberStatus.phoneNumberNotAvailable:
-        return "status.phoneNumber.notAvailable";
-      default:
-        return null;
-    }
-  }
-}
-
-class UserPhoneModel {
+class UserPhoneModel with TextFieldModel {
   final String dialCode;
   final String isoCode;
   final String? phoneNumber;
@@ -40,8 +23,8 @@ class UserPhoneModel {
     required this.isoCode,
     required this.phoneNumber,
     this.isPhoneNumberAvailable,
-  }) : isPhoneNumberValid = phoneNumberValidation(phoneNumber) ==
-            PhoneNumberStatus.phoneNumberValid;
+  }) : isPhoneNumberValid =
+            phoneNumberValidation(phoneNumber) == PhoneNumberStatus.valid;
 
   /// ### Model State 변경 메소드
   ///
@@ -111,26 +94,24 @@ class UserPhoneModel {
   // 전화번호 유효성 검사 메소드
   static PhoneNumberStatus phoneNumberValidation(String? value) {
     if (value == null || value.length < 5 || value.length > 15) {
-      return PhoneNumberStatus.phoneNumberLengthInvalid;
+      return PhoneNumberStatus.lengthInvalid;
     } else if (value.contains(RegExp(r'[^\d]'))) {
       // 숫자가 아닌 다른 문자가 포함되어 있는 경우
-      return PhoneNumberStatus.phoneNumberInvalid;
+      return PhoneNumberStatus.invalid;
     } else {
-      return PhoneNumberStatus.phoneNumberValid;
+      return PhoneNumberStatus.valid;
     }
   }
 
-  // labelText를 반환하는 메소드
-  String labelText(bool authCompleted) {
-    printd("phoneNumber: $phoneNumber");
+  String labelTextWithParameter(bool authCompleted) {
     if (isPhoneNumberAvailable != null && !isPhoneNumberAvailable!) {
-      return "status.phoneNumber.notAvailable".tr();
+      return PhoneNumberStatus.notAvailable.toMessage;
     } else if (authCompleted) {
-      return "status.phoneNumber.available".tr();
+      return PhoneNumberStatus.authCompleted.toMessage;
     } else if (isPhoneNumberValid) {
-      return "status.phoneNumber.valid".tr();
+      return PhoneNumberStatus.valid.toMessage;
     } else {
-      return "status.phoneNumber.empty".tr();
+      return PhoneNumberStatus.empty.toMessage;
     }
   }
 
@@ -156,8 +137,24 @@ class UserPhoneModel {
     }
 
     if (phoneNumber?[0] == "0") {
-      return phoneNumber?.substring(1).replaceAll("-", "");
+      return phoneNumber?.substring(1);
     }
     return phoneNumber?.replaceAll("-", "");
   }
+
+  @override
+  bool get isValid =>
+      phoneNumberValidation(phoneNumber) == PhoneNumberStatus.valid;
+
+  @override
+  String? get errorMessage {
+    if (isValid) {
+      return null;
+    } else {
+      return phoneNumberValidation(phoneNumber).toMessage;
+    }
+  }
+
+  @override
+  get value => phoneNumber;
 }

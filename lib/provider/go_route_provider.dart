@@ -9,11 +9,13 @@ import 'package:woju/page/error/server_error_page.dart';
 import 'package:woju/page/home/home_page.dart';
 
 import 'package:woju/page/onboarding/onboarding_page.dart';
-import 'package:woju/page/onboarding/signin_page.dart';
-import 'package:woju/page/onboarding/signup_page.dart';
-import 'package:woju/page/onboarding/signup_userinfo_page.dart';
+import 'package:woju/page/onboarding/signin/password_reset_page.dart';
+import 'package:woju/page/onboarding/signin/signin_page.dart';
+import 'package:woju/page/onboarding/signup/signup_page.dart';
+import 'package:woju/page/onboarding/signup/signup_userinfo_page.dart';
 import 'package:woju/provider/app_state_notifier.dart';
 import 'package:woju/service/debug_service.dart';
+import 'package:woju/theme/widget/custom_text.dart';
 
 class RouterObserver extends NavigatorObserver {
   @override
@@ -111,12 +113,22 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               ),
             ],
           ),
-          _buildNoTransitionRoute(
+          _buildNestedRoute(
             path: 'signin',
             builder: (context, state) {
               return const SignInPage();
             },
             text: '로그인',
+            routes: [
+              _buildNoTransitionRoute(
+                path: 'resetPassword',
+                builder: (context, state) {
+                  // return const PasswordResetPage();
+                  return Container();
+                },
+                text: '비밀번호 재설정',
+              ),
+            ],
           ),
         ],
       ),
@@ -125,7 +137,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           return const Scaffold(
             body: Center(
-              child: Text('에러 페이지'),
+              child: CustomText('에러 페이지'),
             ),
           );
         },
@@ -158,6 +170,7 @@ GoRoute _buildNoTransitionRoute({
   );
 }
 
+// ignore: unused_element
 GoRoute _buildCustomTransitionRoute({
   required String path,
   required Widget Function(BuildContext, GoRouterState) builder,

@@ -1,10 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:woju/model/app_state_model.dart';
 import 'package:woju/model/onboarding/sign_in_model.dart';
 import 'package:woju/model/secure_model.dart';
+import 'package:woju/model/user/user_auth_model.dart';
 import 'package:woju/model/user/user_detail_info_model.dart';
+import 'package:woju/model/user/user_password_model.dart';
 import 'package:woju/provider/app_state_notifier.dart';
 import 'package:woju/provider/onboarding/user_detail_info_state_notifier.dart';
 import 'package:woju/service/api/http_service.dart';
@@ -12,7 +13,7 @@ import 'package:woju/service/debug_service.dart';
 import 'package:woju/service/device_info_service.dart';
 import 'package:woju/service/secure_storage_service.dart';
 
-class SignInService {
+class UserService {
   /// ### 로그인 수행 함수
   ///
   /// #### Notes
@@ -45,7 +46,7 @@ class SignInService {
         "phoneNumber: $phoneNumber, password: $password, dialCode: $dialCode, isoCode: $isoCode, userID: $userID");
     final json = {
       "userPhoneNumber": phoneNumber,
-      "diaCode": dialCode,
+      "dialCode": dialCode,
       "isoCode": isoCode,
       "userID": userID,
       "userPassword": password,
@@ -62,6 +63,8 @@ class SignInService {
       final decodedJson = jsonDecode(response.body);
       final userDetailInfo =
           UserDetailInfoModel.fromJson(decodedJson['userInfo']);
+
+      printd("profileImage: ${userDetailInfo.profileImage}");
 
       // UserDetailInfoModel 업데이트
       ref.read(userDetailInfoStateProvider.notifier).update(userDetailInfo);
@@ -97,13 +100,10 @@ class SignInService {
       ref
           .read(appStateProvider.notifier)
           .updateSignInStatus(SignInStatus.logout);
-      ref
-          .read(appStateProvider.notifier)
-          .updateAppError(AppError.autoSignInError);
       return SignInStatus.logout;
     }
 
-    final result = await SignInService.login(
+    final result = await UserService.login(
       userDetailInfo.userPhoneNumber,
       passwordFromSecureStorage,
       userDetailInfo.dialCode,
@@ -113,5 +113,115 @@ class SignInService {
     );
 
     return result;
+  }
+
+  /// ### 비밀번호 변경 함수
+  ///
+  /// #### Notes
+  ///
+  /// - 사용자가 비밀번호 변경 버튼을 클릭하면 호출됩니다.
+  ///
+  /// #### Parameters
+  ///
+  /// - [String] `userID` : 사용자 ID
+  /// - [String] `oldPassword` : 기존 비밀번호
+  /// - [String] `newPassword` : 새로운 비밀번호
+  /// - [Ref] `ref` : Riverpod Ref
+  ///
+  /// #### Returns
+  ///
+  /// - `Future<bool>` : 비밀번호 변경 성공 여부
+  ///
+  static Future<bool> changePassword(String userID, String oldPassword,
+      String newPassword, WidgetRef ref) async {
+    // 새 비밀번호 유효성 검사
+    if (UserPasswordModel.isPasswordValid(newPassword) == false) {
+      return false;
+    }
+
+    final response = await HttpService.post('/user/update-user-password', {
+      "userID": userID,
+      "oldPassword": oldPassword,
+      "newPassword": newPassword,
+    });
+
+    if (response.statusCode == 200) {
+      // SecureStorage에 사용자 비밀번호 저장
+      SecureStorageService.writeSecureData(
+          SecureModel.userPassword, newPassword);
+
+      // 로그인 상태 업데이트
+      ref
+          .read(appStateProvider.notifier)
+          .updateSignInStatus(SignInStatus.logout);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /// ### 비밀번호 재설정 함수
+  ///
+  /// #### Notes
+  ///
+  /// - 사용자가 비밀번호 재설정 버튼을 클릭하면 호출됩니다.
+  ///
+  /// #### Parameters
+  ///
+  /// - [String?] 'userUID' : 사용자 UID
+  /// - [String?] 'newPassword' : 새로운 비밀번호
+  /// - [Ref] `ref` : Riverpod Ref
+  ///
+  /// #### Returns
+  ///
+  /// - `Future<bool>` : 비밀번호 재설정 성공 여부
+  ///
+  static Future<bool> resetPassword(
+    String? userUID,
+    String? newPassword,
+    WidgetRef ref,
+  ) async {
+    if (userUID == null || newPassword == null) {
+      return false;
+    }
+
+    final response = await HttpService.post('/user/reset-user-password', {
+      "userUID": userUID,
+      "newPassword": newPassword,
+    });
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /// ### 사용자 가입 여부 확인 함수
+  ///
+  /// #### Notes
+  ///
+  /// - 사용자의 가입 여부를 확인합니다.
+  ///
+  /// #### Parameters
+  ///
+  /// - [String] `userUID` : 사용자 UID
+  ///
+  /// #### Returns
+  ///
+  /// - `Future<bool>` : 사용자 가입 여부
+  ///
+  static Future<UserExistStatus> isUserExist(String userUID) async {
+    final response = await HttpService.post('/user/check-user-exists', {
+      "userUID": userUID,
+    });
+
+    if (response.statusCode == 200) {
+      return UserExistStatus.exist;
+    } else if (response.statusCode == 400) {
+      return UserExistStatus.notExist;
+    } else {
+      return UserExistStatus.error;
+    }
   }
 }

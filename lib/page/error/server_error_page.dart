@@ -1,7 +1,7 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:woju/provider/app_state_notifier.dart';
+import 'package:woju/theme/widget/custom_text.dart';
 
 class ServerErrorPage extends ConsumerWidget {
   const ServerErrorPage({super.key});
@@ -11,7 +11,7 @@ class ServerErrorPage extends ConsumerWidget {
     final appStatusNotifier = ref.watch(appStateProvider.notifier);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('error.server.title').tr(),
+        title: const CustomText('error.server.title'),
         leading: const SizedBox(),
       ),
       body: PopScope(
@@ -21,12 +21,12 @@ class ServerErrorPage extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(width: double.infinity),
-            const Text('error.server.description').tr(),
+            const CustomText('error.server.description'),
             ElevatedButton(
               onPressed: () async {
                 await appStatusNotifier.checkServerConnection();
               },
-              child: const Text('error.server.retry').tr(),
+              child: const CustomText('error.server.retry'),
             ),
           ],
         ),

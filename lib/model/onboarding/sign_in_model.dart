@@ -1,3 +1,4 @@
+import 'package:woju/model/status/status_mixin.dart';
 import 'package:woju/model/user/user_id_model.dart';
 import 'package:woju/model/user/user_password_model.dart';
 import 'package:woju/model/user/user_phone_model.dart';
@@ -8,20 +9,16 @@ import 'package:woju/model/user/user_phone_model.dart';
 ///
 /// - [loginFailedForInvalidLoginInfo] : 로그인을 시도했으나 로그인 정보 오류가 발생한 상태
 /// - [loginFailedForServer] : 로그인을 시도했으나 서버 오류가 발생한 상태
+/// - [withDrawalFailed] : 회원 탈퇴를 시도했으나 서버 오류가 발생한 상태
 /// - [loginSuccess] : 로그인을 성공한 상태
 /// - [logout] : 로그인을 시도하지 않았거나, 로그아웃을 실행한 상태
 ///
-enum SignInStatus {
+enum SignInStatus with StatusMixin {
   loginFailedForInvalidLoginInfo,
   loginFailedForServer,
+  withDrawalFailed,
   loginSuccess,
   logout,
-}
-
-extension SignInStatusExtension on SignInStatus {
-  String get toMessage {
-    return "status.signIn.${toString().split('.').last}";
-  }
 }
 
 class SignInModel {

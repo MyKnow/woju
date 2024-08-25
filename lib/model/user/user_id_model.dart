@@ -1,43 +1,24 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
+import 'package:woju/model/status/status_mixin.dart';
+import 'package:woju/model/text_field_model.dart';
 import 'package:woju/service/debug_service.dart';
 import 'package:woju/service/api/http_service.dart';
 
-enum UserIDStatus {
-  userIDEmpty,
-  userIDShort,
-  userIDLong,
-  userIDInvalid,
-  userIDValid,
-  userIDNotAvailable,
-  userIDAvailable,
+enum UserIDStatus with StatusMixin {
+  empty,
+  short,
+  long,
+  invalid,
+  valid,
+  notAvailable,
+  available,
   serverError,
+  validForSignUp,
 }
 
-extension UserIDStatusExtension on UserIDStatus {
-  String get toMessage {
-    switch (this) {
-      case UserIDStatus.userIDEmpty:
-        return "status.userID.empty";
-      case UserIDStatus.userIDShort:
-        return "status.userID.short";
-      case UserIDStatus.userIDLong:
-        return "status.userID.long";
-      case UserIDStatus.userIDInvalid:
-        return "status.userID.invalid";
-      case UserIDStatus.userIDValid:
-        return "status.userID.valid";
-      case UserIDStatus.userIDNotAvailable:
-        return "status.userID.notAvailable";
-      case UserIDStatus.userIDAvailable:
-        return "status.userID.available";
-      case UserIDStatus.serverError:
-        return "status.server.error";
-    }
-  }
-}
-
-class UserIDModel {
+class UserIDModel with TextFieldModel<String> {
   final String? userID;
   final bool isIDValid;
   final bool isIDAvailable;
@@ -48,7 +29,7 @@ class UserIDModel {
   UserIDModel({
     this.userID,
     this.isIDAvailable = false,
-  }) : isIDValid = validateID(userID) == UserIDStatus.userIDValid;
+  }) : isIDValid = validateID(userID) == UserIDStatus.valid;
 
   UserIDModel copyWith({
     String? userID,
@@ -62,25 +43,25 @@ class UserIDModel {
 
   static UserIDStatus validateID(String? userID) {
     if (userID == null) {
-      return UserIDStatus.userIDEmpty;
+      return UserIDStatus.empty;
     }
 
     if (userID.isEmpty) {
-      return UserIDStatus.userIDEmpty;
+      return UserIDStatus.empty;
     } else if (userID.length < minLength) {
-      return UserIDStatus.userIDShort;
+      return UserIDStatus.short;
     } else if (userID.length > maxLength) {
-      return UserIDStatus.userIDLong;
+      return UserIDStatus.long;
     } else if (RegExp(r'^[a-zA-Z0-9]+$').hasMatch(userID) == false) {
-      return UserIDStatus.userIDInvalid;
+      return UserIDStatus.invalid;
     } else {
-      return UserIDStatus.userIDValid;
+      return UserIDStatus.valid;
     }
   }
 
   static Future<UserIDStatus> checkAvailableID(
       String? userID, String? userUID) async {
-    if (validateID(userID) != UserIDStatus.userIDValid) {
+    if (validateID(userID) != UserIDStatus.valid) {
       return validateID(userID);
     }
 
@@ -100,10 +81,10 @@ class UserIDModel {
         final data = jsonDecode(response.body);
         if (data["isAvailable"] == true) {
           printd("사용 가능한 ID");
-          return UserIDStatus.userIDAvailable;
+          return UserIDStatus.available;
         } else {
           printd("사용 불가능한 ID");
-          return UserIDStatus.userIDNotAvailable;
+          return UserIDStatus.notAvailable;
         }
       } else {
         printd("ID 중복 여부 확인 실패");
@@ -119,15 +100,33 @@ class UserIDModel {
     return UserIDModel();
   }
 
-  String labelText(bool isSignUp) {
+  @override
+  String get labelText;
+
+  String labelTextWithParameter(bool isSignUp) {
     if (isIDValid) {
-      if (isSignUp) {
-        return "status.userID.validForSignUp";
+      if (isSignUp == true) {
+        return "status.UserIDStatus.validForSignUp".tr();
       } else {
-        return "status.userID.validForSignIn";
+        return "status.UserIDStatus.validForSignIn".tr();
       }
     } else {
-      return "onboarding.signIn.inputUserID";
+      return validateID(userID).toMessage;
+    }
+  }
+
+  @override
+  bool get isValid => validateID(userID) == UserIDStatus.valid;
+
+  @override
+  String? get value => userID;
+
+  @override
+  String? get errorMessage {
+    if (isValid) {
+      return null;
+    } else {
+      return validateID(userID).toMessage;
     }
   }
 }

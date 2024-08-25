@@ -11,6 +11,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:woju/firebase_options.dart';
 import 'package:woju/model/hive_box_enum.dart';
 import 'package:woju/provider/go_route_provider.dart';
+import 'package:woju/provider/theme_state_notififer.dart';
+import 'package:woju/theme/custom_theme_data.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -51,9 +53,9 @@ class MainApp extends ConsumerWidget {
       builder: (context, child) => AccessibilityTools(child: child),
       debugShowCheckedModeBanner: false,
       debugShowMaterialGrid: false,
-      darkTheme: ThemeData.dark(useMaterial3: false),
-      themeMode: ThemeMode.system,
-      theme: ThemeData.light(),
+      darkTheme: CustomThemeData.dark,
+      themeMode: ref.watch(themeStateNotifierProvider),
+      theme: CustomThemeData.light,
       routerConfig: ref.watch(goRouterProvider),
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,

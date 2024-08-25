@@ -3,9 +3,12 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:woju/model/onboarding/sign_in_model.dart';
+import 'package:woju/model/secure_model.dart';
+import 'package:woju/provider/onboarding/user_detail_info_state_notifier.dart';
 import 'package:woju/service/api/http_service.dart';
-import 'package:woju/service/api/sign_in_service.dart';
+import 'package:woju/service/api/user_service.dart';
 import 'package:woju/service/debug_service.dart';
+import 'package:woju/service/secure_storage_service.dart';
 
 import '../model/app_state_model.dart';
 
@@ -118,7 +121,7 @@ extension AppStateAction on AppStateNotifier {
     }
 
     // autoSignIn을 시도하고, 성공하면 로그인 상태를 업데이트하고, 실패하면 에러 상태를 업데이트
-    final result = await SignInService.autoSignIn(ref);
+    final result = await UserService.autoSignIn(ref);
 
     printd("initialBoot : AutoLogin result: $result");
 
@@ -132,9 +135,15 @@ extension AppStateAction on AppStateNotifier {
       updateSignInStatus(SignInStatus.logout);
       updateAppError(AppError.serverError);
     }
-    // 그 외 실패 시 로그인 화면으로 이동해야 함
+    // 로그인 정보가 없을 시 온보딩으로 이동해야 함
+    else if (result == SignInStatus.logout) {
+      updateSignInStatus(SignInStatus.logout);
+      updateAppError(AppError.none);
+    } // 그 외의 경우 (로그인 실패)
     else {
       updateSignInStatus(SignInStatus.logout);
+      await ref.read(userDetailInfoStateProvider.notifier).delete();
+      await SecureStorageService.deleteSecureData(SecureModel.userPassword);
       updateAppError(AppError.autoSignInError);
     }
 

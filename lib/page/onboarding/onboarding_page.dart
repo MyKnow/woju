@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_onboarding_slider/flutter_onboarding_slider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:woju/provider/app_state_notifier.dart';
+import 'package:woju/theme/widget/custom_text.dart';
 
 class OnboardingPage extends ConsumerWidget {
   const OnboardingPage({super.key});
@@ -21,10 +22,10 @@ class OnboardingPage extends ConsumerWidget {
         onFinish: () {
           ref.read(appStateProvider.notifier).pushRouteSignUpPage(context);
         },
-        skipTextButton: const Text('onboarding.skip').tr(),
+        skipTextButton: const CustomText('onboarding.skip', isColorful: true),
         skipIcon: Icon(CupertinoIcons.arrow_right,
             semanticLabel: "onboarding.skip".tr()),
-        trailing: const Text('onboarding.signIn.title').tr(),
+        trailing: const CustomText('onboarding.signIn.title', isColorful: true),
         trailingFunction: () {
           context.push("/onboarding/signin");
         },
@@ -48,34 +49,34 @@ class OnboardingPage extends ConsumerWidget {
         pageBodies: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Column(
+            child: const Column(
               children: <Widget>[
                 const SizedBox(
                   height: 480,
                 ),
-                const Text('onboarding.description.1').tr(),
+                const CustomText('onboarding.description.1'),
               ],
             ),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Column(
+            child: const Column(
               children: <Widget>[
-                const SizedBox(
+                SizedBox(
                   height: 480,
                 ),
-                const Text('onboarding.description.2').tr(),
+                CustomText('onboarding.description.2'),
               ],
             ),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Column(
+            child: const Column(
               children: <Widget>[
-                const SizedBox(
+                SizedBox(
                   height: 480,
                 ),
-                const Text('onboarding.description.3').tr(),
+                CustomText('onboarding.description.3'),
               ],
             ),
           ),

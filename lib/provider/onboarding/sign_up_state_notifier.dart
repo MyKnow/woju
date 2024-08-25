@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:country_code_picker/country_code_picker.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -175,7 +174,7 @@ extension SignUpAction on SignUpStateNotifier {
     final nowDialCode = getSignUpModel.userPhoneModel.dialCode;
     if (nowPhoneNumber == null || nowPhoneNumber.isEmpty) {
       printd("전화번호 입력 필요");
-      updateError(PhoneNumberStatus.phoneNumberLengthInvalid.toMessage);
+      updateError(PhoneNumberStatus.lengthInvalid.toMessage);
       return;
     }
     if (nowDialCode.isEmpty) {
@@ -197,7 +196,7 @@ extension SignUpAction on SignUpStateNotifier {
       verificationFailed: (FirebaseAuthException e) {
         if (e.code == 'invalid-phone-number') {
           printd('전화번호 형식이 잘못되었습니다.');
-          updateError(PhoneNumberStatus.phoneNumberInvalid.toMessage);
+          updateError(PhoneNumberStatus.invalid.toMessage);
           showToastMessage();
           return;
         }
@@ -328,7 +327,7 @@ extension SignUpAction on SignUpStateNotifier {
   void showToastMessage() {
     final String? errorMessage = getSignUpModel.error;
     if (errorMessage != null) {
-      ToastMessageService.show(errorMessage.tr());
+      ToastMessageService.show(errorMessage);
     }
   }
 
@@ -387,10 +386,13 @@ extension SignUpAction on SignUpStateNotifier {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        if (data["isAvailable"] == false) {
+        printd("data: $data");
+        if (data["isAvailable"] == false ||
+            data["isAlreadyRegistered"] == true) {
           printd("회원가입된 사용자");
           updatePhoneNumberAvailable(false);
-          updateError(PhoneNumberStatus.phoneNumberNotAvailable.toMessage);
+          updateUserAuthModel(authCodeSent: false);
+          updateError(PhoneNumberStatus.notAvailable.toMessage);
           showToastMessage();
           return false;
         } else {
@@ -401,7 +403,7 @@ extension SignUpAction on SignUpStateNotifier {
       } else if (response.statusCode == 400) {
         printd("이미 가입된 사용자");
         updatePhoneNumberAvailable(false);
-        updateError(PhoneNumberStatus.phoneNumberNotAvailable.toMessage);
+        updateError(PhoneNumberStatus.notAvailable.toMessage);
         showToastMessage();
         changePhoneNumber();
         return false;
@@ -455,7 +457,6 @@ extension SignUpAction on SignUpStateNotifier {
   /// [String] phoneNumber: 전화번호
   ///
   void phoneNumberOnChange(String phoneNumber) {
-    printd("updatePhoneNumber: $phoneNumber");
     updatePhoneNumber(phoneNumber);
   }
 
@@ -474,7 +475,7 @@ extension SignUpAction on SignUpStateNotifier {
     }
 
     if (UserIDModel.validateID(getSignUpModel.userIDModel.userID) !=
-        UserIDStatus.userIDValid) {
+        UserIDStatus.valid) {
       printd(
           "validateID: ${UserIDModel.validateID(getSignUpModel.userIDModel.userID)}");
       return null;
@@ -492,12 +493,12 @@ extension SignUpAction on SignUpStateNotifier {
           getSignUpModel.userIDModel.userID,
           getSignUpModel.userAuthModel.userUid);
 
-      if (isAvailable == UserIDStatus.userIDAvailable) {
+      if (isAvailable == UserIDStatus.available) {
         updateIDAvailable(true);
         ref.read(signUpAuthFocusProvider.notifier).requestFocusUserPassword();
       } else {
         updateIDAvailable(false);
-        updateError(UserIDStatus.userIDNotAvailable.toMessage);
+        updateError(UserIDStatus.notAvailable.toMessage);
         showToastMessage();
         ref.read(signUpAuthFocusProvider.notifier).requestFocusUserID();
       }
@@ -616,6 +617,8 @@ extension SignUpUserInfoAction on SignUpStateNotifier {
       }
 
       if (context.mounted) {
+        ToastMessageService.nativeSnackbar(
+            "onboarding.signUp.detail.signUpSuccess", context);
         context.go('/onboarding/signin');
       }
     };

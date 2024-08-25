@@ -1,18 +1,16 @@
-enum PasswordStatus {
+import 'package:woju/model/status/status_mixin.dart';
+import 'package:woju/model/text_field_model.dart';
+
+enum PasswordStatus with StatusMixin {
   empty,
   short,
   long,
   invalid,
   valid,
+  validForSignIn,
 }
 
-extension PasswordErrorExtension on PasswordStatus {
-  String? get toMessage {
-    return "status.password.${toString().split('.').last}";
-  }
-}
-
-class UserPasswordModel {
+class UserPasswordModel with TextFieldModel {
   final String? userPassword;
   final PasswordStatus? passwordError;
   final bool isPasswordVisible;
@@ -87,5 +85,41 @@ class UserPasswordModel {
       passwordError: null,
       isPasswordVisible: false,
     );
+  }
+
+  @override
+  bool get isValid => validatePassword(userPassword) == PasswordStatus.valid;
+
+  @override
+  get value => userPassword;
+
+  @override
+  String? get errorMessage {
+    if (isValid) {
+      return null;
+    } else {
+      return validatePassword(userPassword).toMessage;
+    }
+  }
+
+  @override
+  String get labelText {
+    if (isPasswordAvailable) {
+      return PasswordStatus.valid.toMessage;
+    } else {
+      return PasswordStatus.empty.toMessage;
+    }
+  }
+
+  String labelTextWithParameter(bool isSignUp) {
+    if (isPasswordAvailable) {
+      if (isSignUp) {
+        return PasswordStatus.valid.toMessage;
+      } else {
+        return PasswordStatus.validForSignIn.toMessage;
+      }
+    } else {
+      return PasswordStatus.empty.toMessage;
+    }
   }
 }

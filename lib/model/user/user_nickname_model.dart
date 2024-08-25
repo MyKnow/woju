@@ -1,4 +1,7 @@
-enum UserNickNameStatus {
+import 'package:woju/model/status/status_mixin.dart';
+import 'package:woju/model/text_field_model.dart';
+
+enum UserNickNameStatus with StatusMixin {
   valid,
   invalid,
   empty,
@@ -6,24 +9,7 @@ enum UserNickNameStatus {
   long,
 }
 
-extension UserNickNameStatusExtension on UserNickNameStatus {
-  String get toMessage {
-    switch (this) {
-      case UserNickNameStatus.valid:
-        return "status.nickname.valid";
-      case UserNickNameStatus.invalid:
-        return "status.nickname.invalid";
-      case UserNickNameStatus.empty:
-        return "status.nickname.empty";
-      case UserNickNameStatus.short:
-        return "status.nickname.short";
-      case UserNickNameStatus.long:
-        return "status.nickname.long";
-    }
-  }
-}
-
-class UserNicknameModel {
+class UserNicknameModel with TextFieldModel<String> {
   final String? nickname;
   final bool isNicknameValid;
 
@@ -58,7 +44,29 @@ class UserNicknameModel {
     );
   }
 
-  String labelText() {
-    return "status.nickname.title";
+  @override
+  bool get isValid => nickNameValidator(nickname) == UserNickNameStatus.valid;
+
+  @override
+  String? get errorMessage {
+    if (isValid) {
+      return null;
+    } else {
+      return nickNameValidator(nickname).toMessage;
+    }
+  }
+
+  @override
+  String get labelText {
+    if (isValid) {
+      return UserNickNameStatus.valid.toMessage;
+    } else {
+      return UserNickNameStatus.empty.toMessage;
+    }
+  }
+
+  @override
+  String? get value {
+    return nickname;
   }
 }

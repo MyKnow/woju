@@ -17,7 +17,7 @@ class UserDetailInfoModelAdapter extends TypeAdapter<UserDetailInfoModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return UserDetailInfoModel(
-      profileImage: fields[0] as XFile?,
+      profileImage: fields[0] as Uint8List?,
       userID: fields[1] as String,
       userPhoneNumber: fields[2] as String,
       dialCode: fields[3] as String,

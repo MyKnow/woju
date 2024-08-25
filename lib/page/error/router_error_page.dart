@@ -1,21 +1,36 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:woju/theme/widget/custom_text.dart';
 
-class RouterErrorPage extends ConsumerWidget {
+class RouterErrorPage extends ConsumerStatefulWidget {
   const RouterErrorPage({super.key});
-
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  RouterErrorPageState createState() => RouterErrorPageState();
+}
+
+class RouterErrorPageState extends ConsumerState<RouterErrorPage> {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      appBar: AppBar(
+        leading: Container(),
+        title: const CustomText('error.router.title'),
+      ),
+      body: PopScope(
+        canPop: false,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('error.router.title').tr(),
+            const SizedBox(
+              width: double.infinity,
+            ),
+            const CustomText('error.router.description'),
             ElevatedButton(
-              onPressed: () {},
-              child: const Text('error.router.button').tr(),
+              onPressed: () {
+                context.go('/');
+              },
+              child: const CustomText('error.router.back'),
             ),
           ],
         ),

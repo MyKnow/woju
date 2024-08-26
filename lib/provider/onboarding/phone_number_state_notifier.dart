@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:woju/model/user/user_phone_model.dart';
 
-final phoneNumberStateProvider =
-    StateNotifierProvider<PhoneNumberStateNotififer, UserPhoneModel>(
+final phoneNumberStateProvider = StateNotifierProvider.autoDispose<
+    PhoneNumberStateNotififer, UserPhoneModel>(
   (ref) => PhoneNumberStateNotififer(ref),
 );
 
@@ -14,12 +14,8 @@ class PhoneNumberStateNotififer extends StateNotifier<UserPhoneModel> {
     state = state.copyWith(phoneNumber: phoneNumber);
   }
 
-  void updateDialCode(String dialCode) {
-    state = state.copyWith(dialCode: dialCode);
-  }
-
-  void updateIsoCode(String isoCode) {
-    state = state.copyWith(isoCode: isoCode);
+  void updateCountryCode(String dialCode, String isoCode) {
+    state = state.copyWith(dialCode: dialCode, isoCode: isoCode);
   }
 
   void reset() {

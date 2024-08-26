@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:woju/model/user/user_auth_model.dart';
 import 'package:woju/service/api/user_service.dart';
 import 'package:woju/service/debug_service.dart';
+import 'package:woju/service/toast_message_service.dart';
 
 final authStateProvider =
-    StateNotifierProvider<AuthStateNotififer, UserAuthModel>(
+    StateNotifierProvider.autoDispose<AuthStateNotififer, UserAuthModel>(
   (ref) => AuthStateNotififer(ref),
 );
 
@@ -22,7 +24,7 @@ class AuthStateNotififer extends StateNotifier<UserAuthModel> {
     state = state.copyWith(verificationId: verificationId);
   }
 
-  void updateResendToken(int resendToken) {
+  void updateResendToken(int? resendToken) {
     state = state.copyWith(resendToken: resendToken);
   }
 
@@ -62,8 +64,10 @@ extension AuthAction on AuthStateNotififer {
   ///
   /// - [String phoneNumber] : 전화번호
   /// - [String dialCode] : 국가 코드
+  /// - [Function focusNodeChange] : 포커스 노드 변경 함수
   ///
-  Future<void> verifyPhoneNumber(String phoneNumber, String dialCode) async {
+  Future<void> verifyPhoneNumber(
+      String phoneNumber, String dialCode, VoidCallback focusNodeChange) async {
     if (phoneNumber.isEmpty || dialCode.isEmpty) return;
 
     // 전화번호의 앞자리가 0이라면 제거
@@ -95,8 +99,9 @@ extension AuthAction on AuthStateNotififer {
       codeSent: (String verificationId, int? resendToken) {
         printd('인증번호 전송됨');
         updateVerificationId(verificationId);
-        updateResendToken(resendToken!);
+        updateResendToken(resendToken);
         updateAuthCodeSent(true);
+        focusNodeChange();
       },
       codeAutoRetrievalTimeout: (String verificationId) {
         printd('인증번호 입력 시간 초과');
@@ -112,13 +117,13 @@ extension AuthAction on AuthStateNotififer {
   ///
   /// #### Parameters
   ///
-  /// [String] authCode: 인증번호
+  /// - [BuildContext] context
   ///
   /// #### Returns
   ///
   /// [bool] 인증 성공 여부
   ///
-  Future<bool> verifyAuthCode() async {
+  Future<bool> verifyAuthCode(BuildContext context) async {
     final String authCode = getAuthModel.authCode ?? "";
     printd("verifyAuthCode: $authCode");
     if (authCode.isEmpty) {
@@ -140,10 +145,15 @@ extension AuthAction on AuthStateNotififer {
       final userExistStatus = await checkUserExist();
 
       updateExistStatus(userExistStatus);
+      printd("사용자 존재 여부: $userExistStatus");
 
       if (userExistStatus == UserExistStatus.exist) {
         return true;
       } else {
+        if (context.mounted) {
+          ToastMessageService.nativeSnackbar(
+              UserExistStatus.notExist.toMessage, context);
+        }
         return false;
       }
     } catch (e) {
@@ -171,5 +181,116 @@ extension AuthAction on AuthStateNotififer {
     final result = UserService.isUserExist(userUid);
 
     return result;
+  }
+}
+
+extension AuthCallback on AuthStateNotififer {
+  /// ### 전화번호 변경 버튼 클릭 시 호출되는 콜백 메서드
+  ///
+  /// - 인증번호 전송 상태를 초기화한다.
+  ///
+  /// #### Parameters
+  ///
+  /// - [Function phoneNumberReset] 전화번호 초기화 함수]
+  /// - [Function focusNode] 포커스 노드 초기화 함수
+  ///
+  /// #### Returns
+  ///
+  /// [VoidCallback?] 인증번호 전송 상태 초기화 함수
+  ///
+  VoidCallback? authStatusResetButton(
+      VoidCallback phoneNumberReset, VoidCallback focusNodeChange) {
+    if (getAuthModel.authCodeSent) {
+      return () {
+        phoneNumberReset();
+        updateAuthCodeSent(false);
+        focusNodeChange();
+      };
+    }
+    return null;
+  }
+
+  /// ### 인증번호 발송 버튼 클릭 시 호출되는 콜백 메서드
+  ///
+  /// - 입력받은 전화번호로 인증번호를 발송한다.
+  ///
+  /// #### Parameters
+  ///
+  /// - [String phoneNumber] 전화번호
+  /// - [String dialCode] 국가 코드
+  /// - [Function focusNodeChange] 포커스 노드 변경 함수
+  ///
+  /// #### Returns
+  ///
+  /// [VoidCallback?] 인증번호 발송 함수
+  ///
+  VoidCallback? authSendButton(
+      String phoneNumber, String dialCode, VoidCallback focusNodeChange) {
+    if (!getAuthModel.authCodeSent) {
+      return () {
+        verifyPhoneNumber(phoneNumber, dialCode, focusNodeChange);
+      };
+    }
+    return null;
+  }
+
+  /// ### 인증번호 재전송 버튼 클릭 시 호출되는 콜백 메서드
+  ///
+  /// - 인증번호 재전송을 요청한다.
+  ///
+  /// #### Parameters
+  ///
+  /// - [String phoneNumber] 전화번호
+  /// - [String dialCode] 국가 코드
+  /// - [Function focusNodeChange] 포커스 노드 변경 함수
+  ///
+  /// #### Returns
+  ///
+  /// [VoidCallback?] 인증번호 재전송 함수
+  ///
+  VoidCallback? authResendButton(
+      String phoneNumber, String dialCode, VoidCallback focusNodeChange) {
+    if (getAuthModel.authCodeSent) {
+      return () {
+        updateAuthCodeSent(false);
+        verifyPhoneNumber(phoneNumber, dialCode, focusNodeChange);
+      };
+    }
+    return null;
+  }
+
+  /// ### 인증번호 확인 버튼 클릭 시 호출되는 콜백 메서드
+  ///
+  /// - 입력받은 인증번호를 확인한다.
+  ///
+  /// #### Parameters
+  ///
+  /// - [BuildContext context] context
+  /// - [Function focusNodeChange] 포커스 노드 변경 함수
+  ///
+  /// #### Returns
+  ///
+  /// - [VoidCallback?] 인증번호 확인 함수
+  ///
+  VoidCallback? authConfirmButton(
+      BuildContext context, VoidCallback focusNodeChange) {
+    if (getAuthModel.authCode == null || getAuthModel.authCode!.isEmpty) {
+      printd("authConfirmButton: authCode is empty");
+      return null;
+    }
+    if (getAuthModel.authCodeSent && getAuthModel.isValid) {
+      printd("authConfirmButton: Function Activated");
+      return () async {
+        printd("authConfirmButton: ${getAuthModel.authCode}");
+        final result = await verifyAuthCode(context);
+        if (result) {
+          updateAuthCompleted(true);
+          focusNodeChange();
+        }
+        printd("authConfirmButton: $result");
+      };
+    } else {
+      return null;
+    }
   }
 }

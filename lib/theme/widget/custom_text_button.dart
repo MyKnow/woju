@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CustomTextButton extends ConsumerWidget {
   final String text;
-  final void Function()? onPressed;
+  final VoidCallback? onPressed;
   final EdgeInsetsGeometry? padding;
   final OutlinedBorder? shape;
   final Size? minimumSize;
@@ -27,20 +27,28 @@ class CustomTextButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final nowTheme = Theme.of(context);
+
+    // onPressed가 null이면 비활성화된 스타일을 적용
     return TextButton(
-      onPressed: onPressed,
+      onPressed: () {
+        if (onPressed != null) {
+          onPressed!();
+        }
+      },
       style: TextButton.styleFrom(
         padding: padding,
         shape: shape,
-        disabledForegroundColor: nowTheme.disabledColor,
         minimumSize: minimumSize,
+        disabledForegroundColor: nowTheme.disabledColor,
       ),
       child: Text(
         text,
         textAlign: TextAlign.center,
         style: textStyle ??
             nowTheme.primaryTextTheme.bodyLarge?.copyWith(
-              color: nowTheme.primaryColor,
+              color: onPressed == null
+                  ? nowTheme.disabledColor
+                  : nowTheme.primaryColor,
             ),
       ).tr(namedArgs: namedArgs),
     );

@@ -44,6 +44,7 @@ class SignUpPage extends ConsumerWidget {
             const SizedBox(height: 20),
             // 전화번호 입력
             CustomTextfieldContainer(
+              fieldKey: 'phoneNumberForSignUp',
               prefix: CountryCodePicker(
                 onChanged:
                     ref.read(signUpStateProvider.notifier).onCountryCodeChanged,
@@ -145,6 +146,7 @@ class SignUpPage extends ConsumerWidget {
             if (signUp.userAuthModel.authCodeSent &&
                 !signUp.userAuthModel.authCompleted)
               CustomTextfieldContainer(
+                fieldKey: 'authCodeForSignUp',
                 labelText: signUp.userAuthModel.labelText,
                 actions: [
                   CustomTextButton(
@@ -185,6 +187,7 @@ class SignUpPage extends ConsumerWidget {
             // 인증 완료 시 아이디 입력창 표시
             if (signUp.userAuthModel.authCompleted)
               CustomTextfieldContainer(
+                fieldKey: 'userIDForSignUp',
                 prefixIcon: const Icon(Icons.person),
                 labelText: signUp.userIDModel.labelTextWithParameter(true),
                 keyboardType: TextInputType.streetAddress,
@@ -236,6 +239,7 @@ class SignUpPage extends ConsumerWidget {
             // 아이디 입력 완료 시 비밀번호 입력창 표시
             if (signUp.userIDModel.isIDAvailable)
               CustomTextfieldContainer(
+                fieldKey: 'passwordForSignUp',
                 prefixIcon: const Icon(
                   CupertinoIcons.lock_fill,
                   size: 24,

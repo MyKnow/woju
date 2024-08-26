@@ -46,15 +46,12 @@ class CustomThemeData {
       suffixIconColor: Colors.blue[900],
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ButtonStyle(
-        textStyle: WidgetStateProperty.all(
-          textTheme.bodySmall?.copyWith(color: Colors.white),
-        ),
-        iconColor: WidgetStateProperty.all(Colors.white),
-        shape: WidgetStateProperty.all(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
+      style: ElevatedButton.styleFrom(
+        textStyle: textTheme.bodySmall?.copyWith(color: Colors.white),
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.blue[900],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
         ),
       ),
     ),

@@ -25,9 +25,11 @@ class CustomTextfieldContainer extends ConsumerWidget {
   final String? initialValue;
   final double verticalDividerHeight;
   final Function? onFieldSubmitted;
+  final String fieldKey;
 
   const CustomTextfieldContainer({
     super.key,
+    required this.fieldKey,
     this.prefix,
     this.prefixIcon,
     this.suffix,
@@ -55,6 +57,7 @@ class CustomTextfieldContainer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final nowTheme = Theme.of(context);
     final TextFormField textFormField = TextFormField(
+      key: Key(fieldKey),
       decoration: InputDecoration(
         border: InputBorder.none,
         contentPadding: const EdgeInsets.symmetric(

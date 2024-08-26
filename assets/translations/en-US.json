@@ -108,6 +108,10 @@
             "notAvailable" : "ID not available",
             "serverError" : "A server error occurred. Please try again"
         },
+        "UserExistStatus" : {
+            "exist" : "User already exists",
+            "notExist" : "User does not exist"
+        },
         "PasswordStatus" : {
             "empty" : "Please enter your password",
             "valid" : "Password available",

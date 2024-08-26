@@ -165,6 +165,7 @@ class SignupUserinfoPage extends ConsumerWidget {
             ),
             // 닉네임 입력
             CustomTextfieldContainer(
+              fieldKey: 'nicknameForSignUp',
               prefixIcon: const Icon(
                 CupertinoIcons.person_fill,
                 size: 24,
@@ -181,6 +182,10 @@ class SignupUserinfoPage extends ConsumerWidget {
               focusNode: focus[4],
               validator: signUp.userNickNameModel.validator,
               initialValue: signUp.userNickNameModel.nickname,
+              onFieldSubmitted: () {
+                focus[4].unfocus();
+              },
+              textInputAction: TextInputAction.done,
             ),
 
             // 성별 선택 (비공개, 남성, 여성, 기타 중 선택)

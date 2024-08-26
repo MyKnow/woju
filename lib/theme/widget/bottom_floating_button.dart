@@ -21,9 +21,10 @@ class BottomFloatingButton {
             )
           : null,
       width: double.infinity,
-      height: 65,
+      height: 55,
       margin: EdgeInsets.zero,
-      transform: Matrix4.translationValues(0, -bottomPadding + 20, 0),
+      padding: EdgeInsets.zero,
+      transform: Matrix4.translationValues(0, -bottomPadding + 16, 0),
       child: Row(
         children: <Widget>[
           // 키보드가 활성화 되어 있을 때만 키보드를 내리는 기능 버튼 표시
@@ -49,7 +50,7 @@ class BottomFloatingButton {
                 onPressed: onPressed,
                 style: CustomThemeData.currentTheme.elevatedButtonTheme.style
                     ?.copyWith(
-                  minimumSize: WidgetStateProperty.all(const Size(80, 50)),
+                  minimumSize: WidgetStateProperty.all(const Size(80, 40)),
                 ),
                 child: CustomText(
                   text,

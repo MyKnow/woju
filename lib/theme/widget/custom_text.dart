@@ -12,6 +12,7 @@ class CustomText extends ConsumerWidget {
   final bool isLocalize;
   final bool isBold;
   final bool isTitle;
+  final bool reverseTextColor;
 
   const CustomText(
     this.text, {
@@ -23,6 +24,7 @@ class CustomText extends ConsumerWidget {
     this.isLocalize = true,
     this.isBold = false,
     this.isTitle = false,
+    this.reverseTextColor = false,
   });
 
   @override
@@ -49,7 +51,9 @@ class CustomText extends ConsumerWidget {
           textStyle?.copyWith(
             color: isColorful
                 ? Theme.of(context).primaryColor
-                : Theme.of(context).primaryTextTheme.bodyMedium?.color,
+                : (reverseTextColor)
+                    ? Theme.of(context).scaffoldBackgroundColor
+                    : Theme.of(context).primaryTextTheme.bodyMedium?.color,
             fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
           ),
       textAlign: textAlign,

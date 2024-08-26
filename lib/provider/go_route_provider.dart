@@ -123,8 +123,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               _buildNoTransitionRoute(
                 path: 'resetPassword',
                 builder: (context, state) {
-                  // return const PasswordResetPage();
-                  return Container();
+                  return const PasswordResetPage();
                 },
                 text: '비밀번호 재설정',
               ),

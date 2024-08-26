@@ -44,6 +44,7 @@ class SignInPage extends ConsumerWidget {
             if (signIn.loginWithPhoneNumber)
               // 전화번호 입력
               CustomTextfieldContainer(
+                fieldKey: 'phoneNumberForSignIn',
                 prefix: CountryCodePicker(
                   backgroundColor: theme.cardColor,
                   onChanged: signInNotifier.countryCodeOnChange,
@@ -104,6 +105,7 @@ class SignInPage extends ConsumerWidget {
             if (!signIn.loginWithPhoneNumber)
               // 아이디 입력
               CustomTextfieldContainer(
+                fieldKey: 'userIDForSignIn',
                 labelText: signIn.userIDModel.labelTextWithParameter(false),
                 prefixIcon: const Icon(
                   CupertinoIcons.person_fill,
@@ -126,6 +128,7 @@ class SignInPage extends ConsumerWidget {
               Container(),
             // 비밀번호 입력
             CustomTextfieldContainer(
+              fieldKey: 'passwordForSignIn',
               prefixIcon: const Icon(
                 CupertinoIcons.lock_fill,
                 size: 24,

@@ -36,13 +36,19 @@ class HomePage extends ConsumerWidget {
             CustomText("User BirthDate: ${userDetail?.userBirthDate}"),
             ElevatedButton(
               onPressed: signInNotifier.withdrawalButtonOnClick(context),
-              child: const CustomText("Withdrawal"),
+              child: const CustomText(
+                "Withdrawal",
+                reverseTextColor: true,
+              ),
             ),
             ElevatedButton(
               onPressed: () {
                 ref.read(signInStateProvider.notifier).logout();
               },
-              child: const CustomText("Sign Out"),
+              child: const CustomText(
+                "Sign Out",
+                reverseTextColor: true,
+              ),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -52,7 +58,10 @@ class HomePage extends ConsumerWidget {
                 await UserService.changePassword(
                     userDetail!.userID, userPassword, "@test1111", ref);
               },
-              child: const CustomText("Change Password"),
+              child: const CustomText(
+                "Change Password",
+                reverseTextColor: true,
+              ),
             ),
             ElevatedButton(
                 onPressed: () {
@@ -68,7 +77,10 @@ class HomePage extends ConsumerWidget {
                     ),
                   );
                 },
-                child: const CustomText("Show SnackBar")),
+                child: const CustomText(
+                  "Show SnackBar",
+                  reverseTextColor: true,
+                )),
           ],
         ),
       ),

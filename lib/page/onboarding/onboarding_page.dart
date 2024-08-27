@@ -59,10 +59,10 @@ class OnboardingPage extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 40),
             child: const Column(
               children: <Widget>[
-                const SizedBox(
+                SizedBox(
                   height: 480,
                 ),
-                const CustomText('onboarding.description.1'),
+                CustomText('onboarding.description.1'),
               ],
             ),
           ),

@@ -76,14 +76,14 @@ class CustomThemeData {
   static final ThemeData dark = ThemeData(
     useMaterial3: false,
     cardTheme: CardTheme(
-      color: Colors.black87,
-      shadowColor: Colors.grey[500],
+      color: const Color.fromARGB(255, 22, 22, 22),
+      shadowColor: Colors.grey[100],
       surfaceTintColor: Colors.white,
     ),
     textTheme: textTheme,
-    scaffoldBackgroundColor: Colors.black87,
+    scaffoldBackgroundColor: Colors.black,
     primaryColor: Colors.purple,
-    cardColor: Colors.black87,
+    cardColor: const Color.fromARGB(255, 22, 22, 22),
     colorScheme: ColorScheme.fromSwatch(
       primarySwatch: Colors.purple,
       accentColor: Colors.purple,
@@ -103,7 +103,7 @@ class CustomThemeData {
       ),
     ),
     appBarTheme: AppBarTheme(
-      backgroundColor: Colors.black87,
+      backgroundColor: Colors.black,
       titleTextStyle: textTheme.titleLarge?.copyWith(color: Colors.white),
       iconTheme: const IconThemeData(color: Colors.white),
       shadowColor: Colors.transparent,
@@ -119,9 +119,13 @@ class CustomThemeData {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
         textStyle: WidgetStateProperty.all(
-          textTheme.bodySmall?.copyWith(color: Colors.black87),
+          textTheme.bodySmall?.copyWith(
+            color: Colors.black,
+          ),
         ),
-        iconColor: WidgetStateProperty.all(Colors.black87),
+        iconColor: WidgetStateProperty.all(
+          Colors.black,
+        ),
         shape: WidgetStateProperty.all(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),

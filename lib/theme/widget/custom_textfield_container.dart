@@ -104,7 +104,7 @@ class CustomTextfieldContainer extends ConsumerWidget {
         child: actions.isEmpty
             ? textFormField
             : Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   SizedBox(
                     width: 360 - actions.length * 80,
@@ -115,7 +115,9 @@ class CustomTextfieldContainer extends ConsumerWidget {
                   //   height: verticalDividerHeight,
                   //   color: theme.shadowColor,
                   // ),
-                  if (actions.isNotEmpty) ...actions,
+                  Row(
+                    children: actions,
+                  ),
                 ],
               ),
       ),

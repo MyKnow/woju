@@ -1,10 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:woju/model/onboarding/sign_in_model.dart';
 import 'package:woju/model/secure_model.dart';
 import 'package:woju/model/user/user_auth_model.dart';
 import 'package:woju/model/user/user_detail_info_model.dart';
+import 'package:woju/model/user/user_gender_model.dart';
 import 'package:woju/model/user/user_password_model.dart';
 import 'package:woju/provider/app_state_notifier.dart';
 import 'package:woju/provider/onboarding/user_detail_info_state_notifier.dart';
@@ -222,6 +224,42 @@ class UserService {
       return UserExistStatus.notExist;
     } else {
       return UserExistStatus.error;
+    }
+  }
+
+  /// ### 유저 정보 업데이트 함수
+  ///
+  /// #### Notes
+  ///
+  /// - 사용자 정보를 서버로 업데이트합니다.
+  ///
+  /// #### Parameters
+  ///
+  /// - [UserDetailInfoModel] `userDetailInfo` : 사용자 정보
+  /// - [String] `userPassword` : 사용자 비밀번호
+  ///
+  /// #### Returns
+  ///
+  /// - `Future<bool>` : 업데이트 성공 여부
+  ///
+  static Future<bool> updateUser(
+      UserDetailInfoModel userDetailInfo, String userPassword) async {
+    final response = await HttpService.post('/user/update-user-info', {
+      "userProfileImage": userDetailInfo.profileImage,
+      "userID": userDetailInfo.userID,
+      "userPhoneNumber": userDetailInfo.userPhoneNumber,
+      "dialCode": userDetailInfo.dialCode,
+      "isoCode": userDetailInfo.isoCode,
+      "userNickName": userDetailInfo.userNickName,
+      "userGender": userDetailInfo.userGender.value,
+      "userBirthDate": userDetailInfo.userBirthDate.toString(),
+      "userPassword": userPassword,
+    });
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
     }
   }
 }

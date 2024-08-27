@@ -51,6 +51,8 @@ class BottomFloatingButton {
                 style: CustomThemeData.currentTheme.elevatedButtonTheme.style
                     ?.copyWith(
                   minimumSize: WidgetStateProperty.all(const Size(80, 40)),
+                  backgroundColor:
+                      WidgetStateProperty.all(Theme.of(context).primaryColor),
                 ),
                 child: CustomText(
                   text,

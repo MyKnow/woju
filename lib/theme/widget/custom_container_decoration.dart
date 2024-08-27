@@ -30,7 +30,7 @@ class CustomDecorationContainer extends ConsumerWidget {
         boxShadow: [
           BoxShadow(
             color: nowTheme.cardTheme.shadowColor ?? nowTheme.shadowColor,
-            blurRadius: 4,
+            blurRadius: 2,
           ),
         ],
       ),

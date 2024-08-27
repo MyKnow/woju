@@ -53,11 +53,14 @@ class UserDetailInfoModel {
     final profileImage = json['userProfileImage'];
 
     printd("profileImage: $profileImage");
-    printd("profileImage data : ${json['userProfileImage']['data']}");
+    printd("profileImage data : ${json['userProfileImage']?['data']}");
 
-    final decodedData =
-        Uint8List.fromList(List<int>.from(json['userProfileImage']['data']));
-    printd("decodedData: $decodedData");
+    Uint8List? decodedData;
+    if (profileImage != null) {
+      decodedData =
+          Uint8List.fromList(List<int>.from(json['userProfileImage']['data']));
+      printd("decodedData: $decodedData");
+    }
 
     return UserDetailInfoModel(
       profileImage: decodedData,
@@ -69,6 +72,32 @@ class UserDetailInfoModel {
       userNickName: json['userNickName'],
       userGender: GenderExtension.getGenderFromString(json['userGender']),
       userBirthDate: DateTime.parse(json['userBirthDate']),
+    );
+  }
+
+  UserDetailInfoModel copyWith({
+    Uint8List? profileImage,
+    String? userID,
+    String? userPhoneNumber,
+    String? dialCode,
+    String? isoCode,
+    String? userUID,
+    String? userNickName,
+    Gender? userGender,
+    DateTime? userBirthDate,
+    bool? profileImageDelete,
+  }) {
+    return UserDetailInfoModel(
+      profileImage:
+          profileImageDelete == true ? null : profileImage ?? this.profileImage,
+      userID: userID ?? this.userID,
+      userPhoneNumber: userPhoneNumber ?? this.userPhoneNumber,
+      dialCode: dialCode ?? this.dialCode,
+      isoCode: isoCode ?? this.isoCode,
+      userUID: userUID ?? this.userUID,
+      userNickName: userNickName ?? this.userNickName,
+      userGender: userGender ?? this.userGender,
+      userBirthDate: userBirthDate ?? this.userBirthDate,
     );
   }
 }

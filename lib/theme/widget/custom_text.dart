@@ -12,7 +12,7 @@ class CustomText extends ConsumerWidget {
   final bool isLocalize;
   final bool isBold;
   final bool isTitle;
-  final bool reverseTextColor;
+  final bool isWhite;
 
   const CustomText(
     this.text, {
@@ -24,23 +24,24 @@ class CustomText extends ConsumerWidget {
     this.isLocalize = true,
     this.isBold = false,
     this.isTitle = false,
-    this.reverseTextColor = false,
+    this.isWhite = false,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     TextStyle? textStyle;
+    final theme = Theme.of(context);
 
     if (style != null) {
       textStyle = style;
     } else {
       if (isTitle) {
-        textStyle = Theme.of(context).primaryTextTheme.titleLarge;
+        textStyle = theme.primaryTextTheme.titleLarge;
       } else {
         if (isBold) {
-          textStyle = Theme.of(context).primaryTextTheme.bodyLarge;
+          textStyle = theme.primaryTextTheme.bodyLarge;
         } else {
-          textStyle = Theme.of(context).primaryTextTheme.bodyMedium;
+          textStyle = theme.primaryTextTheme.bodyMedium;
         }
       }
     }
@@ -50,10 +51,10 @@ class CustomText extends ConsumerWidget {
       style: style ??
           textStyle?.copyWith(
             color: isColorful
-                ? Theme.of(context).primaryColor
-                : (reverseTextColor)
-                    ? Theme.of(context).scaffoldBackgroundColor
-                    : Theme.of(context).primaryTextTheme.bodyMedium?.color,
+                ? theme.primaryColor
+                : (isWhite)
+                    ? Colors.white
+                    : theme.primaryTextTheme.bodyMedium?.color,
             fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
           ),
       textAlign: textAlign,

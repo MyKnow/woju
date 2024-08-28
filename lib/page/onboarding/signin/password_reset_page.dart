@@ -53,12 +53,7 @@ class PasswordResetPageState extends ConsumerState<PasswordResetPage> {
             CustomTextfieldContainer(
               fieldKey: "phoneNumberForPasswordReset",
               prefix: CountryCodePicker(
-                onChanged: (country) {
-                  phoneNumberNotifier.updateCountryCode(
-                    country.dialCode ?? "",
-                    country.code ?? "",
-                  );
-                },
+                onChanged: phoneNumberNotifier.updateCountryCode,
                 initialSelection: 'KR',
                 favorite: const ['KR', 'US'],
                 showCountryOnly: false,

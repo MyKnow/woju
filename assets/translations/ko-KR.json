@@ -67,7 +67,14 @@
     "home" : {
         "title" : "홈",
         "drawer" : {
-            "closeIconDescription" : "메뉴 닫기"
+            "closeIconDescription" : "메뉴 닫기",
+            "openIconDescription" : "메뉴 열기",
+            "customerServiceCenter" : "고객센터",
+            "signOut" : "로그아웃",
+            "appVersion" : "앱 버전 : {version}",
+            "profile" : "내 프로필",
+            "customerService" : "고객센터",
+            "setting" : "설정"
         }
     },
     "accessibility": {

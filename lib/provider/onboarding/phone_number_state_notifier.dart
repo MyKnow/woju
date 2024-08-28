@@ -1,3 +1,4 @@
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:woju/model/user/user_phone_model.dart';
 
@@ -14,8 +15,9 @@ class PhoneNumberStateNotififer extends StateNotifier<UserPhoneModel> {
     state = state.copyWith(phoneNumber: phoneNumber);
   }
 
-  void updateCountryCode(String dialCode, String isoCode) {
-    state = state.copyWith(dialCode: dialCode, isoCode: isoCode);
+  void updateCountryCode(CountryCode countryCode) {
+    state = state.copyWith(
+        dialCode: countryCode.dialCode, isoCode: countryCode.code);
   }
 
   void reset() {

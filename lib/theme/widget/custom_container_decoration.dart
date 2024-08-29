@@ -25,7 +25,7 @@ class CustomDecorationContainer extends ConsumerWidget {
       padding: padding,
       margin: margin,
       decoration: BoxDecoration(
-        color: nowTheme.cardTheme.color,
+        color: nowTheme.cardTheme.color ?? nowTheme.cardColor,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(

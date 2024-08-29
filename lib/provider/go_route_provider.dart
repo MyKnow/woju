@@ -7,6 +7,7 @@ import 'package:woju/model/onboarding/sign_in_model.dart';
 import 'package:woju/page/error/router_error_page.dart';
 import 'package:woju/page/error/server_error_page.dart';
 import 'package:woju/page/home/home_page.dart';
+import 'package:woju/page/home/user_profile_page.dart';
 
 import 'package:woju/page/onboarding/onboarding_page.dart';
 import 'package:woju/page/onboarding/signin/password_reset_page.dart';
@@ -45,7 +46,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
   final errorState =
       ref.watch(appStateProvider.select((state) => state.appError));
   return GoRouter(
-    initialLocation: '/',
+    initialLocation: '/onboarding',
     observers: [RouterObserver()],
     errorPageBuilder: (context, state) {
       return const NoTransitionPage(child: RouterErrorPage());
@@ -83,12 +84,19 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       return null;
     },
     routes: [
-      _buildNoTransitionRoute(
+      _buildNestedRoute(
         path: '/',
         builder: (context, state) {
           return const HomePage();
         },
         text: '홈',
+        routes: [
+          _buildCustomTransitionRoute(
+            path: 'userProfile',
+            builder: (context, state) => const UserProfilePage(),
+            text: "유저 프로필",
+          ),
+        ],
       ),
       _buildNestedRoute(
         path: '/onboarding',
@@ -183,7 +191,7 @@ GoRoute _buildCustomTransitionRoute({
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return SlideTransition(
             position: Tween<Offset>(
-              begin: const Offset(0.0, 1.0),
+              begin: const Offset(1.0, 0.0),
               end: Offset.zero,
             ).animate(animation),
             child: child,

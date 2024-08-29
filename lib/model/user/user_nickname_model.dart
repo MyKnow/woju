@@ -7,22 +7,27 @@ enum UserNickNameStatus with StatusMixin {
   empty,
   short,
   long,
+  validForDisabled,
 }
 
 class UserNicknameModel with TextFieldModel<String> {
   final String? nickname;
   final bool isNicknameValid;
+  final bool isEditing;
 
   UserNicknameModel({
     required this.nickname,
+    this.isEditing = false,
   }) : isNicknameValid =
             nickNameValidator(nickname) == UserNickNameStatus.valid;
 
   UserNicknameModel copyWith({
     String? nickname,
+    bool? isEditing,
   }) {
     return UserNicknameModel(
       nickname: nickname ?? this.nickname,
+      isEditing: isEditing ?? this.isEditing,
     );
   }
 
@@ -40,7 +45,8 @@ class UserNicknameModel with TextFieldModel<String> {
 
   static UserNicknameModel initial() {
     return UserNicknameModel(
-      nickname: "",
+      nickname: null,
+      isEditing: false,
     );
   }
 
@@ -60,6 +66,18 @@ class UserNicknameModel with TextFieldModel<String> {
   String get labelText {
     if (isValid) {
       return UserNickNameStatus.valid.toMessage;
+    } else {
+      return UserNickNameStatus.empty.toMessage;
+    }
+  }
+
+  String? get labelTextForEditing {
+    if (isValid) {
+      if (isEditing) {
+        return UserNickNameStatus.valid.toMessage;
+      } else {
+        return UserNickNameStatus.validForDisabled.toMessage;
+      }
     } else {
       return UserNickNameStatus.empty.toMessage;
     }

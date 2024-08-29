@@ -142,7 +142,13 @@
             "short" : "닉네임은 2자 이상으로 입력해주세요",
             "long" : "닉네임은 20자 이하로 입력해주세요",
             "invalid" : "사용 불가능한 닉네임입니다",
-            "valid" : "사용 가능한 닉네임입니다"
+            "valid" : "사용 가능한 닉네임입니다",
+            "value" : "{nickname}",
+            "validForDisabled" : "닉네임",
+            "nicknameUpdateCancelButton" : "닉네임 변경 취소 버튼",
+            "nicknameUpdateConfirmButton" : "닉네임 변경 시도 버튼",
+            "nicknameUpdate" : "닉네임 변경",
+            "nicknameUpdateActivateButton" : "닉네임 변경 활성화 버튼"
         },
         "UserExistStatus" : {
             "exist" : "이미 존재하는 사용자입니다",
@@ -162,6 +168,9 @@
             "serverError" : "서버 오류가 발생했습니다. 다시 시도해주세요",
             "alreadySignedUp" : "이미 가입된 전화번호입니다.",
             "signUpFailure": "회원가입에 실패했습니다"
+        },
+        "UserServiceStatus" : {
+            "updateSuccess" : "성공적으로 업데이트되었습니다"
         }
     },
     "error" : {

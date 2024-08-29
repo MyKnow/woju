@@ -20,12 +20,14 @@ class CustomTextfieldContainer extends ConsumerWidget {
   final Iterable<String>? autofillHints;
   final bool? enabled;
   final bool? obscureText;
+  final TextEditingController? controller;
   final TextStyle? textStyle;
   final List<Widget> actions;
   final String? initialValue;
   final double verticalDividerHeight;
   final Function? onFieldSubmitted;
   final String fieldKey;
+  final double? width;
 
   const CustomTextfieldContainer({
     super.key,
@@ -49,8 +51,10 @@ class CustomTextfieldContainer extends ConsumerWidget {
     this.textStyle,
     this.initialValue,
     this.verticalDividerHeight = 60,
+    this.width,
     this.actions = const [],
     this.onFieldSubmitted,
+    this.controller,
   });
 
   @override
@@ -69,9 +73,12 @@ class CustomTextfieldContainer extends ConsumerWidget {
         suffixIcon: suffixIcon,
         labelText: (labelText != null) ? (labelText as String) : null,
         hintText: (hintText != null) ? (hintText as String) : null,
-        labelStyle: nowTheme.primaryTextTheme.titleMedium?.copyWith(
-          color: nowTheme.primaryTextTheme.bodyMedium?.color,
-        ),
+        labelStyle: (enabled ?? false)
+            ? nowTheme.primaryTextTheme.titleMedium?.copyWith(
+                color: nowTheme.primaryTextTheme.bodyMedium?.color,
+              )
+            : nowTheme.textTheme.titleMedium
+                ?.copyWith(color: nowTheme.disabledColor.withOpacity(0.7)),
         errorStyle: nowTheme.primaryTextTheme.labelMedium?.copyWith(
           color: Colors.red,
         ),
@@ -86,7 +93,14 @@ class CustomTextfieldContainer extends ConsumerWidget {
       autofillHints: autofillHints,
       enabled: enabled,
       obscureText: obscureText ?? false,
-      style: textStyle ?? nowTheme.primaryTextTheme.bodyMedium,
+      style: textStyle ??
+          ((enabled ?? false)
+              ? nowTheme.primaryTextTheme.bodyMedium
+              : nowTheme.primaryTextTheme.bodyMedium?.copyWith(
+                  color: nowTheme.disabledColor.withOpacity(
+                    0.7,
+                  ),
+                )),
       initialValue: initialValue,
       onFieldSubmitted: (value) {
         if (textInputAction == TextInputAction.next) {
@@ -96,18 +110,28 @@ class CustomTextfieldContainer extends ConsumerWidget {
           onFieldSubmitted?.call();
         }
       },
+      controller: controller,
       // keyboardAppearance: nowTheme.brightness,
+    );
+    // actions의 IconButton의 width를 계산하여 actionsWidth를 구함
+    final actionsWidth = actions.fold<double>(
+      0,
+      (previousValue, element) {
+        return previousValue + ((element.runtimeType == IconButton) ? 41 : 80);
+      },
     );
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
       child: CustomDecorationContainer(
+        width: double.infinity,
         child: actions.isEmpty
             ? textFormField
             : Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.max,
                 children: [
                   SizedBox(
-                    width: 360 - actions.length * 80,
+                    width: 360 - actionsWidth,
                     child: textFormField,
                   ),
                   // Container(

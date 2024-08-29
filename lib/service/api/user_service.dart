@@ -66,8 +66,6 @@ class UserService {
       final userDetailInfo =
           UserDetailInfoModel.fromJson(decodedJson['userInfo']);
 
-      printd("profileImage: ${userDetailInfo.profileImage}");
-
       // UserDetailInfoModel 업데이트
       ref.read(userDetailInfoStateProvider.notifier).update(userDetailInfo);
 

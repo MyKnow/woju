@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:woju/provider/onboarding/profile_image_state_notifier.dart';
 import 'package:woju/theme/widget/custom_text.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class ProfileImageWidget extends ConsumerWidget {
   final bool hasShadow;
@@ -17,18 +17,29 @@ class ProfileImageWidget extends ConsumerWidget {
     final theme = Theme.of(context);
     final image = ref.watch(profileImageStateProvider);
     final imageNotifier = ref.read(profileImageStateProvider.notifier);
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(100),
-        boxShadow: [
-          if (hasShadow)
-            BoxShadow(
-              color: theme.shadowColor,
-              blurRadius: 15,
-              offset: const Offset(0, 3),
-            ),
-        ],
+    return Neumorphic(
+      style: NeumorphicStyle(
+        border: NeumorphicBorder(
+          color: theme.shadowColor,
+          width: 2,
+        ),
+        boxShape: const NeumorphicBoxShape.circle(),
+        depth: 10,
+        intensity: 0.7,
+        shadowDarkColor: Colors.grey[900]?.withOpacity(0.9),
+        shadowLightColor: Colors.grey[300]?.withOpacity(0.6),
       ),
+      // decoration: BoxDecoration(
+      //   borderRadius: BorderRadius.circular(100),
+      //   boxShadow: [
+      //     if (hasShadow)
+      //       BoxShadow(
+      //         color: theme.shadowColor,
+      //         blurRadius: 15,
+      //         offset: const Offset(0, 3),
+      //       ),
+      //   ],
+      // ),
       child: InkWell(
         onTap: (isEditable)
             ? () {

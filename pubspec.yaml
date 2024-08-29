@@ -18,6 +18,10 @@ dependencies:
     sdk: flutter
   flutter_dotenv: ^5.1.0
   flutter_native_splash: ^2.4.1
+  flutter_neumorphic: 
+    git:
+      url: https://github.com/den0206/Flutter-Neumorphic.git
+      ref: feature/remoce_accentcolor
   flutter_onboarding_slider: ^1.0.11
   flutter_riverpod: ^2.5.1
   flutter_secure_storage: ^4.2.1

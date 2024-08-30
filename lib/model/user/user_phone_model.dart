@@ -9,6 +9,7 @@ enum PhoneNumberStatus with StatusMixin {
   authCompleted,
   empty,
   countrycodeEmpty,
+  validForDisabled,
 }
 
 class UserPhoneModel with TextFieldModel {
@@ -17,12 +18,14 @@ class UserPhoneModel with TextFieldModel {
   final String? phoneNumber;
   final bool isPhoneNumberValid;
   final bool? isPhoneNumberAvailable;
+  final bool isEditing;
 
   UserPhoneModel({
     required this.dialCode,
     required this.isoCode,
     required this.phoneNumber,
     this.isPhoneNumberAvailable,
+    this.isEditing = false,
   }) : isPhoneNumberValid =
             phoneNumberValidation(phoneNumber) == PhoneNumberStatus.valid;
 
@@ -48,6 +51,7 @@ class UserPhoneModel with TextFieldModel {
     String? isoCode,
     String? phoneNumber,
     bool? isPhoneNumberAvailable,
+    bool? isEditing,
   }) {
     if (dialCode != null && isoCode != null) {
       return UserPhoneModel(
@@ -56,6 +60,7 @@ class UserPhoneModel with TextFieldModel {
         phoneNumber: phoneNumber ?? this.phoneNumber,
         isPhoneNumberAvailable:
             isPhoneNumberAvailable ?? this.isPhoneNumberAvailable,
+        isEditing: isEditing ?? this.isEditing,
       );
     } else if (phoneNumber != null) {
       return UserPhoneModel(
@@ -64,6 +69,7 @@ class UserPhoneModel with TextFieldModel {
         phoneNumber: phoneNumber,
         isPhoneNumberAvailable:
             isPhoneNumberAvailable ?? this.isPhoneNumberAvailable,
+        isEditing: isEditing ?? this.isEditing,
       );
     } else {
       return UserPhoneModel(
@@ -72,6 +78,7 @@ class UserPhoneModel with TextFieldModel {
         phoneNumber: this.phoneNumber,
         isPhoneNumberAvailable:
             isPhoneNumberAvailable ?? this.isPhoneNumberAvailable,
+        isEditing: isEditing ?? this.isEditing,
       );
     }
   }
@@ -157,4 +164,16 @@ class UserPhoneModel with TextFieldModel {
 
   @override
   get value => phoneNumber;
+
+  String? get labelTextForEditing {
+    if (isValid) {
+      if (isEditing) {
+        return PhoneNumberStatus.valid.toMessage;
+      } else {
+        return PhoneNumberStatus.validForDisabled.toMessage;
+      }
+    } else {
+      return PhoneNumberStatus.empty.toMessage;
+    }
+  }
 }

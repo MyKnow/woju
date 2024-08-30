@@ -75,6 +75,14 @@
             "profile" : "내 프로필",
             "customerService" : "고객센터",
             "setting" : "설정"
+        },
+        "userProfile" : {
+            "title" : "프로필",
+            "userUUID" : "유저 고유 번호",
+            "userUUIDCopied" : "고유 번호가 복사되었습니다",
+            "userNickName" : "닉네임",
+            "userID" : "아이디",
+            "userPhoneNumber": "전화번호"
         }
     },
     "accessibility": {
@@ -90,6 +98,13 @@
             "verified": "인증 완료",
             "resend": "재전송"
         },
+        "AuthStatus" : {
+            "failedInvalidPhoneNumber" : "올바른 전화번호를 입력해주세요",
+            "failedAuthCodeNotSent" : "인증번호를 전송할 수 없습니다. 다시 시도해주세요",
+            "failedAuthCodeTimeout" : "인증번호가 만료되었습니다. 다시 요청해주세요",
+            "failedAuthCodeEmpty" : "인증번호를 입력해주세요",
+            "failedAuthCodeInvalid" : "6자리의 인증번호를 입력해주세요"
+        },
         "server" : {
             "error" : "서버 오류가 발생했습니다. 다시 시도해주세요",
             "online" : "서버와 연결되었습니다",
@@ -104,22 +119,32 @@
             "authCompleted" : "인증 완료",
             "notAvailable" : "이미 사용중인 전화번호입니다",
             "valid" : "올바른 전화번호 형식입니다",
-            "empty" : "전화번호를 입력해주세요"
+            "empty" : "전화번호를 입력해주세요",
+            "validForDisabled" : "전화번호",
+            "phoneNumberUpdateCancelButton" : "전화번호 변경 취소 버튼",
+            "phoneNumberUpdateConfirmButton" : "전화번호 변경 시도 버튼",
+            "phoneNumberUpdate" : "번호 변경",
+            "phoneNumberUpdateActivateButton" : "전화번호 변경 활성화 버튼"
         },
         "UserIDStatus" : {
             "empty" :"아이디를 입력해주세요",
             "inputUserID" : "아이디를 입력해주세요",
             "validForSignUp" : "사용 가능한 아이디입니다",
-            "validForSignIn" : "올바른 형식의 아이디입니다",
+            "validIDFormat" : "올바른 형식의 아이디입니다",
+            "validForDisabled" : "아이디",
             "invalid" : "아이디는 영문, 숫자만 사용할 수 있습니다",
-            "invalidAlphabet" : "아이디는 영문 소문자가 4자 이상 포함되어야 합니다",
+            "invalidAlphabet" : "아이디는 영문 소문자가 6자 이상 포함되어야 합니다",
             "invalidAlphabetFirst" : "아이디는 영문으로 시작해야 합니다",
             "alphabetFirst" : "아이디는 영문으로 시작해야 합니다",
-            "short" : "아이디는 4자 이상이어야 합니다",
+            "short" : "아이디는 6자 이상이어야 합니다",
             "long" : "아이디는 20자 이하로 입력해주세요",
             "exists" : "이미 사용중인 아이디입니다",
             "notAvailable" : "사용할 수 없는 아이디입니다",
-            "serverError" : "서버 오류가 발생했습니다. 다시 시도해주세요"
+            "serverError" : "서버 오류가 발생했습니다. 다시 시도해주세요",
+            "userIDUpdateCancelButton" : "아이디 변경 취소 버튼",
+            "userIDUpdateConfirmButton" : "아이디 변경 시도 버튼",
+            "userIDUpdate" : "아이디 변경",
+            "userIDUpdateActivateButton" : "아이디 변경 활성화 버튼"
         },
         "PasswordStatus" : {
             "empty" : "비밀번호를 입력해주세요",

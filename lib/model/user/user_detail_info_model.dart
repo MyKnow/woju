@@ -9,33 +9,37 @@ part 'user_detail_info_model.g.dart';
 @HiveType(typeId: 1)
 class UserDetailInfoModel {
   @HiveField(0)
-  final Uint8List? profileImage;
+  final String userUUID;
 
   @HiveField(1)
-  final String userID;
+  final Uint8List? profileImage;
 
   @HiveField(2)
-  final String userPhoneNumber;
+  final String userID;
 
   @HiveField(3)
-  final String dialCode;
+  final String userPhoneNumber;
 
   @HiveField(4)
-  final String isoCode;
+  final String dialCode;
 
   @HiveField(5)
-  final String userUID;
+  final String isoCode;
 
   @HiveField(6)
-  final String userNickName;
+  final String userUID;
 
   @HiveField(7)
-  final Gender userGender;
+  final String userNickName;
 
   @HiveField(8)
+  final Gender userGender;
+
+  @HiveField(9)
   final DateTime userBirthDate;
 
   UserDetailInfoModel({
+    required this.userUUID,
     this.profileImage,
     required this.userID,
     required this.userPhoneNumber,
@@ -63,6 +67,7 @@ class UserDetailInfoModel {
     }
 
     return UserDetailInfoModel(
+      userUUID: json['userUUID'],
       profileImage: decodedData,
       userID: json['userID'],
       userPhoneNumber: json['userPhoneNumber'],
@@ -76,6 +81,7 @@ class UserDetailInfoModel {
   }
 
   UserDetailInfoModel copyWith({
+    String? userUUID,
     Uint8List? profileImage,
     String? userID,
     String? userPhoneNumber,
@@ -88,6 +94,7 @@ class UserDetailInfoModel {
     bool? profileImageDelete,
   }) {
     return UserDetailInfoModel(
+      userUUID: userUUID ?? this.userUUID,
       profileImage:
           profileImageDelete == true ? null : profileImage ?? this.profileImage,
       userID: userID ?? this.userID,

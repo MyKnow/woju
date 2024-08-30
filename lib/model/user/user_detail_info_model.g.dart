@@ -17,39 +17,42 @@ class UserDetailInfoModelAdapter extends TypeAdapter<UserDetailInfoModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return UserDetailInfoModel(
-      profileImage: fields[0] as Uint8List?,
-      userID: fields[1] as String,
-      userPhoneNumber: fields[2] as String,
-      dialCode: fields[3] as String,
-      isoCode: fields[4] as String,
-      userUID: fields[5] as String,
-      userNickName: fields[6] as String,
-      userGender: fields[7] as Gender,
-      userBirthDate: fields[8] as DateTime,
+      userUUID: fields[0] as String,
+      profileImage: fields[1] as Uint8List?,
+      userID: fields[2] as String,
+      userPhoneNumber: fields[3] as String,
+      dialCode: fields[4] as String,
+      isoCode: fields[5] as String,
+      userUID: fields[6] as String,
+      userNickName: fields[7] as String,
+      userGender: fields[8] as Gender,
+      userBirthDate: fields[9] as DateTime,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserDetailInfoModel obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
       ..writeByte(0)
-      ..write(obj.profileImage)
+      ..write(obj.userUUID)
       ..writeByte(1)
-      ..write(obj.userID)
+      ..write(obj.profileImage)
       ..writeByte(2)
-      ..write(obj.userPhoneNumber)
+      ..write(obj.userID)
       ..writeByte(3)
-      ..write(obj.dialCode)
+      ..write(obj.userPhoneNumber)
       ..writeByte(4)
-      ..write(obj.isoCode)
+      ..write(obj.dialCode)
       ..writeByte(5)
-      ..write(obj.userUID)
+      ..write(obj.isoCode)
       ..writeByte(6)
-      ..write(obj.userNickName)
+      ..write(obj.userUID)
       ..writeByte(7)
-      ..write(obj.userGender)
+      ..write(obj.userNickName)
       ..writeByte(8)
+      ..write(obj.userGender)
+      ..writeByte(9)
       ..write(obj.userBirthDate);
   }
 

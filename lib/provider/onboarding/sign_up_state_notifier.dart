@@ -475,7 +475,7 @@ extension SignUpAction on SignUpStateNotifier {
     }
 
     if (UserIDModel.validateID(getSignUpModel.userIDModel.userID) !=
-        UserIDStatus.valid) {
+        UserIDStatus.validIDFormat) {
       printd(
           "validateID: ${UserIDModel.validateID(getSignUpModel.userIDModel.userID)}");
       return null;

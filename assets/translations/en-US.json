@@ -1,196 +1,221 @@
 {
-    "onboarding": {
-      "description": {
-        "1": "Reconnect with fleeting encounters",
-        "2": "Communicate with nearby people in real-time",
-        "3": "Have a chat with a stranger before bedtime"
-      },
-      "startWithPhoneNumber": "Start with Phone Number",
-      "signIn": {
-        "title": "Sign In",
-        "signInWithPhoneNumber": "Sign in with Phone Number",
-        "signInWithID": "Sign in with ID",
-        "inputUserID": "Please enter your ID",
-        "inputPhoneNumber": "Please enter your phone number",
-        "inputPassword": "Please enter your password",
-        "forgotPassword": "Forgot your password?",
-        "signIn": "Sign In",
-        "resetPassword": {
-          "title": "Reset Password",
-          "done": "Reset Complete",
-          "error": "A server error occurred. Please try again.",
-          "success": "Password reset was successful. Please log in with your new password."
-        }
-      },
-      "signUp": {
-        "title": "Sign Up",
-        "signin": "Already have an account?",
-        "phoneNumber": "Please enter your phone number",
-        "phoneNumberVerified": "Verification Complete",
-        "phoneNumberAvailable": "The phone number is available",
-        "confirmPassword": "Confirm Password",
-        "searchCountry": "You can search for a country",
-        "next": "Next",
-        "sendCode": "Verify",
-        "changePhoneNumber": "Change Number",
-        "password": "Please enter your password",
-        "passwordRule": "Please enter a password of 8 or more characters",
-        "passwordAvailable": "The password is available",
-        "userID": "Please enter your desired ID",
-        "userIDCheck": "Check for Duplicates",
-        "userIDAvailable": "The ID is available",
-        "userIDAvailableSimple": "Available",
-        "modifyUserID": "Change ID",
-        "detail": {
-          "title": "Create Profile",
-          "profileImage": {
-            "default": "Change to Default Image",
-            "fromGallery": "Select from Gallery",
-            "fromCamera": "Take a Photo"
-          },
-          "done": "Sign Up",
-          "signUpSuccess": "Successfully signed up",
-          "nickname": "Please enter your nickname",
-          "nicknameValid": "The nickname is available",
-          "gender": {
-            "title": "Please select your gender",
-            "private": "Private",
-            "man": "Male",
-            "woman": "Female",
-            "other": "Other"
-          },
-          "birth": "Please enter your date of birth"
-        }
-      },
-      "skip": "Skip"
+  "onboarding": {
+    "description": {
+      "1": "Connect with passing relationships",
+      "2": "Communicate with people nearby in real time",
+      "3": "Have a conversation with a stranger before bed"
     },
-    "home": {
-      "title": "Home",
-      "drawer": {
-        "closeIconDescription": "Close Menu",
-        "openIconDescription": "Open Menu",
-        "customerServiceCenter": "Customer Service",
-        "signOut": "Sign Out",
-        "appVersion": "App Version: {version}",
-        "profile": "My Profile",
-        "customerService": "Customer Service",
-        "setting": "Settings"
+    "startWithPhoneNumber": "Start with phone number",
+    "signIn": {
+      "title": "Sign In",
+      "signInWithPhoneNumber" : "Sign in with phone number",
+      "signInWithID" : "Sign in with ID",
+      "inputUserID": "Please enter your ID",
+      "inputPhoneNumber": "Please enter your phone number",
+      "inputPassword": "Please enter your password",
+      "forgotPassword": "Forgot password?",
+      "signIn": "Sign In",
+      "resetPassword" : {
+        "title": "Reset Password",
+        "done" : "Reset Complete",
+        "error" : "A server error occurred. Please try again",
+        "success" : "Password reset successful.\nPlease log in with your new password"
       }
     },
-    "accessibility": {
-      "hideKeyboardButton": "Hide Keyboard Button",
-      "hidePasswordFieldButton": "Hide Password Button",
-      "showPasswordFieldButton": "Show Password Button"
-    },
-    "status": {
-      "authcode": {
-        "label": "Please enter the verification code",
-        "invalid": "Please enter a 6-digit verification code",
-        "verify": "Verify Code",
-        "verified": "Verification Complete",
-        "resend": "Resend"
-      },
-      "server": {
-        "error": "A server error occurred. Please try again.",
-        "online": "Connected to the server",
-        "offline": "Disconnected from the server",
-        "connecting": "Connecting to the server"
-      },
-      "PhoneNumberStatus": {
-        "lengthInvalid": "Please enter a phone number between 5 and 15 digits",
-        "invalid": "The phone number is not valid",
-        "countryCodeEmpty": "Please enter the country code",
-        "available": "The phone number is available",
-        "authCompleted": "Verification Complete",
-        "notAvailable": "The phone number is already in use",
-        "valid": "The phone number format is correct",
-        "empty": "Please enter your phone number"
-      },
-      "UserIDStatus": {
-        "empty": "Please enter your ID",
-        "inputUserID": "Please enter your ID",
-        "validForSignUp": "The ID is available",
-        "validForSignIn": "The ID format is correct",
-        "invalid": "The ID can only contain letters and numbers",
-        "invalidAlphabet": "The ID must contain at least 4 lowercase letters",
-        "invalidAlphabetFirst": "The ID must start with a letter",
-        "alphabetFirst": "The ID must start with a letter",
-        "short": "The ID must be at least 4 characters long",
-        "long": "Please enter an ID of 20 characters or less",
-        "exists": "The ID is already in use",
-        "notAvailable": "The ID is not available",
-        "serverError": "A server error occurred. Please try again."
-      },
-      "PasswordStatus": {
-        "empty": "Please enter your password",
-        "valid": "The password is available",
-        "invalid": "The password must include special characters, letters, and numbers",
-        "short": "The password must be at least 8 characters long",
-        "long": "Please enter a password of 20 characters or less",
-        "validForSignIn": "The password format is correct"
-      },
-      "gender": {
-        "title": "Please select your gender",
-        "man": "Male",
-        "woman": "Female",
-        "other": "Other",
-        "private": "Private"
-      },
-      "UserNickNameStatus": {
-        "title": "Please enter your nickname",
-        "empty": "Please enter your nickname",
-        "short": "The nickname must be at least 2 characters long",
-        "long": "Please enter a nickname of 20 characters or less",
-        "invalid": "The nickname is not available",
-        "valid": "The nickname is available",
-        "value": "{nickname}",
-        "validForDisabled" : "Nickname",
-        "nicknameUpdateCancelButton": "Nickname Change Cancel Button",
-        "nicknameUpdateConfirmButton": "Nickname Change Confirm Button",
-        "nicknameUpdate": "Change Nickname",
-        "nicknameUpdateActivateButton": "Activate Nickname Change Button"
-      },
-      "UserExistStatus": {
-        "exist": "The user already exists",
-        "notExist": "The user does not exist"
-      },
-      "SignInStatus": {
-        "loginFailedForInvalidLoginInfo": "The ID or password is incorrect",
-        "loginFailedForServer": "Failed to log in. Please try again.",
-        "loginSuccess": "Welcome, {nickname}",
-        "withDrawalFailed": "Failed to withdraw. Please try again."
-      },
-      "SignUpError": {
-        "authCodeEmpty": "Please enter the verification code",
-        "authCodeInvalid": "Please enter a valid verification code",
-        "authCodeTimeout": "The verification code has expired. Please request again.",
-        "authCodeNotSent": "Unable to send verification code. Please try again.",
-        "serverError": "A server error occurred. Please try again.",
-        "alreadySignedUp": "The phone number is already registered.",
-        "signUpFailure": "Failed to sign up"
-      },
-      "UserServiceStatus": {
-        "updateSuccess": "Successfully updated"
+    "signUp" : {
+      "title": "Sign Up",
+      "signin" : "Already have an account?",
+      "phoneNumber": "Please enter your phone number",
+      "phoneNumberVerified" : "Verification complete",
+      "phoneNumberAvailable" : "Phone number available",
+      "confirmPassword": "Confirm password",
+      "searchCountry": "You can search for a country",
+      "next": "Next",
+      "sendCode": "Send code",
+      "changePhoneNumber": "Change number",
+      "password": "Please enter your password",
+      "passwordRule": "Please enter a password of at least 8 characters",
+      "passwordAvailable": "Password available",
+      "userID": "Please enter your ID",
+      "userIDCheck": "Check for duplicates",
+      "userIDAvailable": "ID available",
+      "userIDAvailableSimple": "Available",
+      "modifyUserID": "Change ID",
+      "detail" : {
+        "title": "Write Profile",
+        "profileImage" : {
+          "default": "Change to default image",
+          "fromGallery": "Select from gallery",
+          "fromCamera": "Take a photo with camera"
+        },
+        "done": "Sign Up",
+        "signUpSuccess": "Sign up successful",
+        "nickname": "Please enter your nickname",
+        "nicknameValid": "Nickname available",
+        "gender": {
+          "title": "Please select your gender",
+          "private": "Private",
+          "man": "Male",
+          "woman" : "Female",
+          "other" : "Other"
+        },
+        "birth": "Please enter your date of birth"
       }
     },
-    "error": {
-      "server": {
-        "title": "Server Error",
-        "description": "A server error occurred. Please try again later."
-      },
-      "router": {
-        "title": "Page Error",
-        "description": "The page does not exist.",
-        "back": "Go to Main Page"
-      }
+    "skip": "Skip"
+  },
+  "home" : {
+    "title" : "Home",
+    "drawer" : {
+      "closeIconDescription" : "Close menu",
+      "openIconDescription" : "Open menu",
+      "customerServiceCenter" : "Customer Service Center",
+      "signOut" : "Sign Out",
+      "appVersion" : "App Version: {version}",
+      "profile" : "My Profile",
+      "customerService" : "Customer Service",
+      "setting" : "Settings"
     },
-    "theme": {
-      "dark": "Dark Mode",
-      "light": "Light Mode"
-    },
-    "input": {
-      "defaultLabel": "Please enter content",
-      "defaultHint": "Please enter content",
-      "defaultError": "The entered content is incorrect"
+    "userProfile" : {
+      "title" : "Profile",
+      "userUUID" : "User UUID",
+      "userUUIDCopied" : "UUID copied",
+      "userNickName" : "Nickname",
+      "userID" : "ID",
+      "userPhoneNumber": "Phone Number"
     }
+  },
+  "accessibility": {
+    "hideKeyboardButton": "Hide keyboard button",
+    "hidePasswordFieldButton": "Hide password field button",
+    "showPasswordFieldButton": "Show password field button"
+  },
+  "status" : {
+    "authcode" : {
+      "label": "Please enter the verification code",
+      "invalid": "Please enter a 6-digit verification code",
+      "verify": "Verify code",
+      "verified": "Verification complete",
+      "resend": "Resend"
+    },
+    "AuthStatus" : {
+      "failedInvalidPhoneNumber" : "Please enter a valid phone number",
+      "failedAuthCodeNotSent" : "Unable to send verification code. Please try again",
+      "failedAuthCodeTimeout" : "Verification code has expired. Please request again",
+      "failedAuthCodeEmpty" : "Please enter the verification code",
+      "failedAuthCodeInvalid" : "Please enter a 6-digit verification code"
+    },
+    "server" : {
+      "error" : "A server error occurred. Please try again",
+      "online" : "Connected to server",
+      "offline" : "Disconnected from server",
+      "connecting" : "Connecting to server"
+    },
+    "PhoneNumberStatus" : {
+      "lengthInvalid" : "Please enter a phone number between 5 and 15 digits",
+      "invalid" : "Invalid phone number",
+      "countryCodeEmpty" : "Please enter the country code",
+      "available" : "Phone number available",
+      "authCompleted" : "Verification complete",
+      "notAvailable" : "Phone number already in use",
+      "valid" : "Valid phone number format",
+      "empty" : "Please enter a phone number",
+      "validForDisabled" : "Phone number",
+      "phoneNumberUpdateCancelButton" : "Phone number update cancel button",
+      "phoneNumberUpdateConfirmButton" : "Phone number update attempt button",
+      "phoneNumberUpdate" : "Change number",
+      "phoneNumberUpdateActivateButton" : "Phone number update activate button"
+    },
+    "UserIDStatus" : {
+      "empty" :"Please enter your ID",
+      "inputUserID" : "Please enter your ID",
+      "validForSignUp" : "ID available",
+      "validIDFormat" : "Valid ID format",
+      "validForDisabled" : "ID",
+      "invalid" : "ID can only contain letters and numbers",
+      "invalidAlphabet" : "ID must contain at least 6 lowercase letters",
+      "invalidAlphabetFirst" : "ID must start with a letter",
+      "alphabetFirst" : "ID must start with a letter",
+      "short" : "ID must be at least 6 characters",
+      "long" : "Please enter an ID up to 20 characters",
+      "exists" : "ID already in use",
+      "notAvailable" : "ID not available",
+      "serverError" : "A server error occurred. Please try again",
+      "userIDUpdateCancelButton" : "ID update cancel button",
+      "userIDUpdateConfirmButton" : "ID update attempt button",
+      "userIDUpdate" : "Change ID",
+      "userIDUpdateActivateButton" : "ID update activate button"
+    },
+    "PasswordStatus" : {
+      "empty" : "Please enter your password",
+      "valid" : "Password available",
+      "invalid" : "Password must contain special characters, letters, and numbers",
+      "short" : "Please enter a password of at least 8 characters",
+      "long" : "Please enter a password up to 20 characters",
+      "validForSignIn" : "Valid password format"
+    },
+    "gender" : {
+      "title" : "Please select your gender",
+      "man" : "Male",
+      "woman" : "Female",
+      "other" : "Other",
+      "private" : "Private"
+    },
+    "UserNickNameStatus" : {
+      "title" : "Please enter your nickname",
+      "empty" : "Please enter your nickname",
+      "short" : "Nickname must be at least 2 characters",
+      "long" : "Please enter a nickname up to 20 characters",
+      "invalid" : "Invalid nickname",
+      "valid" : "Nickname available",
+      "value" : "{nickname}",
+      "validForDisabled" : "Nickname",
+      "nicknameUpdateCancelButton" : "Nickname update cancel button",
+      "nicknameUpdateConfirmButton" : "Nickname update attempt button",
+      "nicknameUpdate" : "Change nickname",
+      "nicknameUpdateActivateButton" : "Nickname update activate button"
+    },
+    "UserExistStatus" : {
+      "exist" : "User already exists",
+      "notExist" : "User does not exist"
+    },
+    "SignInStatus" : {
+      "loginFailedForInvalidLoginInfo" : "Invalid ID or password",
+      "loginFailedForServer" : "Login failed. Please try again",
+      "loginSuccess" : "Welcome, {nickname}",
+      "withDrawalFailed" : "Withdrawal failed. Please try again"
+    },
+    "SignUpError" : {
+      "authCodeEmpty" : "Please enter the verification code",
+      "authCodeInvalid" : "Please enter a valid verification code",
+      "authCodeTimeout" : "Verification code has expired. Please request again",
+      "authCodeNotSent" : "Unable to send verification code. Please try again",
+      "serverError" : "A server error occurred. Please try again",
+      "alreadySignedUp" : "Phone number already signed up",
+      "signUpFailure": "Sign up failed"
+    },
+    "UserServiceStatus" : {
+      "updateSuccess" : "Successfully updated"
+    }
+  },
+  "error" : {
+    "server" : {
+      "title" : "Server Error",
+      "description" : "A server error occurred. Please try again later"
+    },
+    "router" : {
+      "title" : "Page Error",
+      "description" : "The page you are looking for does not exist.",
+      "back" : "Go to main page"
+    }
+  },
+  "theme" : {
+    "dark" : "Dark Mode",
+    "light" : "Light Mode"
+  },
+  "input" : {
+    "defaultLabel" : "Please enter the content",
+    "defaultHint" : "Please enter the content",
+    "defaultError" : "The entered content is not valid"
   }
+}

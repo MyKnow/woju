@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -36,11 +37,11 @@ class CustomTextfieldContainer extends ConsumerWidget {
     this.prefixIcon,
     this.suffix,
     this.suffixIcon,
-    this.labelText = "input.defaultLabel",
+    this.labelText,
     this.hintText,
     this.validator,
     this.focusNode,
-    this.autovalidateMode,
+    this.autovalidateMode = AutovalidateMode.onUserInteraction,
     this.onChanged,
     this.keyboardType = TextInputType.text,
     this.textInputAction = TextInputAction.next,
@@ -59,6 +60,7 @@ class CustomTextfieldContainer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final defaultLabel = "input.defaultLabel".tr();
     final nowTheme = Theme.of(context);
     final TextFormField textFormField = TextFormField(
       key: Key(fieldKey),
@@ -71,7 +73,7 @@ class CustomTextfieldContainer extends ConsumerWidget {
         prefixIcon: prefixIcon,
         suffix: suffix,
         suffixIcon: suffixIcon,
-        labelText: (labelText != null) ? (labelText as String) : null,
+        labelText: (labelText != null) ? (labelText as String) : defaultLabel,
         hintText: (hintText != null) ? (hintText as String) : null,
         labelStyle: (enabled ?? false)
             ? nowTheme.primaryTextTheme.titleMedium?.copyWith(

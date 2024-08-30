@@ -32,8 +32,9 @@ class PasswordResetPageState extends ConsumerState<PasswordResetPage> {
     final theme = ref.watch(themeStateNotifierProvider.notifier).theme;
     final auth = ref.watch(authStateProvider);
     final authNotifier = ref.watch(authStateProvider.notifier);
-    final phoneNumber = ref.watch(phoneNumberStateProvider);
-    final phoneNumberNotifier = ref.watch(phoneNumberStateProvider.notifier);
+    final phoneNumber = ref.watch(phoneNumberStateProvider(false));
+    final phoneNumberNotifier =
+        ref.watch(phoneNumberStateProvider(false).notifier);
     final password = ref.watch(passwordStateProvider);
     final passwordNotifier = ref.watch(passwordStateProvider.notifier);
     final focus = ref.watch(textfieldFocusStateProvider(3));

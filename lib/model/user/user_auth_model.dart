@@ -7,7 +7,7 @@ enum AuthStatus with StatusMixin {
   failedInvalidPhoneNumber,
   failedAuthCodeNotSent,
   failedAuthCodeTimeout,
-  failedAUthCodeEmpty,
+  failedAuthCodeEmpty,
   failedAuthCodeInvalid,
 }
 
@@ -94,7 +94,7 @@ class UserAuthModel with TextFieldModel<String> {
     if (isValid) {
       return null;
     } else {
-      return 'status.authcode.error'.tr();
+      return AuthStatus.failedAuthCodeInvalid.toMessage;
     }
   }
 }

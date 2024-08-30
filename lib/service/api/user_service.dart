@@ -260,4 +260,38 @@ class UserService {
       return false;
     }
   }
+
+  /// ### 사용자 ID 업데이트 함수
+  ///
+  /// #### Notes
+  ///
+  /// - 사용자 ID를 서버로 업데이트합니다.
+  ///
+  /// #### Parameters
+  ///
+  /// - [String] `oldUserID` : 기존 사용자 ID
+  /// - [String] `newUserID` : 새로운 사용자 ID
+  /// - [String] `userPassword` : 사용자 비밀번호
+  ///
+  /// #### Returns
+  ///
+  /// - `Future<bool>` : 업데이트 성공 여부
+  ///
+  static Future<bool> updateUserID(
+    String oldUserID,
+    String newUserID,
+    String userPassword,
+  ) async {
+    final response = await HttpService.post('/user/update-user-id', {
+      "oldUserID": oldUserID,
+      "newUserID": newUserID,
+      "userPassword": userPassword,
+    });
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

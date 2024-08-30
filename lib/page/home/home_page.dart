@@ -21,20 +21,41 @@ class HomePage extends ConsumerWidget {
         title: const CustomText("Home Page", isTitle: true),
       ),
       drawer: const CustomDrawerWidget(),
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CustomText("User ID: ${userDetail?.userID}"),
-            CustomText("User Nickname: ${userDetail?.userNickName}"),
+            const SizedBox(width: double.infinity),
             CustomText(
-                "User Phone: ${userDetail?.dialCode} ${userDetail?.userPhoneNumber} (${userDetail?.isoCode})"),
-            CustomText("User UID: ${userDetail?.userUID}"),
-            CustomText("User Gender: ${userDetail?.userGender}"),
+              "User UUID: ${userDetail?.userUUID}",
+              isLocalize: false,
+            ),
+            CustomText(
+              "User ID: ${userDetail?.userID}",
+              isLocalize: false,
+            ),
+            CustomText(
+              "User Nickname: ${userDetail?.userNickName}",
+              isLocalize: false,
+            ),
+            CustomText(
+              "User Phone: ${userDetail?.dialCode} ${userDetail?.userPhoneNumber} (${userDetail?.isoCode})",
+              isLocalize: false,
+            ),
+            CustomText(
+              "User UID: ${userDetail?.userUID}",
+              isLocalize: false,
+            ),
+            CustomText(
+              "User Gender: ${userDetail?.userGender}",
+              isLocalize: false,
+            ),
             const ProfileImageWidget(
               isEditable: false,
             ),
-            CustomText("User BirthDate: ${userDetail?.userBirthDate}"),
+            CustomText(
+              "User BirthDate: ${userDetail?.userBirthDate}",
+              isLocalize: false,
+            ),
             ElevatedButton(
               onPressed: signInNotifier.withdrawalButtonOnClick(context),
               child: const CustomText(
@@ -49,6 +70,7 @@ class HomePage extends ConsumerWidget {
               child: const CustomText(
                 "Sign Out",
                 isWhite: true,
+                isLocalize: false,
               ),
             ),
             ElevatedButton(
@@ -62,26 +84,29 @@ class HomePage extends ConsumerWidget {
               child: const CustomText(
                 "Change Password",
                 isWhite: true,
+                isLocalize: false,
               ),
             ),
             ElevatedButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const CustomText("This is a SnackBar"),
-                      action: SnackBarAction(
-                        label: "Close",
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                        },
-                      ),
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const CustomText("This is a SnackBar"),
+                    action: SnackBarAction(
+                      label: "Close",
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      },
                     ),
-                  );
-                },
-                child: const CustomText(
-                  "Show SnackBar",
-                  isWhite: true,
-                )),
+                  ),
+                );
+              },
+              child: const CustomText(
+                "Show SnackBar",
+                isWhite: true,
+                isLocalize: false,
+              ),
+            ),
           ],
         ),
       ),

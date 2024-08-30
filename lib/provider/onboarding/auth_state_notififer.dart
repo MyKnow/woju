@@ -128,7 +128,7 @@ extension AuthAction on AuthStateNotififer {
     printd("verifyAuthCode: $authCode");
     if (authCode.isEmpty) {
       printd("인증번호 입력 필요");
-      updateAuthStatus(AuthStatus.failedAUthCodeEmpty);
+      updateAuthStatus(AuthStatus.failedAuthCodeEmpty);
       return false;
     }
 

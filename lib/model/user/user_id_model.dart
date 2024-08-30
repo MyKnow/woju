@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:woju/model/status/status_mixin.dart';
 import 'package:woju/model/text_field_model.dart';
 import 'package:woju/service/debug_service.dart';
@@ -11,17 +10,20 @@ enum UserIDStatus with StatusMixin {
   short,
   long,
   invalid,
-  valid,
+  invalidAlphabetFirst,
+  validIDFormat,
   notAvailable,
   available,
   serverError,
   validForSignUp,
+  validForDisabled,
 }
 
 class UserIDModel with TextFieldModel<String> {
   final String? userID;
   final bool isIDValid;
   final bool isIDAvailable;
+  final bool isEditing;
 
   static const int minLength = 6;
   static const int maxLength = 20;
@@ -29,15 +31,18 @@ class UserIDModel with TextFieldModel<String> {
   UserIDModel({
     this.userID,
     this.isIDAvailable = false,
-  }) : isIDValid = validateID(userID) == UserIDStatus.valid;
+    this.isEditing = false,
+  }) : isIDValid = validateID(userID) == UserIDStatus.validIDFormat;
 
   UserIDModel copyWith({
     String? userID,
     bool? isIDAvailable,
+    bool? isEditing,
   }) {
     return UserIDModel(
       userID: userID ?? this.userID,
       isIDAvailable: isIDAvailable ?? this.isIDAvailable,
+      isEditing: isEditing ?? this.isEditing,
     );
   }
 
@@ -52,16 +57,16 @@ class UserIDModel with TextFieldModel<String> {
       return UserIDStatus.short;
     } else if (userID.length > maxLength) {
       return UserIDStatus.long;
-    } else if (RegExp(r'^[a-zA-Z0-9]+$').hasMatch(userID) == false) {
+    } else if (RegExp(r'^[a-z0-9]+$').hasMatch(userID) == false) {
       return UserIDStatus.invalid;
     } else {
-      return UserIDStatus.valid;
+      return UserIDStatus.validIDFormat;
     }
   }
 
   static Future<UserIDStatus> checkAvailableID(
       String? userID, String? userUID) async {
-    if (validateID(userID) != UserIDStatus.valid) {
+    if (validateID(userID) != UserIDStatus.validIDFormat) {
       return validateID(userID);
     }
 
@@ -106,17 +111,17 @@ class UserIDModel with TextFieldModel<String> {
   String labelTextWithParameter(bool isSignUp) {
     if (isIDValid) {
       if (isSignUp == true) {
-        return "status.UserIDStatus.validForSignUp".tr();
+        return UserIDStatus.validForSignUp.toMessage;
       } else {
-        return "status.UserIDStatus.validForSignIn".tr();
+        return UserIDStatus.validIDFormat.toMessage;
       }
     } else {
-      return validateID(userID).toMessage;
+      return UserIDStatus.empty.toMessage;
     }
   }
 
   @override
-  bool get isValid => validateID(userID) == UserIDStatus.valid;
+  bool get isValid => validateID(userID) == UserIDStatus.validIDFormat;
 
   @override
   String? get value => userID;
@@ -128,5 +133,28 @@ class UserIDModel with TextFieldModel<String> {
     } else {
       return validateID(userID).toMessage;
     }
+  }
+
+  String? get labelTextForEditing {
+    if (isValid) {
+      if (isEditing) {
+        return UserIDStatus.validIDFormat.toMessage;
+      } else {
+        return UserIDStatus.validForDisabled.toMessage;
+      }
+    } else {
+      return UserIDStatus.empty.toMessage;
+    }
+  }
+
+  @override
+  String? Function(dynamic)? get validator {
+    return (value) {
+      if (isValid) {
+        return null;
+      } else {
+        return validateID(userID).toMessage;
+      }
+    };
   }
 }

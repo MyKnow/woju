@@ -16,12 +16,17 @@ import 'package:woju/theme/widget/custom_text.dart';
 /// - 변경사항은 'phoneNumberStateProvider'를 통해서 구독 가능
 ///
 class CustomCountryPickerWidget extends ConsumerWidget {
-  const CustomCountryPickerWidget({super.key});
+  final bool isEditing;
+  final bool isDisabled;
+  const CustomCountryPickerWidget(
+      {super.key, this.isEditing = false, this.isDisabled = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final phonenumberNotifier = ref.watch(phoneNumberStateProvider.notifier);
+    final phonenumberNotifier = ref.watch(phoneNumberStateProvider(
+      isEditing,
+    ).notifier);
 
     return CountryCodePicker(
       backgroundColor: theme.cardColor,
@@ -40,6 +45,7 @@ class CustomCountryPickerWidget extends ConsumerWidget {
         labelStyle: theme.primaryTextTheme.bodyMedium,
       ),
       searchStyle: theme.primaryTextTheme.bodyMedium,
+      enabled: !isDisabled,
       builder: (country) {
         if (country == null) {
           return const SizedBox.shrink();
@@ -55,6 +61,7 @@ class CustomCountryPickerWidget extends ConsumerWidget {
             const SizedBox(width: 8),
             CustomText(
               country.dialCode ?? '',
+              isDisabled: isDisabled,
             ),
           ],
         );

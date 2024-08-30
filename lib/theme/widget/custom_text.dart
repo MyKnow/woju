@@ -13,6 +13,7 @@ class CustomText extends ConsumerWidget {
   final bool isBold;
   final bool isTitle;
   final bool isWhite;
+  final bool isDisabled;
 
   const CustomText(
     this.text, {
@@ -25,6 +26,7 @@ class CustomText extends ConsumerWidget {
     this.isBold = false,
     this.isTitle = false,
     this.isWhite = false,
+    this.isDisabled = false,
   });
 
   @override
@@ -50,11 +52,13 @@ class CustomText extends ConsumerWidget {
       isLocalize ? text.tr(namedArgs: namedArgs) : text,
       style: style ??
           textStyle?.copyWith(
-            color: isColorful
-                ? theme.primaryColor
-                : (isWhite)
-                    ? Colors.white
-                    : theme.primaryTextTheme.bodyMedium?.color,
+            color: isDisabled
+                ? theme.disabledColor
+                : isColorful
+                    ? theme.primaryColor
+                    : (isWhite)
+                        ? Colors.white
+                        : theme.primaryTextTheme.bodyMedium?.color,
             fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
           ),
       textAlign: textAlign,

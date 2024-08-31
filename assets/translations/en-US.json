@@ -36,13 +36,13 @@
       "password": "Please enter your password",
       "passwordRule": "Please enter a password of at least 8 characters",
       "passwordAvailable": "Password available",
-      "userID": "Please enter your ID",
+      "userID": "Please enter your desired ID",
       "userIDCheck": "Check for duplicates",
       "userIDAvailable": "ID available",
       "userIDAvailableSimple": "Available",
       "modifyUserID": "Change ID",
       "detail" : {
-        "title": "Write Profile",
+        "title": "Profile Creation",
         "profileImage" : {
           "default": "Change to default image",
           "fromGallery": "Select from gallery",
@@ -78,17 +78,28 @@
     },
     "userProfile" : {
       "title" : "Profile",
+      "save" : "Save",
+      "edit" : "Edit Profile",
+      "cancel" : "Cancel",
+      "userProfileImage" : "Profile Image",
       "userUUID" : "User UUID",
       "userUUIDCopied" : "UUID copied",
       "userNickName" : "Nickname",
       "userID" : "ID",
-      "userPhoneNumber": "Phone Number"
+      "userPhoneNumber": "Phone Number",
+      "userGender" : "Gender",
+      "userBirthDate" : "Date of Birth",
+      "userAccountAction" : "Account Management",
+      "userWithdrawal" : "Withdrawal",
+      "userPasswordChange" : "Change Password",
+      "userPhoneNumberChange" : "Change Phone Number",
+      "userIDChange" : "Change ID"
     }
   },
   "accessibility": {
-    "hideKeyboardButton": "Hide keyboard button",
-    "hidePasswordFieldButton": "Hide password field button",
-    "showPasswordFieldButton": "Show password field button"
+    "hideKeyboardButton": "Hide Keyboard Button",
+    "hidePasswordFieldButton": "Hide Password Field Button",
+    "showPasswordFieldButton": "Show Password Field Button"
   },
   "status" : {
     "authcode" : {

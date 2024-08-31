@@ -1,14 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:woju/provider/onboarding/id_state_notifier.dart';
-import 'package:woju/provider/onboarding/nickname_state_notifier.dart';
-// import 'package:woju/provider/onboarding/phone_number_state_notifier.dart';
-import 'package:woju/provider/onboarding/user_detail_info_state_notifier.dart';
-import 'package:woju/service/toast_message_service.dart';
+import 'package:woju/provider/home/user_profile_state_notifier.dart';
+
 import 'package:woju/theme/widget/custom_container_decoration.dart';
+import 'package:woju/theme/widget/custom_date_picker.dart';
 import 'package:woju/theme/widget/custom_text.dart';
+import 'package:woju/theme/widget/custom_text_button.dart';
 import 'package:woju/theme/widget/custom_textfield_container.dart';
+import 'package:woju/theme/widget/custom_toggle_switch.dart';
 import 'package:woju/theme/widget/profile_image_widget.dart';
 
 class UserProfilePage extends ConsumerWidget {
@@ -16,70 +17,108 @@ class UserProfilePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userDetailInfoStateProvider)?.userUUID;
-    final nickname = ref.watch(nicknameStateProvider);
-    final nicknameNotifier = ref.read(nicknameStateProvider.notifier);
-    final userID = ref.watch(userIDStateProvider);
-    final userIDNotifier = ref.read(userIDStateProvider.notifier);
-    // final phoneNumber = ref.watch(phoneNumberStateProvider(true));
-    // final phoneNumberNotifier =
-    //     ref.read(phoneNumberStateProvider(true).notifier);
+    final userProfileEditState = ref.watch(userProfileStateNotifierProvider);
+    final userProfileStateNotifier =
+        ref.watch(userProfileStateNotifierProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
         title: const CustomText("home.userProfile.title", isTitle: true),
+        centerTitle: false,
+        actions: [
+          if (userProfileEditState.isEditing)
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CustomTextButton(
+                  "home.userProfile.cancel",
+                  minimumSize: const Size(48, 48),
+                  padding: const EdgeInsets.only(right: 32),
+                  onPressed: () {
+                    ref
+                        .read(userProfileStateNotifierProvider.notifier)
+                        .onClickSaveProfile(context);
+                  },
+                ),
+                CustomTextButton(
+                  "home.userProfile.save",
+                  padding: const EdgeInsets.only(right: 24),
+                  minimumSize: const Size(48, 48),
+                  onPressed: () {
+                    ref
+                        .read(userProfileStateNotifierProvider.notifier)
+                        .onClickSaveProfile(context);
+                  },
+                ),
+              ],
+            )
+          else
+            CustomTextButton(
+              "home.userProfile.edit",
+              padding: const EdgeInsets.only(right: 24),
+              onPressed: () {
+                ref
+                    .read(userProfileStateNotifierProvider.notifier)
+                    .onClickEditProfile(context);
+              },
+            ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const SizedBox(
-              height: 20,
-              width: double.infinity,
-            ),
             // 유저 프로필 이미지 변경
-            const ProfileImageWidget(),
-            const SizedBox(height: 40),
-            // 유저 고유 번호 조회
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.only(left: 32, bottom: 8, top: 16),
+              padding: const EdgeInsets.only(left: 32, bottom: 16, top: 40),
               child: const CustomText(
-                "home.userProfile.userUUID",
+                "home.userProfile.userProfileImage",
                 isBold: true,
                 isColorful: true,
               ),
             ),
-            CustomDecorationContainer(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  CustomText(user ?? "",
-                      isLocalize: false,
-                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                            color: Theme.of(context).disabledColor,
-                          )),
-                  IconButton(
-                    icon: const Icon(Icons.copy),
-                    onPressed: () {
-                      Clipboard.setData(ClipboardData(text: user ?? ""));
-                      ToastMessageService.nativeSnackbar(
-                        "home.userProfile.userUUIDCopied",
-                        context,
-                      );
-                    },
-                  ),
-                ],
-              ),
+            ProfileImageWidget(
+              isEditable: userProfileEditState.isEditing,
             ),
-            const SizedBox(
-              height: 20,
-            ),
+
+            // 유저 고유 번호 조회
+            // Container(
+            //   width: double.infinity,
+            //   padding: const EdgeInsets.only(left: 32, bottom: 8, top: 16),
+            //   child: const CustomText(
+            //     "home.userProfile.userUUID",
+            //     isBold: true,
+            //     isColorful: true,
+            //   ),
+            // ),
+            // CustomDecorationContainer(
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //     children: [
+            //       CustomText(user ?? "",
+            //           isLocalize: false,
+            //           style: Theme.of(context).textTheme.labelMedium?.copyWith(
+            //                 color: Theme.of(context).disabledColor,
+            //               )),
+            //       IconButton(
+            //         icon: const Icon(Icons.copy),
+            //         onPressed: () {
+            //           Clipboard.setData(ClipboardData(text: user ?? ""));
+            //           ToastMessageService.nativeSnackbar(
+            //             "home.userProfile.userUUIDCopied",
+            //             context,
+            //           );
+            //         },
+            //       ),
+            //     ],
+            //   ),
+            // ),
 
             // 유저 닉네임 변경
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.only(left: 32, bottom: 8, top: 16),
+              padding: const EdgeInsets.only(left: 32, bottom: 8, top: 56),
               child: const CustomText(
                 "home.userProfile.userNickName",
                 isBold: true,
@@ -89,101 +128,71 @@ class UserProfilePage extends ConsumerWidget {
             CustomTextfieldContainer(
               fieldKey: "user_profile_user_nick_name",
               prefixIcon: const Icon(Icons.person),
-              labelText: nickname.labelTextForEditing,
-              validator: nickname.validator,
-              onChanged: nicknameNotifier.onChangeNickname,
-              enabled: nickname.isEditing,
-              // initialValue: nickname.nickname,
+              labelText:
+                  userProfileEditState.userNicknameModel.labelTextForEditing,
+              validator: userProfileEditState.userNicknameModel.validator,
+              // onChanged: nicknameNotifier.onChangeNickname,
+              enabled: userProfileEditState.isEditing,
               keyboardType: TextInputType.name,
               autofillHints: const [AutofillHints.nickname],
-              onFieldSubmitted: (value) =>
-                  nicknameNotifier.onClickCompleteChangeNickname(context),
-              controller: nicknameNotifier.nicknameController,
-              actions: [
-                if (!nickname.isEditing)
-                  TextButton(
-                    onPressed: nicknameNotifier.onClickChangeNickname,
-                    child: const CustomText(
-                      "status.UserNickNameStatus.nicknameUpdate",
-                      isColorful: true,
-                      isBold: true,
-                    ),
-                  )
-                else
-                  IconButton(
-                    icon: const Icon(
-                      Icons.cancel,
-                      semanticLabel:
-                          "status.UserNickNameStatus.nicknameUpdateCancelButton",
-                    ),
-                    onPressed: nicknameNotifier.onClickCancelChangeNickname,
-                  ),
-                if (nickname.isEditing)
-                  IconButton(
-                    icon: const Icon(
-                      Icons.check,
-                      semanticLabel:
-                          "status.UserNickNameStatus.nicknameUpdateConfirmButton",
-                    ),
-                    onPressed:
-                        nicknameNotifier.onClickCompleteChangeNickname(context),
-                  ),
-              ],
+              // onFieldSubmitted: (value) =>
+              //     nicknameNotifier.onClickCompleteChangeNickname(context),
+              controller: userProfileEditState.userNicknameController,
             ),
 
-            // 유저 아이디 변경
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.only(left: 32, bottom: 8, top: 16),
-              child: const CustomText(
-                "home.userProfile.userID",
-                isBold: true,
-                isColorful: true,
-              ),
-            ),
-            CustomTextfieldContainer(
-              fieldKey: "user_profile_id",
-              prefixIcon: const Icon(Icons.person),
-              labelText: userID.labelTextForEditing,
-              validator: userID.validator,
-              onChanged: userIDNotifier.onChangeUserID,
-              enabled: userID.isEditing,
-              keyboardType: TextInputType.name,
-              autofillHints: const [AutofillHints.username],
-              onFieldSubmitted: (value) =>
-                  userIDNotifier.onClickCompleteChangeUserID(context),
-              controller: userIDNotifier.userIDController,
-              actions: [
-                if (!userID.isEditing)
-                  TextButton(
-                    onPressed: userIDNotifier.onClickChangeUserID,
-                    child: const CustomText(
-                      "status.UserIDStatus.userIDUpdate",
-                      isColorful: true,
-                      isBold: true,
-                    ),
-                  )
-                else
-                  IconButton(
-                    icon: const Icon(
-                      Icons.cancel,
-                      semanticLabel:
-                          "status.UserIDStatus.userIDUpdateCancelButton",
-                    ),
-                    onPressed: userIDNotifier.onClickCancelChangeUserID,
-                  ),
-                if (userID.isEditing)
-                  IconButton(
-                    icon: const Icon(
-                      Icons.check,
-                      semanticLabel:
-                          "status.UserIDStatus.userIDUpdateConfirmButton",
-                    ),
-                    onPressed:
-                        userIDNotifier.onClickCompleteChangeUserID(context),
-                  ),
-              ],
-            ),
+            // // 유저 아이디 변경
+            // Container(
+            //   width: double.infinity,
+            //   padding: const EdgeInsets.only(left: 32, bottom: 8, top: 16),
+            //   child: const CustomText(
+            //     "home.userProfile.userID",
+            //     isBold: true,
+            //     isColorful: true,
+            //   ),
+            // ),
+            // CustomTextfieldContainer(
+            //   fieldKey: "user_profile_id",
+            //   prefixIcon: const Icon(Icons.person),
+            //   labelText: userID.labelTextForEditing,
+            //   validator: userID.validator,
+            //   onChanged: userIDNotifier.onChangeUserID,
+            //   enabled: userID.isEditing,
+            //   keyboardType: TextInputType.name,
+            //   autofillHints: const [AutofillHints.username],
+            //   onFieldSubmitted: (value) =>
+            //       userIDNotifier.onClickCompleteChangeUserID(context),
+            //   controller: userIDNotifier.userIDController,
+            //   actions: [
+            //     if (!userID.isEditing)
+            //       TextButton(
+            //         onPressed: userIDNotifier.onClickChangeUserID,
+            //         child: const CustomText(
+            //           "status.UserIDStatus.userIDUpdate",
+            //           isColorful: true,
+            //           isBold: true,
+            //         ),
+            //       )
+            //     else
+            //       IconButton(
+            //         icon: const Icon(
+            //           Icons.cancel,
+            //           semanticLabel:
+            //               "status.UserIDStatus.userIDUpdateCancelButton",
+            //         ),
+            //         onPressed: userIDNotifier.onClickCancelChangeUserID,
+            //       ),
+            //     if (userID.isEditing)
+            //       IconButton(
+            //         icon: const Icon(
+            //           Icons.check,
+            //           semanticLabel:
+            //               "status.UserIDStatus.userIDUpdateConfirmButton",
+            //         ),
+            //         onPressed:
+            //             userIDNotifier.onClickCompleteChangeUserID(context),
+            //       ),
+            //   ],
+            // ),
 
             // // 유저 전화번호 변경
             // Container(
@@ -248,6 +257,154 @@ class UserProfilePage extends ConsumerWidget {
             //       ),
             //   ],
             // )
+
+            // 유저 성별 변경
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.only(left: 32, bottom: 8, top: 16),
+              child: const CustomText(
+                "home.userProfile.userGender",
+                isBold: true,
+                isColorful: true,
+              ),
+            ),
+
+            CustomToggleSwitch(
+              initialIndex: 0,
+              labels: userProfileStateNotifier.getGenderList(),
+              onToggle: (index) {
+                // ref.read(userDetailInfoStateProvider.notifier)
+                //     .onClickChangeUserGender(context, index);
+              },
+              changeOnTap: userProfileEditState.isEditing,
+            ),
+
+            // 유저 생년월일 변경
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.only(left: 32, bottom: 8, top: 36),
+              child: const CustomText(
+                "home.userProfile.userBirthDate",
+                isBold: true,
+                isColorful: true,
+              ),
+            ),
+            CustomDatePicker(
+              selectedDate: userProfileEditState.userBirthDate,
+              isEditing: userProfileEditState.isEditing,
+              onDateChanged: (date) {
+                // ref.read(userDetailInfoStateProvider.notifier)
+                //     .onClickChangeUserBirthDate(context, date);
+              },
+            ),
+
+            // 유저 계정 관리 영역
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.only(left: 32, bottom: 8, top: 96),
+              child: const CustomText(
+                "home.userProfile.userAccountAction",
+                isBold: true,
+                isColorful: true,
+              ),
+            ),
+            CustomDecorationContainer(
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: Icon(
+                      CupertinoIcons.lock_shield_fill,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    title: const CustomText(
+                      "home.userProfile.userPasswordChange",
+                      isLocalize: true,
+                    ),
+                    onTap: () {
+                      // ref.read(userDetailInfoStateProvider.notifier)
+                      //     .onClickChangePassword(context);
+                    },
+                  ),
+                  Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: Theme.of(context).disabledColor.withOpacity(0.5),
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      CupertinoIcons.phone_fill,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    title: const CustomText(
+                      "home.userProfile.userPhoneNumberChange",
+                      isLocalize: true,
+                    ),
+                    onTap: () {
+                      // ref.read(userDetailInfoStateProvider.notifier)
+                      //     .onClickChangeProfile(context);
+                    },
+                  ),
+                  Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: Theme.of(context).disabledColor.withOpacity(0.5),
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      CupertinoIcons.person_crop_circle_fill,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    title: const CustomText(
+                      "home.userProfile.userIDChange",
+                      isLocalize: true,
+                    ),
+                    onTap: () {
+                      // ref.read(userDetailInfoStateProvider.notifier)
+                      //     .onClickWithdrawal(context);
+                    },
+                  ),
+                  Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: Theme.of(context).disabledColor.withOpacity(0.5),
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      CupertinoIcons.person_crop_circle_fill_badge_exclam,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    title: const CustomText(
+                      "home.userProfile.userWithdrawal",
+                      isLocalize: true,
+                    ),
+                    onTap: () {
+                      // ref.read(userDetailInfoStateProvider.notifier)
+                      //     .onClickWithdrawal(context);
+                    },
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(
+              height: 40,
+            ),
           ],
         ),
       ),

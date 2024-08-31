@@ -124,17 +124,18 @@ extension UserIDAction on UserIDStateNotifier {
         return;
       }
 
-      final updatedUserData = userData.copyWith(userID: getUserIDModel.userID);
+      final updatedUserData =
+          userData.copyWith(userNickName: getUserIDModel.userID);
 
       await ref
           .read(userDetailInfoStateProvider.notifier)
           .update(updatedUserData);
 
-      final result = await UserService.updateUserID(
-          userData.userID, updatedUserData.userID, userPassword);
+      final result =
+          await UserService.updateUser(updatedUserData, userPassword);
 
       if (result) {
-        printd("UserID update success");
+        printd("ID update success");
         if (context.mounted) {
           ToastMessageService.nativeSnackbar(
               "status.UserServiceStatus.updateSuccess", context);

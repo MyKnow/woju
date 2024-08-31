@@ -63,8 +63,9 @@ class CustomDrawerWidget extends ConsumerWidget {
                 const SizedBox(
                   width: double.infinity,
                 ),
-                const ProfileImageWidget(
+                ProfileImageWidget(
                   hasShadow: false,
+                  image: userDetail?.profileImage,
                 ),
                 const SizedBox(
                   height: 16,

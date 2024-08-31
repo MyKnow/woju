@@ -49,8 +49,9 @@ class HomePage extends ConsumerWidget {
               "User Gender: ${userDetail?.userGender}",
               isLocalize: false,
             ),
-            const ProfileImageWidget(
+            ProfileImageWidget(
               isEditable: false,
+              image: userDetail?.profileImage,
             ),
             CustomText(
               "User BirthDate: ${userDetail?.userBirthDate}",

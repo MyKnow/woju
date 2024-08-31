@@ -206,7 +206,8 @@
       "signUpFailure": "Sign up failed"
     },
     "UserServiceStatus" : {
-      "updateSuccess" : "Successfully updated"
+      "updateSuccess" : "Successfully updated",
+      "updateFailed" : "Update failed. Please try again"
     }
   },
   "error" : {

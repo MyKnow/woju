@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -8,14 +10,24 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 class ProfileImageWidget extends ConsumerWidget {
   final bool hasShadow;
   final bool isEditable;
+  final Uint8List? image;
+  final void Function()? onImageSelectedForDefault;
+  final void Function()? onImageSelectedForGallery;
+  final void Function()? onImageSelectedForCamera;
 
-  const ProfileImageWidget(
-      {super.key, this.hasShadow = true, this.isEditable = true});
+  const ProfileImageWidget({
+    super.key,
+    required this.image,
+    this.hasShadow = true,
+    this.isEditable = true,
+    this.onImageSelectedForDefault,
+    this.onImageSelectedForGallery,
+    this.onImageSelectedForCamera,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final image = ref.watch(profileImageStateProvider);
     return Stack(
       alignment: Alignment.bottomRight,
       children: [
@@ -44,8 +56,13 @@ class ProfileImageWidget extends ConsumerWidget {
                     showMaterialModalBottomSheet(
                       backgroundColor: Colors.transparent,
                       context: context,
-                      builder: (context) =>
-                          imageBottomModalSheet(context: context, ref: ref),
+                      builder: (context) => imageBottomModalSheet(
+                        context: context,
+                        ref: ref,
+                        onImageSelectedForDefault: onImageSelectedForDefault,
+                        onImageSelectedForGallery: onImageSelectedForGallery,
+                        onImageSelectedForCamera: onImageSelectedForCamera,
+                      ),
                     );
                   }
                 : null,
@@ -65,7 +82,7 @@ class ProfileImageWidget extends ConsumerWidget {
                   : // 이미지가 있을 경우 원형 이미지로 표시
                   CircleAvatar(
                       radius: 100,
-                      backgroundImage: MemoryImage(image),
+                      backgroundImage: MemoryImage(image as Uint8List),
                     ),
             ),
           ),
@@ -77,8 +94,13 @@ class ProfileImageWidget extends ConsumerWidget {
                     showMaterialModalBottomSheet(
                       backgroundColor: Colors.transparent,
                       context: context,
-                      builder: (context) =>
-                          imageBottomModalSheet(context: context, ref: ref),
+                      builder: (context) => imageBottomModalSheet(
+                        context: context,
+                        ref: ref,
+                        onImageSelectedForDefault: onImageSelectedForDefault,
+                        onImageSelectedForGallery: onImageSelectedForGallery,
+                        onImageSelectedForCamera: onImageSelectedForCamera,
+                      ),
                     );
                   }
                 : null,
@@ -110,6 +132,9 @@ class ProfileImageWidget extends ConsumerWidget {
     required BuildContext context,
     required WidgetRef ref,
     Color? backgroundColor,
+    void Function()? onImageSelectedForDefault,
+    void Function()? onImageSelectedForGallery,
+    void Function()? onImageSelectedForCamera,
   }) {
     final theme = Theme.of(context);
     final imageNotifier = ref.read(profileImageStateProvider.notifier);
@@ -139,9 +164,10 @@ class ProfileImageWidget extends ConsumerWidget {
             height: 10,
           ),
           InkWell(
-            onTap: () async {
-              await imageNotifier.pickImage(null, context);
-            },
+            onTap: onImageSelectedForDefault ??
+                () async {
+                  await imageNotifier.pickImage(null, context);
+                },
             child: const ListTile(
               title: CustomText(
                 "onboarding.signUp.detail.profileImage.default",
@@ -157,9 +183,10 @@ class ProfileImageWidget extends ConsumerWidget {
             color: theme.shadowColor,
           ),
           InkWell(
-            onTap: () async {
-              await imageNotifier.pickImage(true, context);
-            },
+            onTap: onImageSelectedForGallery ??
+                () async {
+                  await imageNotifier.pickImage(true, context);
+                },
             child: const ListTile(
               title: CustomText(
                 "onboarding.signUp.detail.profileImage.fromGallery",
@@ -175,9 +202,10 @@ class ProfileImageWidget extends ConsumerWidget {
             color: theme.shadowColor,
           ),
           InkWell(
-            onTap: () async {
-              await imageNotifier.pickImage(false, context);
-            },
+            onTap: onImageSelectedForCamera ??
+                () async {
+                  await imageNotifier.pickImage(false, context);
+                },
             child: const ListTile(
               title: CustomText(
                 "onboarding.signUp.detail.profileImage.fromCamera",

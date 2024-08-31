@@ -243,6 +243,7 @@ class UserService {
   static Future<bool> updateUser(
       UserDetailInfoModel userDetailInfo, String userPassword) async {
     final response = await HttpService.post('/user/update-user-info', {
+      "userUUID": userDetailInfo.userUUID,
       "userProfileImage": userDetailInfo.profileImage,
       "userID": userDetailInfo.userID,
       "userPhoneNumber": userDetailInfo.userPhoneNumber,

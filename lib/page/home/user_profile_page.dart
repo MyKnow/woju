@@ -33,23 +33,22 @@ class UserProfilePage extends ConsumerWidget {
                 CustomTextButton(
                   "home.userProfile.cancel",
                   minimumSize: const Size(48, 48),
-                  padding: const EdgeInsets.only(right: 32),
+                  // padding: const EdgeInsets.only(right: 32),
                   onPressed: () {
                     ref
                         .read(userProfileStateNotifierProvider.notifier)
-                        .onClickSaveProfile(context);
+                        .onClickUserProfileEditCancelButton();
                   },
                 ),
                 CustomTextButton(
                   "home.userProfile.save",
-                  padding: const EdgeInsets.only(right: 24),
+                  // padding: const EdgeInsets.only(right: 24),
                   minimumSize: const Size(48, 48),
-                  onPressed: () {
-                    ref
-                        .read(userProfileStateNotifierProvider.notifier)
-                        .onClickSaveProfile(context);
-                  },
+                  onPressed: ref
+                      .read(userProfileStateNotifierProvider.notifier)
+                      .onClickUserProfileEditCompletButton(context),
                 ),
+                const SizedBox(width: 16),
               ],
             )
           else
@@ -59,7 +58,7 @@ class UserProfilePage extends ConsumerWidget {
               onPressed: () {
                 ref
                     .read(userProfileStateNotifierProvider.notifier)
-                    .onClickEditProfile(context);
+                    .onClickUserProfileEditButton();
               },
             ),
         ],
@@ -80,6 +79,19 @@ class UserProfilePage extends ConsumerWidget {
             ),
             ProfileImageWidget(
               isEditable: userProfileEditState.isEditing,
+              image: userProfileEditState.userImage,
+              onImageSelectedForDefault: () async {
+                await userProfileStateNotifier.onClickUserProfileImage(
+                    context, null);
+              },
+              onImageSelectedForGallery: () async {
+                await userProfileStateNotifier.onClickUserProfileImage(
+                    context, true);
+              },
+              onImageSelectedForCamera: () async {
+                await userProfileStateNotifier.onClickUserProfileImage(
+                    context, false);
+              },
             ),
 
             // 유저 고유 번호 조회
@@ -131,12 +143,10 @@ class UserProfilePage extends ConsumerWidget {
               labelText:
                   userProfileEditState.userNicknameModel.labelTextForEditing,
               validator: userProfileEditState.userNicknameModel.validator,
-              // onChanged: nicknameNotifier.onChangeNickname,
+              onChanged: userProfileStateNotifier.onChangeUserNickname,
               enabled: userProfileEditState.isEditing,
               keyboardType: TextInputType.name,
               autofillHints: const [AutofillHints.nickname],
-              // onFieldSubmitted: (value) =>
-              //     nicknameNotifier.onClickCompleteChangeNickname(context),
               controller: userProfileEditState.userNicknameController,
             ),
 
@@ -270,11 +280,10 @@ class UserProfilePage extends ConsumerWidget {
             ),
 
             CustomToggleSwitch(
-              initialIndex: 0,
+              initialIndex: userProfileEditState.userGender.index,
               labels: userProfileStateNotifier.getGenderList(),
               onToggle: (index) {
-                // ref.read(userDetailInfoStateProvider.notifier)
-                //     .onClickChangeUserGender(context, index);
+                userProfileStateNotifier.onChangeUserGender(index);
               },
               changeOnTap: userProfileEditState.isEditing,
             ),
@@ -292,10 +301,7 @@ class UserProfilePage extends ConsumerWidget {
             CustomDatePicker(
               selectedDate: userProfileEditState.userBirthDate,
               isEditing: userProfileEditState.isEditing,
-              onDateChanged: (date) {
-                // ref.read(userDetailInfoStateProvider.notifier)
-                //     .onClickChangeUserBirthDate(context, date);
-              },
+              onDateChanged: userProfileStateNotifier.onChangeUserBirthDate,
             ),
 
             // 유저 계정 관리 영역

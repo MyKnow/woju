@@ -1,109 +1,27 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:go_router/go_router.dart';
+
 import 'package:woju/model/secure_model.dart';
 import 'package:woju/model/user/user_gender_model.dart';
-import 'package:woju/model/user/user_nickname_model.dart';
+import 'package:woju/model/user/user_profile_edit_model.dart';
+
 import 'package:woju/provider/onboarding/user_detail_info_state_notifier.dart';
+
 import 'package:woju/service/api/user_service.dart';
 import 'package:woju/service/debug_service.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:woju/service/image_picker_service.dart';
 import 'package:woju/service/secure_storage_service.dart';
 import 'package:woju/service/toast_message_service.dart';
 
-class UserProfileEditState {
-  final Uint8List? userImage;
-  final Uint8List? userImageBackup;
-
-  final UserNicknameModel userNicknameModel;
-  final String? userNicknameBackup;
-  final TextEditingController userNicknameController;
-
-  final Gender userGender;
-  final Gender? userGenderBackup;
-
-  final DateTime userBirthDate;
-  final DateTime? userBirthDateBackup;
-
-  final bool isEditing;
-  final bool isLoding;
-
-  UserProfileEditState({
-    required this.userImage,
-    this.userImageBackup,
-    required this.userNicknameModel,
-    this.userNicknameBackup,
-    required this.userNicknameController,
-    required this.userGender,
-    this.userGenderBackup,
-    required this.userBirthDate,
-    this.userBirthDateBackup,
-    required this.isEditing,
-    required this.isLoding,
-  });
-
-  UserProfileEditState copyWith({
-    Uint8List? userImage,
-    Uint8List? userImageBackup,
-    bool? userImageClear,
-    UserNicknameModel? userNicknameModel,
-    String? userNicknameBackup,
-    TextEditingController? userNicknameController,
-    Gender? userGender,
-    Gender? userGenderBackup,
-    DateTime? userBirthDate,
-    DateTime? userBirthDateBackup,
-    bool? isEditing,
-    bool? isBackupClear,
-    bool? isLoding,
-  }) {
-    if (isBackupClear == true) {
-      return UserProfileEditState(
-        userImage: this.userImage,
-        userNicknameModel: this.userNicknameModel,
-        userNicknameController: this.userNicknameController,
-        userGender: this.userGender,
-        userBirthDate: this.userBirthDate,
-        userImageBackup: null,
-        userNicknameBackup: null,
-        userGenderBackup: null,
-        userBirthDateBackup: null,
-        isEditing: this.isEditing,
-        isLoding: this.isLoding,
-      );
-    } else {
-      return UserProfileEditState(
-        userImage: userImageClear == true ? null : userImage ?? this.userImage,
-        userImageBackup: userImageBackup ?? this.userImageBackup,
-        userNicknameModel: userNicknameModel ?? this.userNicknameModel,
-        userNicknameBackup: userNicknameBackup ?? this.userNicknameBackup,
-        userNicknameController:
-            userNicknameController ?? this.userNicknameController,
-        userGender: userGender ?? this.userGender,
-        userGenderBackup: userGenderBackup ?? this.userGenderBackup,
-        userBirthDate: userBirthDate ?? this.userBirthDate,
-        userBirthDateBackup: userBirthDateBackup ?? this.userBirthDateBackup,
-        isEditing: isEditing ?? this.isEditing,
-        isLoding: isLoding ?? this.isLoding,
-      );
-    }
-  }
-
-  static UserProfileEditState initial() {
-    return UserProfileEditState(
-      userImage: null,
-      userNicknameModel: UserNicknameModel.initial(),
-      userNicknameController: TextEditingController(),
-      userGender: Gender.private,
-      userBirthDate: DateTime.now(),
-      isEditing: false,
-      isLoding: false,
-    );
-  }
-}
-
+/// ### 유저 프로필 수정 상태 Notifier
+/// - 유저 프로필 수정 상태를 관리하는 StateNotifier
+/// - 유저 프로필 수정 상태를 변경하는 액션을 정의
+///
 final userProfileStateNotifierProvider = StateNotifierProvider.autoDispose<
     UserProfileStateNotifier, UserProfileEditState>((ref) {
   return UserProfileStateNotifier(ref);
@@ -115,6 +33,13 @@ class UserProfileStateNotifier extends StateNotifier<UserProfileEditState> {
     readFromDB();
   }
 
+  /// ### DB에서 유저 프로필 정보 읽기
+  ///
+  /// #### Notes
+  ///
+  /// - DB에서 유저 프로필 정보를 읽어와 상태 변경
+  /// - notifier 생성 시 호출
+  ///
   void readFromDB() async {
     final userData = ref.read(userDetailInfoStateProvider);
 
@@ -162,6 +87,12 @@ class UserProfileStateNotifier extends StateNotifier<UserProfileEditState> {
     state = state.copyWith(isEditing: isEditing);
   }
 
+  /// ### 유저 프로필 정보 백업
+  ///
+  /// #### Notes
+  ///
+  /// - 현재 유저 프로필 정보를 백업
+  ///
   void backupUserProfile() {
     state = state.copyWith(
       userImageBackup: state.userImage,
@@ -171,10 +102,12 @@ class UserProfileStateNotifier extends StateNotifier<UserProfileEditState> {
     );
   }
 
+  /// ### 백업된 유저 프로필 정보 삭제
   void clearBackupUserProfile() {
     state = state.copyWith(isBackupClear: true);
   }
 
+  /// ### 백업된 유저 프로필 정보 복구
   void rollbackUserProfile() {
     updateUserImage(state.userImageBackup);
     updateUserNicknameModel(state.userNicknameBackup, false);
@@ -186,6 +119,12 @@ class UserProfileStateNotifier extends StateNotifier<UserProfileEditState> {
     state = state.copyWith(isLoding: isLoding);
   }
 
+  /// ### 성별 리스트 반환
+  ///
+  /// #### Returns
+  ///
+  /// - `List<String>`: 성별 리스트 반환
+  ///
   List<String> getGenderList() {
     return Gender.values.map((e) => e.toMessage.tr()).toList();
   }
@@ -372,5 +311,65 @@ extension UserProfileEditAction on UserProfileStateNotifier {
     }
     printd("onChangeUserBirthDate: $date");
     updateUserBirthDate(date);
+  }
+}
+
+/// ### 다른 페이지로 이동하는 Action을 정의하는 Extension
+///
+extension UserProfileEditNavigationAction on UserProfileStateNotifier {
+  /// ### 비밀번호 변경 페이지로 이동
+  ///
+  /// #### Notes
+  ///
+  /// - 비밀번호 변경 페이지로 이동
+  ///
+  /// #### Parameters
+  ///
+  /// - `BuildContext context`: BuildContext
+  ///
+  void navigateToChangePasswordPage(BuildContext context) {
+    context.push('/userProfile/userPasswordChange');
+  }
+
+  /// ### 전화번호 변경 페이지로 이동
+  ///
+  /// #### Notes
+  ///
+  /// - 전화번호 변경 페이지로 이동
+  ///
+  /// #### Parameters
+  ///
+  /// - `BuildContext context`: BuildContext
+  ///
+  void navigateToChangePhoneNumberPage(BuildContext context) {
+    context.push('/userProfile/userPhoneNumberChange');
+  }
+
+  /// ### 아이디 변경 페이지로 이동
+  ///
+  /// #### Notes
+  ///
+  /// - 아이디 변경 페이지로 이동
+  ///
+  /// #### Parameters
+  ///
+  /// - `BuildContext context`: BuildContext
+  ///
+  void navigateToChangeIdPage(BuildContext context) {
+    context.push('/userProfile/userIDChange');
+  }
+
+  /// ### 회원 탈퇴 페이지로 이동
+  ///
+  /// #### Notes
+  ///
+  /// - 회원 탈퇴 페이지로 이동
+  ///
+  /// #### Parameters
+  ///
+  /// - `BuildContext context`: BuildContext
+  ///
+  void navigateToWithdrawalPage(BuildContext context) {
+    context.push('/userProfile/userWithdrawal');
   }
 }

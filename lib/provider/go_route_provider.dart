@@ -7,7 +7,10 @@ import 'package:woju/model/onboarding/sign_in_model.dart';
 import 'package:woju/page/error/router_error_page.dart';
 import 'package:woju/page/error/server_error_page.dart';
 import 'package:woju/page/home/home_page.dart';
-import 'package:woju/page/home/user_profile_page.dart';
+import 'package:woju/page/home/userProfile/user_id_change_page.dart';
+import 'package:woju/page/home/userProfile/user_phone_number_change_page.dart';
+import 'package:woju/page/home/userProfile/user_profile_page.dart';
+import 'package:woju/page/home/userProfile/user_withdrawal_page.dart';
 
 import 'package:woju/page/onboarding/onboarding_page.dart';
 import 'package:woju/page/onboarding/signin/password_reset_page.dart';
@@ -15,6 +18,7 @@ import 'package:woju/page/onboarding/signin/signin_page.dart';
 import 'package:woju/page/onboarding/signup/signup_page.dart';
 import 'package:woju/page/onboarding/signup/signup_userinfo_page.dart';
 import 'package:woju/provider/app_state_notifier.dart';
+import 'package:woju/page/home/userProfile/user_password_change_page.dart';
 import 'package:woju/service/debug_service.dart';
 import 'package:woju/theme/widget/custom_text.dart';
 
@@ -91,10 +95,32 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         },
         text: '홈',
         routes: [
-          _buildCustomTransitionRoute(
+          _buildNestedRoute(
             path: 'userProfile',
             builder: (context, state) => const UserProfilePage(),
             text: "유저 프로필",
+            routes: [
+              _buildNoTransitionRoute(
+                path: 'userPasswordChange',
+                builder: (context, state) => const UserPasswordChangePage(),
+                text: "비밀번호 변경",
+              ),
+              _buildNoTransitionRoute(
+                path: 'userPhoneNumberChange',
+                builder: (context, state) => const UserPhoneNumberChangePage(),
+                text: "전화번호 변경",
+              ),
+              _buildNoTransitionRoute(
+                path: 'userIDChange',
+                builder: (context, state) => const UserIdChangePage(),
+                text: "아이디 변경",
+              ),
+              _buildNoTransitionRoute(
+                path: 'userWithdrawal',
+                builder: (context, state) => const UserWithdrawalPage(),
+                text: "회원 탈퇴",
+              ),
+            ],
           ),
         ],
       ),

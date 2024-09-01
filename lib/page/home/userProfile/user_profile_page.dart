@@ -286,7 +286,6 @@ class UserProfilePage extends ConsumerWidget {
                 isColorful: true,
               ),
             ),
-
             CustomToggleSwitch(
               initialIndex: userProfileEditState.userGender.index,
               labels: userProfileStateNotifier.getGenderList(),
@@ -315,7 +314,7 @@ class UserProfilePage extends ConsumerWidget {
             // 유저 계정 관리 영역
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.only(left: 32, bottom: 8, top: 96),
+              padding: const EdgeInsets.only(left: 32, bottom: 8, top: 36),
               child: const CustomText(
                 "home.userProfile.userAccountAction",
                 isBold: true,
@@ -339,8 +338,8 @@ class UserProfilePage extends ConsumerWidget {
                       isLocalize: true,
                     ),
                     onTap: () {
-                      // ref.read(userDetailInfoStateProvider.notifier)
-                      //     .onClickChangePassword(context);
+                      userProfileStateNotifier
+                          .navigateToChangePasswordPage(context);
                     },
                   ),
                   Divider(
@@ -362,8 +361,8 @@ class UserProfilePage extends ConsumerWidget {
                       isLocalize: true,
                     ),
                     onTap: () {
-                      // ref.read(userDetailInfoStateProvider.notifier)
-                      //     .onClickChangeProfile(context);
+                      userProfileStateNotifier
+                          .navigateToChangePhoneNumberPage(context);
                     },
                   ),
                   Divider(
@@ -385,8 +384,7 @@ class UserProfilePage extends ConsumerWidget {
                       isLocalize: true,
                     ),
                     onTap: () {
-                      // ref.read(userDetailInfoStateProvider.notifier)
-                      //     .onClickWithdrawal(context);
+                      userProfileStateNotifier.navigateToChangeIdPage(context);
                     },
                   ),
                   Divider(
@@ -408,14 +406,15 @@ class UserProfilePage extends ConsumerWidget {
                       isLocalize: true,
                     ),
                     onTap: () {
-                      // ref.read(userDetailInfoStateProvider.notifier)
-                      //     .onClickWithdrawal(context);
+                      userProfileStateNotifier
+                          .navigateToWithdrawalPage(context);
                     },
                   ),
                 ],
               ),
             ),
 
+            // 바텀 패딩
             const SizedBox(
               height: 40,
             ),

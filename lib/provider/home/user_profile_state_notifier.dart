@@ -28,6 +28,7 @@ class UserProfileEditState {
   final DateTime? userBirthDateBackup;
 
   final bool isEditing;
+  final bool isLoding;
 
   UserProfileEditState({
     required this.userImage,
@@ -40,6 +41,7 @@ class UserProfileEditState {
     required this.userBirthDate,
     this.userBirthDateBackup,
     required this.isEditing,
+    required this.isLoding,
   });
 
   UserProfileEditState copyWith({
@@ -55,6 +57,7 @@ class UserProfileEditState {
     DateTime? userBirthDateBackup,
     bool? isEditing,
     bool? isBackupClear,
+    bool? isLoding,
   }) {
     if (isBackupClear == true) {
       return UserProfileEditState(
@@ -63,11 +66,12 @@ class UserProfileEditState {
         userNicknameController: this.userNicknameController,
         userGender: this.userGender,
         userBirthDate: this.userBirthDate,
-        isEditing: this.isEditing,
         userImageBackup: null,
         userNicknameBackup: null,
         userGenderBackup: null,
         userBirthDateBackup: null,
+        isEditing: this.isEditing,
+        isLoding: this.isLoding,
       );
     } else {
       return UserProfileEditState(
@@ -82,6 +86,7 @@ class UserProfileEditState {
         userBirthDate: userBirthDate ?? this.userBirthDate,
         userBirthDateBackup: userBirthDateBackup ?? this.userBirthDateBackup,
         isEditing: isEditing ?? this.isEditing,
+        isLoding: isLoding ?? this.isLoding,
       );
     }
   }
@@ -94,6 +99,7 @@ class UserProfileEditState {
       userGender: Gender.private,
       userBirthDate: DateTime.now(),
       isEditing: false,
+      isLoding: false,
     );
   }
 }
@@ -176,6 +182,10 @@ class UserProfileStateNotifier extends StateNotifier<UserProfileEditState> {
     updateUserBirthDate(state.userBirthDateBackup!);
   }
 
+  void updateIsLoding(bool isLoding) {
+    state = state.copyWith(isLoding: isLoding);
+  }
+
   List<String> getGenderList() {
     return Gender.values.map((e) => e.toMessage.tr()).toList();
   }
@@ -247,6 +257,10 @@ extension UserProfileEditAction on UserProfileStateNotifier {
     }
 
     return () async {
+      // 버튼을 누른 직후, 변경을 하지 못하도록 isEditing 상태를 false로 변경하고 loading 상태를 true로 변경
+      updateIsEditing(false);
+      updateIsLoding(true);
+
       final userData = ref.read(userDetailInfoStateProvider);
       final userPassword =
           await SecureStorageService.readSecureData(SecureModel.userPassword);
@@ -270,6 +284,7 @@ extension UserProfileEditAction on UserProfileStateNotifier {
       final result =
           await UserService.updateUser(updatedUserData, userPassword);
 
+      updateIsLoding(false);
       if (result) {
         printd("UserProfile update success");
         if (context.mounted) {
@@ -280,6 +295,8 @@ extension UserProfileEditAction on UserProfileStateNotifier {
         }
       } else {
         printd("UserProfile update failed");
+        // 변경 실패 시 다시 isEditing 상태를 true로 변경하고 loading 상태를 false로 변경
+        updateIsEditing(true);
         if (context.mounted) {
           ToastMessageService.nativeSnackbar(
               "status.UserServiceStatus.updateFailed", context);

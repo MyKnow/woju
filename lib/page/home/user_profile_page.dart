@@ -51,6 +51,14 @@ class UserProfilePage extends ConsumerWidget {
                 const SizedBox(width: 16),
               ],
             )
+          else if (userProfileEditState.isLoding)
+            Padding(
+              padding: const EdgeInsets.only(right: 24),
+              child: CupertinoActivityIndicator(
+                color: Theme.of(context).primaryColor,
+                radius: Theme.of(context).textTheme.labelSmall?.fontSize ?? 16,
+              ),
+            )
           else
             CustomTextButton(
               "home.userProfile.edit",

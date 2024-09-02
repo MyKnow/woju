@@ -8,7 +8,9 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:woju/provider/onboarding/sign_up_state_notifier.dart';
-import 'package:woju/theme/widget/bottom_floating_button.dart';
+
+import 'package:woju/theme/widget/custom_app_bar_action_button.dart';
+import 'package:woju/theme/widget/custom_scaffold.dart';
 import 'package:woju/theme/widget/custom_text.dart';
 import 'package:woju/theme/widget/custom_text_button.dart';
 import 'package:woju/theme/widget/custom_textfield_container.dart';
@@ -22,22 +24,16 @@ class SignUpPage extends ConsumerWidget {
     final signUpNotifier = ref.read(signUpStateProvider.notifier);
     final focus = ref.watch(signUpAuthFocusProvider);
     final theme = Theme.of(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: const CustomText("onboarding.signUp.title", isTitle: true),
-        centerTitle: false,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: CustomTextButton(
-              "onboarding.signUp.signin",
-              onPressed: () {
-                context.go('/onboarding/signin');
-              },
-            ),
-          ),
-        ],
-      ),
+    return CustomScaffold(
+      title: "onboarding.signUp.title",
+      appBarActions: [
+        CustomAppBarTextButton(
+          text: "onboarding.signUp.signin",
+          onPressed: () {
+            context.go('/onboarding/signin');
+          },
+        ),
+      ],
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -292,10 +288,8 @@ class SignUpPage extends ConsumerWidget {
           ],
         ),
       ),
-      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
-      floatingActionButtonLocation: BottomFloatingButton.centerDocked,
-      floatingActionButton: BottomFloatingButton.build(context, ref,
-          signUpNotifier.nextButton(context), "onboarding.signUp.next"),
+      floatingActionButtonCallback: signUpNotifier.nextButton(context),
+      floatingActionButtonText: "onboarding.signUp.next",
     );
   }
 }

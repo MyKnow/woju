@@ -130,13 +130,13 @@ class UserService {
   ///
   /// #### Returns
   ///
-  /// - `Future<bool>` : 비밀번호 변경 성공 여부
+  /// - `Future<String?>` : 비밀번호 변경 성공 여부, 성공했다면 null, 실패했다면 에러 이유를 반환함
   ///
-  static Future<bool> changePassword(String userID, String oldPassword,
-      String newPassword, WidgetRef ref) async {
+  static Future<String?> changePassword(
+      String userID, String oldPassword, String newPassword, Ref ref) async {
     // 새 비밀번호 유효성 검사
     if (UserPasswordModel.isPasswordValid(newPassword) == false) {
-      return false;
+      return "error.failureReason.PASSWORD_NOT_MATCH";
     }
 
     final response = await HttpService.post('/user/update-user-password', {
@@ -150,13 +150,13 @@ class UserService {
       SecureStorageService.writeSecureData(
           SecureModel.userPassword, newPassword);
 
-      // 로그인 상태 업데이트
-      ref
-          .read(appStateProvider.notifier)
-          .updateSignInStatus(SignInStatus.logout);
-      return true;
+      // 바뀐 비밀번호로 다시 로그인
+      await UserService.autoSignIn(ref);
+      return null;
     } else {
-      return false;
+      final decode = jsonDecode(response.body);
+      final reason = decode['failureReason'] ?? "undefined";
+      return reason;
     }
   }
 

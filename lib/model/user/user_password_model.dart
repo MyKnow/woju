@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:woju/model/status/status_mixin.dart';
 import 'package:woju/model/text_field_model.dart';
 
@@ -63,20 +64,22 @@ class UserPasswordModel with TextFieldModel {
       return false;
     } else if (password.length > maxLength) {
       return false;
-    } else if (!RegExp(
-            r'^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,20}$')
+    }
+    // 특수문자가 포함되어야 함
+    else if (!RegExp("""[!@#\$%^&*()-_=+{}[]|;:"<>,./?`~'\\₩]""")
         .hasMatch(password)) {
       return false;
     }
+    // 영문이 포함되어야 함
+    else if (!RegExp("""[a-zA-Z]""").hasMatch(password)) {
+      return false;
+    }
+    // 숫자가 포함되어야 함
+    else if (!RegExp("""[0-9]""").hasMatch(password)) {
+      return false;
+    }
+
     return true;
-  }
-
-  UserPasswordModel togglePasswordVisibility() {
-    return copyWith(isPasswordVisible: !isPasswordVisible);
-  }
-
-  UserPasswordModel updatePassword(String newPassword) {
-    return copyWith(password: newPassword);
   }
 
   static UserPasswordModel initial() {
@@ -121,5 +124,14 @@ class UserPasswordModel with TextFieldModel {
     } else {
       return PasswordStatus.empty.toMessage;
     }
+  }
+
+  List<TextInputFormatter>? get getInputFormatter {
+    return [
+      FilteringTextInputFormatter.allow(
+        RegExp("""[a-zA-Z0-9!@#\$%^&*()-_=+{}[]|;:"<>,./?~'\\₩]"""),
+      ),
+      LengthLimitingTextInputFormatter(20),
+    ];
   }
 }

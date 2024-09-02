@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:woju/theme/widget/custom_scaffold.dart';
 import 'package:woju/theme/widget/custom_text.dart';
 
 class RouterErrorPage extends ConsumerStatefulWidget {
@@ -12,11 +13,9 @@ class RouterErrorPage extends ConsumerStatefulWidget {
 class RouterErrorPageState extends ConsumerState<RouterErrorPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: Container(),
-        title: const CustomText('error.router.title', isTitle: true),
-      ),
+    return CustomScaffold(
+      appBarLeading: Container(),
+      title: 'error.router.title',
       body: PopScope(
         canPop: false,
         child: Column(

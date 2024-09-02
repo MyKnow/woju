@@ -52,7 +52,9 @@ class SignInStateNotifier extends StateNotifier<SignInModel> {
 
   void togglePasswordVisibility() {
     state = state.copyWith(
-      userPasswordModel: state.userPasswordModel.togglePasswordVisibility(),
+      userPasswordModel: state.userPasswordModel.copyWith(
+        isPasswordVisible: !state.userPasswordModel.isPasswordVisible,
+      ),
     );
   }
 

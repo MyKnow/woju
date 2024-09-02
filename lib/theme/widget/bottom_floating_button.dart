@@ -6,9 +6,10 @@ import 'package:woju/theme/custom_theme_data.dart';
 import 'package:woju/theme/widget/custom_text.dart';
 
 class BottomFloatingButton {
-  static const centerDocked = FloatingActionButtonLocation.centerDocked;
+  static const location = FloatingActionButtonLocation.centerDocked;
   static Widget build(BuildContext context, WidgetRef ref,
-      VoidCallback? onPressed, String? text) {
+      VoidCallback? onPressed, String? text,
+      {Widget? child}) {
     final viewInsets = MediaQuery.of(context).viewInsets.vertical;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
     return Container(
@@ -43,26 +44,36 @@ class BottomFloatingButton {
               ),
             ),
           const Spacer(),
-          if (text != null)
-            Padding(
-              padding: const EdgeInsets.only(right: 20),
-              child: ElevatedButton(
-                onPressed: onPressed,
-                style: CustomThemeData.currentTheme.elevatedButtonTheme.style
-                    ?.copyWith(
-                  minimumSize: WidgetStateProperty.all(const Size(80, 40)),
-                  backgroundColor:
-                      WidgetStateProperty.all(Theme.of(context).primaryColor),
-                ),
-                child: CustomText(
-                  text,
-                  style: Theme.of(context)
-                      .primaryTextTheme
-                      .bodyMedium
-                      ?.copyWith(color: Colors.white),
-                ),
-              ),
-            ),
+          (child != null)
+              ? Padding(
+                  padding: const EdgeInsets.only(right: 20),
+                  child: child,
+                )
+              : (text != null)
+                  ? Padding(
+                      padding: const EdgeInsets.only(right: 20),
+                      child: ElevatedButton(
+                        onPressed: onPressed,
+                        style: CustomThemeData
+                            .currentTheme.elevatedButtonTheme.style
+                            ?.copyWith(
+                                minimumSize:
+                                    WidgetStateProperty.all(const Size(80, 40)),
+                                backgroundColor: (onPressed != null)
+                                    ? WidgetStateProperty.all(
+                                        Theme.of(context).primaryColor)
+                                    : WidgetStateProperty.all(
+                                        Theme.of(context).disabledColor)),
+                        child: CustomText(
+                          text,
+                          style: Theme.of(context)
+                              .primaryTextTheme
+                              .bodyMedium
+                              ?.copyWith(color: Colors.white),
+                        ),
+                      ),
+                    )
+                  : Container(),
         ],
       ),
     );

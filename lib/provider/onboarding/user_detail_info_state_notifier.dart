@@ -63,4 +63,24 @@ class UserDetailInfoStateNotifier extends StateNotifier<UserDetailInfoModel?> {
   /// - [UserDetailInfoState?] : 현재 UserDetailInfoState (nullable)
   ///
   UserDetailInfoModel? get userDetailInfoState => state;
+
+  /// ### 에러 메세지 반환
+  ///
+  /// #### Notes
+  ///
+  /// - UserDetailInfo의 상태에 따라 에러 메세지를 반환함
+  ///
+  /// #### Returns
+  ///
+  /// - [String?] 에러 메세지(localizing 되지 않음)
+  ///
+  String? get getErrorMessage {
+    if (state == null) {
+      return "error.userDetail.nullInfo";
+    } else if (state != null && state!.userUUID.isEmpty) {
+      return "error.userDetail.emptyUUID";
+    } else {
+      return null;
+    }
+  }
 }

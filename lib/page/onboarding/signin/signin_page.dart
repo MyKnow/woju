@@ -1,12 +1,15 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:woju/provider/onboarding/sign_in_state_notifier.dart';
-import 'package:woju/theme/widget/bottom_floating_button.dart';
+
+import 'package:woju/theme/widget/custom_app_bar_action_button.dart';
+import 'package:woju/theme/widget/custom_scaffold.dart';
 import 'package:woju/theme/widget/custom_text.dart';
 import 'package:woju/theme/widget/custom_text_button.dart';
 import 'package:woju/theme/widget/custom_textfield_container.dart';
@@ -20,23 +23,20 @@ class SignInPage extends ConsumerWidget {
     final signInNotifier = ref.watch(signInStateProvider.notifier);
     final theme = Theme.of(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const CustomText("onboarding.signIn.title", isTitle: true),
-        actions: [
-          // 로그인 방법 변경
-          CustomTextButton(
-            (signIn.loginWithPhoneNumber)
-                ? "onboarding.signIn.signInWithID"
-                : "onboarding.signIn.signInWithPhoneNumber",
-            onPressed: () {
-              FocusScope.of(context).unfocus();
-              signInNotifier.changeLoginButton();
-            },
-          ),
-          const SizedBox(width: 10),
-        ],
-      ),
+    return CustomScaffold(
+      title: "onboarding.signIn.title",
+      appBarActions: [
+        // 로그인 방법 변경
+        CustomAppBarTextButton(
+          text: (signIn.loginWithPhoneNumber)
+              ? "onboarding.signIn.signInWithID"
+              : "onboarding.signIn.signInWithPhoneNumber",
+          onPressed: () {
+            FocusScope.of(context).unfocus();
+            signInNotifier.changeLoginButton();
+          },
+        ),
+      ],
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -187,13 +187,8 @@ class SignInPage extends ConsumerWidget {
           ],
         ),
       ),
-      floatingActionButtonLocation: BottomFloatingButton.centerDocked,
-      floatingActionButton: BottomFloatingButton.build(
-        context,
-        ref,
-        signInNotifier.loginButtonOnClick(context),
-        "onboarding.signIn.signIn",
-      ),
+      floatingActionButtonCallback: signInNotifier.loginButtonOnClick(context),
+      floatingActionButtonText: "onboarding.signIn.signIn",
     );
   }
 }

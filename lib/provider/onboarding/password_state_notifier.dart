@@ -6,6 +6,11 @@ final passwordStateProvider =
   (ref) => PasswordStateNotifier(),
 );
 
+final currentPasswordStateProvider =
+    StateNotifierProvider.autoDispose<PasswordStateNotifier, UserPasswordModel>(
+  (ref) => PasswordStateNotifier(),
+);
+
 class PasswordStateNotifier extends StateNotifier<UserPasswordModel> {
   PasswordStateNotifier() : super(UserPasswordModel.initial());
 

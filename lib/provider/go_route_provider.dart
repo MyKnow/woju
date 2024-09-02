@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import 'package:woju/model/app_state_model.dart';
 import 'package:woju/model/onboarding/sign_in_model.dart';
+
 import 'package:woju/page/error/router_error_page.dart';
 import 'package:woju/page/error/server_error_page.dart';
 import 'package:woju/page/home/home_page.dart';
@@ -11,16 +13,17 @@ import 'package:woju/page/home/userProfile/user_id_change_page.dart';
 import 'package:woju/page/home/userProfile/user_phone_number_change_page.dart';
 import 'package:woju/page/home/userProfile/user_profile_page.dart';
 import 'package:woju/page/home/userProfile/user_withdrawal_page.dart';
-
 import 'package:woju/page/onboarding/onboarding_page.dart';
 import 'package:woju/page/onboarding/signin/password_reset_page.dart';
 import 'package:woju/page/onboarding/signin/signin_page.dart';
 import 'package:woju/page/onboarding/signup/signup_page.dart';
 import 'package:woju/page/onboarding/signup/signup_userinfo_page.dart';
-import 'package:woju/provider/app_state_notifier.dart';
 import 'package:woju/page/home/userProfile/user_password_change_page.dart';
+
+import 'package:woju/provider/app_state_notifier.dart';
+
 import 'package:woju/service/debug_service.dart';
-import 'package:woju/theme/widget/custom_text.dart';
+import 'package:woju/theme/widget/custom_scaffold.dart';
 
 class RouterObserver extends NavigatorObserver {
   @override
@@ -168,10 +171,8 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       _buildNestedRoute(
         path: '/error',
         builder: (context, state) {
-          return const Scaffold(
-            body: Center(
-              child: CustomText('에러 페이지'),
-            ),
+          return const CustomScaffold(
+            title: "error.title",
           );
         },
         text: '에러',

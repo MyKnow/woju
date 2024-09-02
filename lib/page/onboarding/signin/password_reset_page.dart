@@ -1,18 +1,22 @@
-import 'package:country_code_picker/country_code_picker.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'package:country_code_picker/country_code_picker.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import 'package:woju/provider/onboarding/auth_state_notififer.dart';
 import 'package:woju/provider/onboarding/password_state_notifier.dart';
 import 'package:woju/provider/onboarding/phone_number_state_notifier.dart';
 import 'package:woju/provider/textfield_focus_state_notifier.dart';
 import 'package:woju/provider/theme_state_notififer.dart';
+
 import 'package:woju/service/api/user_service.dart';
 import 'package:woju/service/toast_message_service.dart';
-import 'package:woju/theme/widget/bottom_floating_button.dart';
+
+import 'package:woju/theme/widget/custom_scaffold.dart';
 import 'package:woju/theme/widget/custom_text.dart';
 import 'package:woju/theme/widget/custom_text_button.dart';
 import 'package:woju/theme/widget/custom_textfield_container.dart';
@@ -40,11 +44,8 @@ class PasswordResetPageState extends ConsumerState<PasswordResetPage> {
     final focus = ref.watch(textfieldFocusStateProvider(3));
     final focusNotifier = ref.watch(textfieldFocusStateProvider(3).notifier);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const CustomText("onboarding.signIn.resetPassword.title",
-            isTitle: true),
-      ),
+    return CustomScaffold(
+      title: "onboarding.signIn.resetPassword.title",
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -242,36 +243,32 @@ class PasswordResetPageState extends ConsumerState<PasswordResetPage> {
           ],
         ),
       ),
-      floatingActionButtonLocation: BottomFloatingButton.centerDocked,
-      floatingActionButton: BottomFloatingButton.build(
-        context,
-        ref,
-        (auth.userUid == null || !password.isPasswordAvailable)
-            ? null
-            : () async {
-                if (auth.userUid == null || !password.isPasswordAvailable) {
-                  return;
+      floatingActionButtonCallback: (auth.userUid == null ||
+              !password.isPasswordAvailable)
+          ? null
+          : () async {
+              if (auth.userUid == null || !password.isPasswordAvailable) {
+                return;
+              }
+
+              final userUID = auth.userUid as String;
+              final userPassword = password.userPassword as String;
+
+              final result =
+                  await UserService.resetPassword(userUID, userPassword, ref);
+
+              if (context.mounted) {
+                if (result) {
+                  ToastMessageService.nativeSnackbar(
+                      "onboarding.signIn.resetPassword.success", context);
+                  context.go('/onboarding/signin');
+                } else {
+                  ToastMessageService.nativeSnackbar(
+                      "onboarding.signIn.resetPassword.error", context);
                 }
-
-                final userUID = auth.userUid as String;
-                final userPassword = password.userPassword as String;
-
-                final result =
-                    await UserService.resetPassword(userUID, userPassword, ref);
-
-                if (context.mounted) {
-                  if (result) {
-                    ToastMessageService.nativeSnackbar(
-                        "onboarding.signIn.resetPassword.success", context);
-                    context.go('/onboarding/signin');
-                  } else {
-                    ToastMessageService.nativeSnackbar(
-                        "onboarding.signIn.resetPassword.error", context);
-                  }
-                }
-              },
-        "onboarding.signIn.resetPassword.done",
-      ),
+              }
+            },
+      floatingActionButtonText: "onboarding.signIn.resetPassword.done",
     );
   }
 }

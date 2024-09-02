@@ -28,6 +28,7 @@ class CustomDatePicker extends ConsumerWidget {
           child: CustomText(
             DateFormat.yMMMMd(context.locale.toString()).format(selectedDate),
             isDisabled: !isEditing,
+            isLocalize: false,
           ),
         ),
       );

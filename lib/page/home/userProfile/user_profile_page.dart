@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:woju/provider/home/user_profile_state_notifier.dart';
+import 'package:woju/theme/widget/custom_app_bar_action_button.dart';
 
 import 'package:woju/theme/widget/custom_container_decoration.dart';
 import 'package:woju/theme/widget/custom_date_picker.dart';
+import 'package:woju/theme/widget/custom_scaffold.dart';
 import 'package:woju/theme/widget/custom_text.dart';
 import 'package:woju/theme/widget/custom_text_button.dart';
 import 'package:woju/theme/widget/custom_textfield_container.dart';
@@ -21,56 +23,51 @@ class UserProfilePage extends ConsumerWidget {
     final userProfileStateNotifier =
         ref.watch(userProfileStateNotifierProvider.notifier);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const CustomText("home.userProfile.title", isTitle: true),
-        centerTitle: false,
-        actions: [
-          if (userProfileEditState.isEditing)
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CustomTextButton(
-                  "home.userProfile.cancel",
-                  minimumSize: const Size(48, 48),
-                  // padding: const EdgeInsets.only(right: 32),
-                  onPressed: () {
-                    ref
-                        .read(userProfileStateNotifierProvider.notifier)
-                        .onClickUserProfileEditCancelButton();
-                  },
-                ),
-                CustomTextButton(
-                  "home.userProfile.save",
-                  // padding: const EdgeInsets.only(right: 24),
-                  minimumSize: const Size(48, 48),
-                  onPressed: ref
+    return CustomScaffold(
+      title: "home.userProfile.title",
+      appBarActions: [
+        if (userProfileEditState.isEditing)
+          CustomAppBarTextButton(
+            children: [
+              CustomTextButton(
+                "home.userProfile.cancel",
+                minimumSize: const Size(48, 48),
+                // padding: const EdgeInsets.only(right: 32),
+                onPressed: () {
+                  ref
                       .read(userProfileStateNotifierProvider.notifier)
-                      .onClickUserProfileEditCompletButton(context),
-                ),
-                const SizedBox(width: 16),
-              ],
-            )
-          else if (userProfileEditState.isLoding)
-            Padding(
-              padding: const EdgeInsets.only(right: 24),
-              child: CupertinoActivityIndicator(
+                      .onClickUserProfileEditCancelButton();
+                },
+              ),
+              CustomTextButton(
+                "home.userProfile.save",
+                // padding: const EdgeInsets.only(right: 24),
+                minimumSize: const Size(48, 48),
+                onPressed: ref
+                    .read(userProfileStateNotifierProvider.notifier)
+                    .onClickUserProfileEditCompletButton(context),
+              ),
+            ],
+          )
+        else if (userProfileEditState.isLoding)
+          CustomAppBarTextButton(
+            children: [
+              CupertinoActivityIndicator(
                 color: Theme.of(context).primaryColor,
                 radius: Theme.of(context).textTheme.labelSmall?.fontSize ?? 16,
               ),
-            )
-          else
-            CustomTextButton(
-              "home.userProfile.edit",
-              padding: const EdgeInsets.only(right: 24),
-              onPressed: () {
-                ref
-                    .read(userProfileStateNotifierProvider.notifier)
-                    .onClickUserProfileEditButton();
-              },
-            ),
-        ],
-      ),
+            ],
+          )
+        else
+          CustomAppBarTextButton(
+            text: "home.userProfile.edit",
+            onPressed: () {
+              ref
+                  .read(userProfileStateNotifierProvider.notifier)
+                  .onClickUserProfileEditButton();
+            },
+          ),
+      ],
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -156,6 +153,8 @@ class UserProfilePage extends ConsumerWidget {
               keyboardType: TextInputType.name,
               autofillHints: const [AutofillHints.nickname],
               controller: userProfileEditState.userNicknameController,
+              textInputAction: TextInputAction.done,
+              onFieldSubmitted: (value) => FocusScope.of(context).unfocus(),
             ),
 
             // // 유저 아이디 변경
@@ -334,7 +333,7 @@ class UserProfilePage extends ConsumerWidget {
                       color: Theme.of(context).primaryColor,
                     ),
                     title: const CustomText(
-                      "home.userProfile.userPasswordChange",
+                      "home.userProfile.userPasswordChange.title",
                       isLocalize: true,
                     ),
                     onTap: () {
@@ -421,6 +420,7 @@ class UserProfilePage extends ConsumerWidget {
           ],
         ),
       ),
+      floatingActionButtonChild: Container(),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:woju/provider/app_state_notifier.dart';
+import 'package:woju/theme/widget/custom_scaffold.dart';
 import 'package:woju/theme/widget/custom_text.dart';
 
 class ServerErrorPage extends ConsumerWidget {
@@ -9,11 +10,9 @@ class ServerErrorPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appStatusNotifier = ref.watch(appStateProvider.notifier);
-    return Scaffold(
-      appBar: AppBar(
-        title: const CustomText('error.server.title', isTitle: true),
-        leading: const SizedBox(),
-      ),
+    return CustomScaffold(
+      title: 'error.server.title',
+      appBarLeading: const SizedBox(),
       body: PopScope(
         canPop: false,
         child: Column(

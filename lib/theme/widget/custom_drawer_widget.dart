@@ -74,6 +74,7 @@ class CustomDrawerWidget extends ConsumerWidget {
                   userDetail?.userNickName ?? "",
                   isWhite: true,
                   isTitle: true,
+                  isLocalize: false,
                 ),
               ],
             ),

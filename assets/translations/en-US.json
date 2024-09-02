@@ -31,24 +31,24 @@
       "confirmPassword": "Confirm password",
       "searchCountry": "You can search for a country",
       "next": "Next",
-      "sendCode": "Send code",
+      "sendCode": "Verify",
       "changePhoneNumber": "Change number",
       "password": "Please enter your password",
       "passwordRule": "Please enter a password of at least 8 characters",
       "passwordAvailable": "Password available",
-      "userID": "Please enter your desired ID",
-      "userIDCheck": "Check for duplicates",
+      "userID": "Please enter your ID",
+      "userIDCheck": "Check duplication",
       "userIDAvailable": "ID available",
       "userIDAvailableSimple": "Available",
       "modifyUserID": "Change ID",
       "detail" : {
-        "title": "Profile Creation",
+        "title": "Write profile",
         "profileImage" : {
           "default": "Change to default image",
           "fromGallery": "Select from gallery",
           "fromCamera": "Take a photo with camera"
         },
-        "done": "Sign Up",
+        "done": "Sign up",
         "signUpSuccess": "Sign up successful",
         "nickname": "Please enter your nickname",
         "nicknameValid": "Nickname available",
@@ -59,7 +59,7 @@
           "woman" : "Female",
           "other" : "Other"
         },
-        "birth": "Please enter your date of birth"
+        "birth": "Please enter your birthdate"
       }
     },
     "skip": "Skip"
@@ -79,27 +79,32 @@
     "userProfile" : {
       "title" : "Profile",
       "save" : "Save",
-      "edit" : "Edit Profile",
+      "edit" : "Edit profile",
       "cancel" : "Cancel",
-      "userProfileImage" : "Profile Image",
+      "userProfileImage" : "Profile image",
       "userUUID" : "User UUID",
       "userUUIDCopied" : "UUID copied",
       "userNickName" : "Nickname",
       "userID" : "ID",
-      "userPhoneNumber": "Phone Number",
+      "userPhoneNumber": "Phone number",
       "userGender" : "Gender",
-      "userBirthDate" : "Date of Birth",
-      "userAccountAction" : "Account Management",
+      "userBirthDate" : "Birthdate",
+      "userAccountAction" : "Account management",
       "userWithdrawal" : "Withdrawal",
-      "userPasswordChange" : "Change Password",
-      "userPhoneNumberChange" : "Change Phone Number",
+      "userPasswordChange" : {
+        "title" : "Change Password",
+        "currentPassword" : "Current password",
+        "newPassword" : "New password",
+        "changePassword" : "Change password"
+      },
+      "userPhoneNumberChange" : "Change phone number",
       "userIDChange" : "Change ID"
     }
   },
   "accessibility": {
-    "hideKeyboardButton": "Hide Keyboard Button",
-    "hidePasswordFieldButton": "Hide Password Field Button",
-    "showPasswordFieldButton": "Show Password Field Button"
+    "hideKeyboardButton": "Hide keyboard button",
+    "hidePasswordFieldButton": "Hide password field button",
+    "showPasswordFieldButton": "Show password field button"
   },
   "status" : {
     "authcode" : {
@@ -111,7 +116,7 @@
     },
     "AuthStatus" : {
       "failedInvalidPhoneNumber" : "Please enter a valid phone number",
-      "failedAuthCodeNotSent" : "Unable to send verification code. Please try again",
+      "failedAuthCodeNotSent" : "Failed to send verification code. Please try again",
       "failedAuthCodeTimeout" : "Verification code has expired. Please request again",
       "failedAuthCodeEmpty" : "Please enter the verification code",
       "failedAuthCodeInvalid" : "Please enter a 6-digit verification code"
@@ -144,7 +149,7 @@
       "validIDFormat" : "Valid ID format",
       "validForDisabled" : "ID",
       "invalid" : "ID can only contain letters and numbers",
-      "invalidAlphabet" : "ID must contain at least 6 lowercase letters",
+      "invalidAlphabet" : "ID must include at least 6 lowercase letters",
       "invalidAlphabetFirst" : "ID must start with a letter",
       "alphabetFirst" : "ID must start with a letter",
       "short" : "ID must be at least 6 characters",
@@ -160,7 +165,7 @@
     "PasswordStatus" : {
       "empty" : "Please enter your password",
       "valid" : "Password available",
-      "invalid" : "Password must contain special characters, letters, and numbers",
+      "invalid" : "Password must include special characters, letters, and numbers",
       "short" : "Please enter a password of at least 8 characters",
       "long" : "Please enter a password up to 20 characters",
       "validForSignIn" : "Valid password format"
@@ -192,7 +197,7 @@
     },
     "SignInStatus" : {
       "loginFailedForInvalidLoginInfo" : "Invalid ID or password",
-      "loginFailedForServer" : "Login failed. Please try again",
+      "loginFailedForServer" : "Failed to log in. Please try again",
       "loginSuccess" : "Welcome, {nickname}",
       "withDrawalFailed" : "Withdrawal failed. Please try again"
     },
@@ -200,7 +205,7 @@
       "authCodeEmpty" : "Please enter the verification code",
       "authCodeInvalid" : "Please enter a valid verification code",
       "authCodeTimeout" : "Verification code has expired. Please request again",
-      "authCodeNotSent" : "Unable to send verification code. Please try again",
+      "authCodeNotSent" : "Failed to send verification code. Please try again",
       "serverError" : "A server error occurred. Please try again",
       "alreadySignedUp" : "Phone number already signed up",
       "signUpFailure": "Sign up failed"
@@ -219,11 +224,27 @@
       "title" : "Page Error",
       "description" : "The page you are looking for does not exist.",
       "back" : "Go to main page"
+    },
+    "userDetail" : {
+      "nullInfo" : "Failed to load user information",
+      "emptyUUID" : "User information is not valid"
+    },
+    "failureReason": {
+      "USER_ID_NOT_AVAILABLE": "ID not available",
+      "USER_NOT_FOUND": "User not found",
+      "USER_ID_EMPTY": "Please enter your ID",
+      "PHONENUMBER_NOT_AVAILABLE": "Phone number not available",
+      "PHONENUMBER_EMPTY": "Please enter your phone number",
+      "USER_LOGIN_INFO_EMPTY": "Please enter your login information",
+      "PASSWORD_NOT_MATCH": "Current password is incorrect",
+      "PASSWORD_EMPTY": "Please enter your password",
+      "USER_UID_EMPTY": "User UUID is empty",
+      "SERVER_ERROR": "A server error occurred"
     }
   },
   "theme" : {
-    "dark" : "Dark Mode",
-    "light" : "Light Mode"
+    "dark" : "Dark mode",
+    "light" : "Light mode"
   },
   "input" : {
     "defaultLabel" : "Please enter the content",

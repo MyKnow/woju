@@ -1,9 +1,9 @@
 import 'dart:io';
-
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:scroll_date_picker/scroll_date_picker.dart';
@@ -11,8 +11,9 @@ import 'package:toggle_switch/toggle_switch.dart';
 
 import 'package:woju/model/user/user_gender_model.dart';
 import 'package:woju/provider/onboarding/sign_up_state_notifier.dart';
-import 'package:woju/theme/widget/bottom_floating_button.dart';
+
 import 'package:woju/theme/widget/custom_container_decoration.dart';
+import 'package:woju/theme/widget/custom_scaffold.dart';
 import 'package:woju/theme/widget/custom_text.dart';
 import 'package:woju/theme/widget/custom_textfield_container.dart';
 
@@ -25,12 +26,8 @@ class SignupUserinfoPage extends ConsumerWidget {
     final signUpNotifier = ref.read(signUpStateProvider.notifier);
     final focus = ref.watch(signUpAuthFocusProvider);
     final theme = Theme.of(context);
-    return Scaffold(
-      appBar: AppBar(
-        title:
-            const CustomText("onboarding.signUp.detail.title", isTitle: true),
-        centerTitle: false,
-      ),
+    return CustomScaffold(
+      title: "onboarding.signUp.detail.title",
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -284,14 +281,8 @@ class SignupUserinfoPage extends ConsumerWidget {
           ],
         ),
       ),
-      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
-      floatingActionButtonLocation: BottomFloatingButton.centerDocked,
-      floatingActionButton: BottomFloatingButton.build(
-        context,
-        ref,
-        signUpNotifier.completeButton(context),
-        "onboarding.signUp.detail.done",
-      ),
+      floatingActionButtonCallback: signUpNotifier.completeButton(context),
+      floatingActionButtonText: "onboarding.signUp.detail.done",
     );
   }
 }

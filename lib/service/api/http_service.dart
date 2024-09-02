@@ -38,4 +38,8 @@ class HttpService {
 
     return response;
   }
+
+  static String failureReason(String code) {
+    return "error.failureReason.$code";
+  }
 }

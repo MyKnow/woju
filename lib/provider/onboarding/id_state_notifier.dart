@@ -9,7 +9,7 @@ import 'package:woju/service/secure_storage_service.dart';
 import 'package:woju/service/toast_message_service.dart';
 
 final userIDStateProvider =
-    StateNotifierProvider<UserIDStateNotifier, UserIDModel>((ref) {
+    StateNotifierProvider.autoDispose<UserIDStateNotifier, UserIDModel>((ref) {
   return UserIDStateNotifier(ref);
 });
 

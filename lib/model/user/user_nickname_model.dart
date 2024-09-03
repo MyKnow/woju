@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:woju/model/status/status_mixin.dart';
 import 'package:woju/model/text_field_model.dart';
 
@@ -86,5 +87,11 @@ class UserNicknameModel with TextFieldModel<String> {
   @override
   String? get value {
     return nickname;
+  }
+
+  List<TextInputFormatter>? get inputFormatters {
+    return [
+      LengthLimitingTextInputFormatter(20),
+    ];
   }
 }

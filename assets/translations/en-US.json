@@ -17,7 +17,7 @@
       "signIn": "Sign In",
       "resetPassword" : {
         "title": "Reset Password",
-        "done" : "Reset Complete",
+        "done" : "Reset complete",
         "error" : "A server error occurred. Please try again",
         "success" : "Password reset successful.\nPlease log in with your new password"
       }
@@ -36,13 +36,13 @@
       "password": "Please enter your password",
       "passwordRule": "Please enter a password of at least 8 characters",
       "passwordAvailable": "Password available",
-      "userID": "Please enter your ID",
-      "userIDCheck": "Check duplication",
+      "userID": "Please enter your desired ID",
+      "userIDCheck": "Check for duplicates",
       "userIDAvailable": "ID available",
       "userIDAvailableSimple": "Available",
       "modifyUserID": "Change ID",
       "detail" : {
-        "title": "Write profile",
+        "title": "Profile creation",
         "profileImage" : {
           "default": "Change to default image",
           "fromGallery": "Select from gallery",
@@ -50,7 +50,7 @@
         },
         "done": "Sign up",
         "signUpSuccess": "Sign up successful",
-        "nickname": "Please enter your nickname",
+        "nickname": "Please enter a nickname",
         "nicknameValid": "Nickname available",
         "gender": {
           "title": "Please select your gender",
@@ -59,7 +59,7 @@
           "woman" : "Female",
           "other" : "Other"
         },
-        "birth": "Please enter your birthdate"
+        "birth": "Please enter your date of birth"
       }
     },
     "skip": "Skip"
@@ -79,26 +79,42 @@
     "userProfile" : {
       "title" : "Profile",
       "save" : "Save",
-      "edit" : "Edit profile",
+      "edit" : "Edit Profile",
       "cancel" : "Cancel",
-      "userProfileImage" : "Profile image",
+      "userProfileImage" : "Profile Image",
       "userUUID" : "User UUID",
       "userUUIDCopied" : "UUID copied",
       "userNickName" : "Nickname",
       "userID" : "ID",
-      "userPhoneNumber": "Phone number",
+      "userPhoneNumber": "Phone Number",
       "userGender" : "Gender",
-      "userBirthDate" : "Birthdate",
-      "userAccountAction" : "Account management",
-      "userWithdrawal" : "Withdrawal",
+      "userBirthDate" : "Date of Birth",
+      "userAccountAction" : "Account Management",
       "userPasswordChange" : {
         "title" : "Change Password",
-        "currentPassword" : "Current password",
-        "newPassword" : "New password",
-        "changePassword" : "Change password"
+        "currentPassword" : "Current Password",
+        "newPassword" : "New Password",
+        "changePassword" : "Change Password"
       },
-      "userPhoneNumberChange" : "Change phone number",
-      "userIDChange" : "Change ID"
+      "userPhoneNumberChange" : {
+        "title" : "Change Phone Number",
+        "newPhoneNumber" : "New Phone Number",
+        "authCode" : "Verification Code",
+        "changePhoneNumberButton" : "Change Phone Number"
+      },
+      "userIDChange" : {
+         "title": "Change ID",
+        "newUserID" : "New ID",
+        "changeUserIDButton" : "Change ID"
+      },
+      "userWithdrawal" : {
+        "title" : "Withdrawal",
+        "withdrawalButton" : "Withdraw",
+        "withdrawalDetail" : "All information will be deleted upon withdrawal.",
+        "withdrawalConfirm" : "Are you sure you want to withdraw?",
+        "withdrawalConfirmButton" : "Withdraw",
+        "withdrawalCancelButton" : "Cancel"
+      }
     }
   },
   "accessibility": {
@@ -116,7 +132,7 @@
     },
     "AuthStatus" : {
       "failedInvalidPhoneNumber" : "Please enter a valid phone number",
-      "failedAuthCodeNotSent" : "Failed to send verification code. Please try again",
+      "failedAuthCodeNotSent" : "Unable to send verification code. Please try again",
       "failedAuthCodeTimeout" : "Verification code has expired. Please request again",
       "failedAuthCodeEmpty" : "Please enter the verification code",
       "failedAuthCodeInvalid" : "Please enter a 6-digit verification code"
@@ -149,7 +165,7 @@
       "validIDFormat" : "Valid ID format",
       "validForDisabled" : "ID",
       "invalid" : "ID can only contain letters and numbers",
-      "invalidAlphabet" : "ID must include at least 6 lowercase letters",
+      "invalidAlphabet" : "ID must contain at least 6 lowercase letters",
       "invalidAlphabetFirst" : "ID must start with a letter",
       "alphabetFirst" : "ID must start with a letter",
       "short" : "ID must be at least 6 characters",
@@ -165,7 +181,7 @@
     "PasswordStatus" : {
       "empty" : "Please enter your password",
       "valid" : "Password available",
-      "invalid" : "Password must include special characters, letters, and numbers",
+      "invalid" : "Password must contain special characters, letters, and numbers",
       "short" : "Please enter a password of at least 8 characters",
       "long" : "Please enter a password up to 20 characters",
       "validForSignIn" : "Valid password format"
@@ -178,9 +194,9 @@
       "private" : "Private"
     },
     "UserNickNameStatus" : {
-      "title" : "Please enter your nickname",
-      "empty" : "Please enter your nickname",
-      "short" : "Nickname must be at least 2 characters",
+      "title" : "Please enter a nickname",
+      "empty" : "Please enter a nickname",
+      "short" : "Please enter a nickname of at least 2 characters",
       "long" : "Please enter a nickname up to 20 characters",
       "invalid" : "Invalid nickname",
       "valid" : "Nickname available",
@@ -197,7 +213,7 @@
     },
     "SignInStatus" : {
       "loginFailedForInvalidLoginInfo" : "Invalid ID or password",
-      "loginFailedForServer" : "Failed to log in. Please try again",
+      "loginFailedForServer" : "Login failed. Please try again",
       "loginSuccess" : "Welcome, {nickname}",
       "withDrawalFailed" : "Withdrawal failed. Please try again"
     },
@@ -205,7 +221,7 @@
       "authCodeEmpty" : "Please enter the verification code",
       "authCodeInvalid" : "Please enter a valid verification code",
       "authCodeTimeout" : "Verification code has expired. Please request again",
-      "authCodeNotSent" : "Failed to send verification code. Please try again",
+      "authCodeNotSent" : "Unable to send verification code. Please try again",
       "serverError" : "A server error occurred. Please try again",
       "alreadySignedUp" : "Phone number already signed up",
       "signUpFailure": "Sign up failed"
@@ -226,7 +242,7 @@
       "back" : "Go to main page"
     },
     "userDetail" : {
-      "nullInfo" : "Failed to load user information",
+      "nullInfo" : "Failed to retrieve user information",
       "emptyUUID" : "User information is not valid"
     },
     "failureReason": {
@@ -243,8 +259,8 @@
     }
   },
   "theme" : {
-    "dark" : "Dark mode",
-    "light" : "Light mode"
+    "dark" : "Dark Mode",
+    "light" : "Light Mode"
   },
   "input" : {
     "defaultLabel" : "Please enter the content",

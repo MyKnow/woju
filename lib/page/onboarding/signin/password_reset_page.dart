@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -11,7 +10,6 @@ import 'package:woju/provider/onboarding/auth_state_notififer.dart';
 import 'package:woju/provider/onboarding/password_state_notifier.dart';
 import 'package:woju/provider/onboarding/phone_number_state_notifier.dart';
 import 'package:woju/provider/textfield_focus_state_notifier.dart';
-import 'package:woju/provider/theme_state_notififer.dart';
 
 import 'package:woju/service/api/user_service.dart';
 import 'package:woju/service/toast_message_service.dart';
@@ -33,7 +31,7 @@ class PasswordResetPage extends ConsumerStatefulWidget {
 class PasswordResetPageState extends ConsumerState<PasswordResetPage> {
   @override
   Widget build(BuildContext context) {
-    final theme = ref.watch(themeStateNotifierProvider.notifier).theme;
+    final theme = Theme.of(context);
     final auth = ref.watch(authStateProvider);
     final authNotifier = ref.watch(authStateProvider.notifier);
     final phoneNumber = ref.watch(phoneNumberStateProvider(false));
@@ -105,10 +103,7 @@ class PasswordResetPageState extends ConsumerState<PasswordResetPage> {
               onChanged: phoneNumberNotifier.updatePhoneNumber,
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.done,
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(15),
-              ],
+              inputFormatters: phoneNumber.inputFormatters,
               autofillHints: const <String>[
                 AutofillHints.telephoneNumberNational,
               ],
@@ -142,6 +137,8 @@ class PasswordResetPageState extends ConsumerState<PasswordResetPage> {
               onFieldSubmitted: () => focusNotifier.nextFocusNode(),
             ),
 
+            const SizedBox(height: 20),
+
             // 인증코드 요청 시 입력한 전화번호로 전송된 인증코드 입력창 표시
             if (auth.authCodeSent && !auth.authCompleted)
               CustomTextfieldContainer(
@@ -171,10 +168,7 @@ class PasswordResetPageState extends ConsumerState<PasswordResetPage> {
                 keyboardType: TextInputType.number,
                 autofillHints: const <String>[AutofillHints.oneTimeCode],
                 onChanged: authNotifier.updateAuthCode,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(6),
-                ],
+                inputFormatters: auth.inputFormatters,
                 enabled: !auth.authCompleted,
                 textStyle: (auth.authCompleted)
                     ? theme.textTheme.bodyMedium!.copyWith(
@@ -188,6 +182,8 @@ class PasswordResetPageState extends ConsumerState<PasswordResetPage> {
             else
               Container(),
 
+            const SizedBox(height: 20),
+
             // 아이디 입력 완료 시 비밀번호 입력창 표시
             if (auth.userUid != null && auth.authCompleted)
               CustomTextfieldContainer(
@@ -200,13 +196,7 @@ class PasswordResetPageState extends ConsumerState<PasswordResetPage> {
                 keyboardType: TextInputType.visiblePassword,
                 autofillHints: const <String>[AutofillHints.newPassword],
                 onChanged: passwordNotifier.updatePassword,
-                inputFormatters: [
-                  // 소문자, 대문자, 숫자, 특수문자만 입력 가능
-                  FilteringTextInputFormatter.allow(
-                      RegExp(r'[a-zA-Z0-9!@#$%^&*()]')),
-                  // 최대 30자까지 입력 가능
-                  LengthLimitingTextInputFormatter(30),
-                ],
+                inputFormatters: password.inputFormatters,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 focusNode: focus[2],
                 validator: password.validator,

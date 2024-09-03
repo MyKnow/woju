@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:woju/model/status/status_mixin.dart';
 import 'package:woju/model/text_field_model.dart';
 
@@ -175,5 +176,12 @@ class UserPhoneModel with TextFieldModel {
     } else {
       return PhoneNumberStatus.empty.toMessage;
     }
+  }
+
+  List<TextInputFormatter>? get inputFormatters {
+    return [
+      FilteringTextInputFormatter.digitsOnly,
+      LengthLimitingTextInputFormatter(15),
+    ];
   }
 }

@@ -157,124 +157,6 @@ class UserProfilePage extends ConsumerWidget {
               onFieldSubmitted: (value) => FocusScope.of(context).unfocus(),
             ),
 
-            // // 유저 아이디 변경
-            // Container(
-            //   width: double.infinity,
-            //   padding: const EdgeInsets.only(left: 32, bottom: 8, top: 16),
-            //   child: const CustomText(
-            //     "home.userProfile.userID",
-            //     isBold: true,
-            //     isColorful: true,
-            //   ),
-            // ),
-            // CustomTextfieldContainer(
-            //   fieldKey: "user_profile_id",
-            //   prefixIcon: const Icon(Icons.person),
-            //   labelText: userID.labelTextForEditing,
-            //   validator: userID.validator,
-            //   onChanged: userIDNotifier.onChangeUserID,
-            //   enabled: userID.isEditing,
-            //   keyboardType: TextInputType.name,
-            //   autofillHints: const [AutofillHints.username],
-            //   onFieldSubmitted: (value) =>
-            //       userIDNotifier.onClickCompleteChangeUserID(context),
-            //   controller: userIDNotifier.userIDController,
-            //   actions: [
-            //     if (!userID.isEditing)
-            //       TextButton(
-            //         onPressed: userIDNotifier.onClickChangeUserID,
-            //         child: const CustomText(
-            //           "status.UserIDStatus.userIDUpdate",
-            //           isColorful: true,
-            //           isBold: true,
-            //         ),
-            //       )
-            //     else
-            //       IconButton(
-            //         icon: const Icon(
-            //           Icons.cancel,
-            //           semanticLabel:
-            //               "status.UserIDStatus.userIDUpdateCancelButton",
-            //         ),
-            //         onPressed: userIDNotifier.onClickCancelChangeUserID,
-            //       ),
-            //     if (userID.isEditing)
-            //       IconButton(
-            //         icon: const Icon(
-            //           Icons.check,
-            //           semanticLabel:
-            //               "status.UserIDStatus.userIDUpdateConfirmButton",
-            //         ),
-            //         onPressed:
-            //             userIDNotifier.onClickCompleteChangeUserID(context),
-            //       ),
-            //   ],
-            // ),
-
-            // // 유저 전화번호 변경
-            // Container(
-            //   width: double.infinity,
-            //   padding: const EdgeInsets.only(left: 32, bottom: 8, top: 16),
-            //   child: const CustomText(
-            //     "home.userProfile.userPhoneNumber",
-            //     isBold: true,
-            //     isColorful: true,
-            //   ),
-            // ),
-            // CustomTextfieldContainer(
-            //   fieldKey: 'user_profile_phone_number',
-            //   prefix: CustomCountryPickerWidget(
-            //     isEditing: true,
-            //     isDisabled: !phoneNumber.isEditing,
-            //   ),
-            //   labelText: phoneNumber.labelTextForEditing,
-            //   validator: phoneNumber.validator,
-            //   autovalidateMode: AutovalidateMode.onUserInteraction,
-            //   onChanged: phoneNumberNotifier.updatePhoneNumber,
-            //   keyboardType: TextInputType.number,
-            //   textInputAction: TextInputAction.next,
-            //   inputFormatters: [
-            //     FilteringTextInputFormatter.digitsOnly,
-            //     LengthLimitingTextInputFormatter(15),
-            //   ],
-            //   autofillHints: const <String>[
-            //     AutofillHints.telephoneNumberNational,
-            //   ],
-            //   controller: phoneNumberNotifier.phoneNumberController,
-            //   enabled: phoneNumber.isEditing,
-            //   actions: [
-            //     if (!phoneNumber.isEditing)
-            //       TextButton(
-            //         onPressed: phoneNumberNotifier.onClickChangePhoneNumber,
-            //         child: const CustomText(
-            //           "status.PhoneNumberStatus.phoneNumberUpdate",
-            //           isColorful: true,
-            //           isBold: true,
-            //         ),
-            //       )
-            //     else
-            //       IconButton(
-            //         icon: const Icon(
-            //           Icons.cancel,
-            //           semanticLabel:
-            //               "status.PhoneNumberStatus.phoneNumberUpdateCancelButton",
-            //         ),
-            //         onPressed:
-            //             phoneNumberNotifier.onClickCancelChangePhoneNumber,
-            //       ),
-            //     if (phoneNumber.isEditing)
-            //       IconButton(
-            //         icon: const Icon(
-            //           Icons.check,
-            //           semanticLabel:
-            //               "status.PhoneNumberStatus.phoneNumberUpdateConfirmButton",
-            //         ),
-            //         onPressed: phoneNumberNotifier
-            //             .onClickCompleteChangePhoneNumber(context),
-            //       ),
-            //   ],
-            // )
-
             // 유저 성별 변경
             Container(
               width: double.infinity,
@@ -401,7 +283,7 @@ class UserProfilePage extends ConsumerWidget {
                       color: Theme.of(context).primaryColor,
                     ),
                     title: const CustomText(
-                      "home.userProfile.userWithdrawal",
+                      "home.userProfile.userWithdrawal.title",
                       isLocalize: true,
                     ),
                     onTap: () {

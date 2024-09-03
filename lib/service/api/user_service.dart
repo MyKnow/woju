@@ -353,4 +353,47 @@ class UserService {
       return reason;
     }
   }
+
+  /// ### 사용자 탈퇴 함수
+  ///
+  /// #### Notes
+  ///
+  /// - 사용자를 탈퇴 처리합니다.
+  ///
+  /// #### Parameters
+  ///
+  /// - [String] `userID` : 사용자 ID
+  /// - [String] `userPassword` : 사용자 비밀번호
+  /// - [WidgetRef] `ref` : Riverpod Ref
+  ///
+  /// #### Returns
+  ///
+  /// - `Future<String?>` : 탈퇴 성공 여부 (성공: null, 실패: 에러 이유)
+  ///
+  static Future<String?> withdrawal(
+      String userID, String userPassword, WidgetRef ref) async {
+    final response = await HttpService.post('/user/withdraw', {
+      "userID": userID,
+      "userPassword": userPassword,
+    });
+
+    if (response.statusCode == 200) {
+      // SecureStorage에 사용자 비밀번호 삭제
+      SecureStorageService.deleteSecureData(SecureModel.userPassword);
+
+      // AppState 업데이트
+      ref
+          .read(appStateProvider.notifier)
+          .updateSignInStatus(SignInStatus.logout);
+
+      // UserDetailInfoModel 삭제
+      await ref.read(userDetailInfoStateProvider.notifier).delete();
+
+      return null;
+    } else {
+      final decode = jsonDecode(response.body);
+      final reason = decode['failureReason'] ?? "undefined";
+      return reason;
+    }
+  }
 }

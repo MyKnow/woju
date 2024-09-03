@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/services.dart';
 import 'package:woju/model/status/status_mixin.dart';
 import 'package:woju/model/text_field_model.dart';
 
@@ -96,5 +97,12 @@ class UserAuthModel with TextFieldModel<String> {
     } else {
       return AuthStatus.failedAuthCodeInvalid.toMessage;
     }
+  }
+
+  List<TextInputFormatter>? get inputFormatters {
+    return [
+      FilteringTextInputFormatter.digitsOnly,
+      LengthLimitingTextInputFormatter(6),
+    ];
   }
 }

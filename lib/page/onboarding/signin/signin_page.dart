@@ -1,11 +1,10 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:woju/provider/onboarding/sign_in_state_notifier.dart';
 
 import 'package:woju/theme/widget/custom_app_bar_action_button.dart';
@@ -90,10 +89,7 @@ class SignInPage extends ConsumerWidget {
                 onChanged: signInNotifier.phoneNumberOnChange,
                 keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.next,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(15),
-                ],
+                inputFormatters: signIn.userPhoneModel.inputFormatters,
                 autofillHints: const <String>[
                   AutofillHints.telephoneNumberNational,
                 ],
@@ -116,16 +112,13 @@ class SignInPage extends ConsumerWidget {
                 onChanged: signInNotifier.userIDOnChange,
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
-                inputFormatters: [
-                  // 소문자, 대문자, 숫자만 입력 가능
-                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]')),
-                  // 최대 20자까지 입력 가능
-                  LengthLimitingTextInputFormatter(20),
-                ],
+                inputFormatters: signIn.userIDModel.inputFormatters,
                 initialValue: signIn.userIDModel.userID,
               )
             else
               Container(),
+
+            const SizedBox(height: 16),
             // 비밀번호 입력
             CustomTextfieldContainer(
               fieldKey: 'passwordForSignIn',
@@ -139,13 +132,7 @@ class SignInPage extends ConsumerWidget {
                 AutofillHints.password,
               ],
               onChanged: signInNotifier.passwordOnChange,
-              inputFormatters: [
-                // 소문자, 대문자, 숫자, 특수문자만 입력 가능
-                FilteringTextInputFormatter.allow(
-                    RegExp(r'[a-zA-Z0-9!@#$%^&*()]')),
-                // 최대 30자까지 입력 가능
-                LengthLimitingTextInputFormatter(30),
-              ],
+              inputFormatters: signIn.userPasswordModel.inputFormatters,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               // focusNode: focus[3],
               validator: signIn.userPasswordModel.validator,

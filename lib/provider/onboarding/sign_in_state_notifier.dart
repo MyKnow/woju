@@ -278,8 +278,8 @@ extension SignInModelExtension on SignInStateNotifier {
 
       if (result) {
         // 탈퇴 성공 시 signInStatus를 logout로 업데이트하여 goRouterProvider가 리다이렉트하도록 함
-        ref.read(userDetailInfoStateProvider.notifier).delete();
-        SecureStorageService.deleteSecureData(SecureModel.userPassword);
+        await ref.read(userDetailInfoStateProvider.notifier).delete();
+        await SecureStorageService.deleteSecureData(SecureModel.userPassword);
         updateSignInStatus(SignInStatus.logout);
       } else {
         // 탈퇴 실패 시 에러 메시지 표시

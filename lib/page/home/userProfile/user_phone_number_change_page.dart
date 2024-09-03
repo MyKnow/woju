@@ -1,8 +1,8 @@
-import 'package:country_code_picker/country_code_picker.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
+import 'package:country_code_picker/country_code_picker.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:woju/model/secure_model.dart';
@@ -11,6 +11,7 @@ import 'package:woju/provider/onboarding/auth_state_notififer.dart';
 import 'package:woju/provider/onboarding/phone_number_state_notifier.dart';
 import 'package:woju/provider/onboarding/user_detail_info_state_notifier.dart';
 import 'package:woju/provider/textfield_focus_state_notifier.dart';
+
 import 'package:woju/service/api/user_service.dart';
 import 'package:woju/service/secure_storage_service.dart';
 import 'package:woju/service/toast_message_service.dart';
@@ -106,10 +107,7 @@ class UserPhoneNumberChangePage extends ConsumerWidget {
               onChanged: phoneNumberNotifier.updatePhoneNumber,
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.done,
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(15),
-              ],
+              inputFormatters: phoneNumber.inputFormatters,
               autofillHints: const <String>[
                 AutofillHints.telephoneNumberNational,
               ],
@@ -185,10 +183,7 @@ class UserPhoneNumberChangePage extends ConsumerWidget {
                     keyboardType: TextInputType.number,
                     autofillHints: const <String>[AutofillHints.oneTimeCode],
                     onChanged: authNotifier.updateAuthCode,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(6),
-                    ],
+                    inputFormatters: auth.inputFormatters,
                     enabled: !auth.authCompleted,
                     textStyle: (auth.authCompleted)
                         ? theme.textTheme.bodyMedium!.copyWith(

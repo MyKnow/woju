@@ -51,7 +51,7 @@ class UserPasswordChangePage extends ConsumerWidget {
               onFieldSubmitted: (value) {
                 focusNotifier.nextFocusNode();
               },
-              inputFormatters: password.currentPassword.getInputFormatter,
+              inputFormatters: password.currentPassword.inputFormatters,
               obscureText: !password.currentPassword.isPasswordVisible,
               actions: [
                 SizedBox(
@@ -107,7 +107,7 @@ class UserPasswordChangePage extends ConsumerWidget {
                     password.newPasswordFieldKey, value);
               },
               keyboardType: TextInputType.visiblePassword,
-              inputFormatters: password.newPassword.getInputFormatter,
+              inputFormatters: password.newPassword.inputFormatters,
               autofillHints: const [AutofillHints.password],
               textInputAction: TextInputAction.done,
               onFieldSubmitted:

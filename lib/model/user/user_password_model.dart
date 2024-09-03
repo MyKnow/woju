@@ -126,7 +126,7 @@ class UserPasswordModel with TextFieldModel {
     }
   }
 
-  List<TextInputFormatter>? get getInputFormatter {
+  List<TextInputFormatter>? get inputFormatters {
     return [
       FilteringTextInputFormatter.allow(
         RegExp("""[a-zA-Z0-9!@#\$%^&*()-_=+{}[]|;:"<>,./?~'\\₩]"""),

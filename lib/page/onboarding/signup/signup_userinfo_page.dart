@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -44,7 +43,7 @@ class SignupUserinfoPage extends ConsumerWidget {
                   BoxShadow(
                     color: theme.shadowColor,
                     blurRadius: 15,
-                    offset: const Offset(0, 3),
+                    // offset: const Offset(0, 3),
                   ),
                 ],
               ),
@@ -163,6 +162,7 @@ class SignupUserinfoPage extends ConsumerWidget {
             // 닉네임 입력
             CustomTextfieldContainer(
               fieldKey: 'nicknameForSignUp',
+              headerText: "onboarding.signUp.detail.nickname",
               prefixIcon: const Icon(
                 CupertinoIcons.person_fill,
                 size: 24,
@@ -171,10 +171,7 @@ class SignupUserinfoPage extends ConsumerWidget {
               keyboardType: TextInputType.name,
               autofillHints: const <String>[AutofillHints.nickname],
               onChanged: signUpNotifier.nickNameOnChange,
-              inputFormatters: [
-                // 최대 20자까지 입력 가능
-                LengthLimitingTextInputFormatter(20),
-              ],
+              inputFormatters: signUp.userNickNameModel.inputFormatters,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               focusNode: focus[4],
               validator: signUp.userNickNameModel.validator,
@@ -188,9 +185,11 @@ class SignupUserinfoPage extends ConsumerWidget {
             // 성별 선택 (비공개, 남성, 여성, 기타 중 선택)
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.only(left: 25, bottom: 8, top: 20),
+              padding: const EdgeInsets.only(left: 32, bottom: 16, top: 48),
               child: const CustomText(
                 "status.gender.title",
+                isBold: true,
+                isColorful: true,
               ),
             ),
             CustomDecorationContainer(
@@ -226,9 +225,11 @@ class SignupUserinfoPage extends ConsumerWidget {
             // 생년월일 선택
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.only(left: 25, bottom: 8, top: 20),
+              padding: const EdgeInsets.only(left: 32, bottom: 16, top: 32),
               child: const CustomText(
                 "onboarding.signUp.detail.birth",
+                isBold: true,
+                isColorful: true,
               ),
             ),
 
@@ -275,7 +276,7 @@ class SignupUserinfoPage extends ConsumerWidget {
               ),
             ),
             const SizedBox(
-              height: 50,
+              height: 100,
               width: double.infinity,
             ),
           ],

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -101,10 +100,7 @@ class SignUpPage extends ConsumerWidget {
               },
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.done,
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(15),
-              ],
+              inputFormatters: signUp.userPhoneModel.inputFormatters,
               autofillHints: const <String>[
                 AutofillHints.telephoneNumberNational,
               ],
@@ -138,6 +134,8 @@ class SignUpPage extends ConsumerWidget {
               ],
             ),
 
+            const SizedBox(height: 20),
+
             // 인증코드 요청 시 입력한 전화번호로 전송된 인증코드 입력창 표시
             if (signUp.userAuthModel.authCodeSent &&
                 !signUp.userAuthModel.authCompleted)
@@ -165,10 +163,7 @@ class SignUpPage extends ConsumerWidget {
                       .read(signUpStateProvider.notifier)
                       .updateUserAuthModel(authCode: value);
                 },
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(6),
-                ],
+                inputFormatters: signUp.userAuthModel.inputFormatters,
                 enabled: !signUp.userAuthModel.authCompleted,
                 textStyle: (signUp.userAuthModel.authCompleted)
                     ? theme.textTheme.bodyMedium!.copyWith(
@@ -191,12 +186,7 @@ class SignUpPage extends ConsumerWidget {
                 onChanged: (value) {
                   ref.read(signUpStateProvider.notifier).updateUserID(value);
                 },
-                inputFormatters: [
-                  // 소문자, 숫자만 입력 가능
-                  FilteringTextInputFormatter.allow(RegExp(r'[a-z0-9]')),
-                  // 최대 20자까지 입력 가능
-                  LengthLimitingTextInputFormatter(20),
-                ],
+                inputFormatters: signUp.userIDModel.inputFormatters,
                 validator: signUp.userIDModel.validator,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 enabled: !signUp.userIDModel.isIDAvailable,
@@ -232,6 +222,8 @@ class SignUpPage extends ConsumerWidget {
             else
               Container(),
 
+            const SizedBox(height: 20),
+
             // 아이디 입력 완료 시 비밀번호 입력창 표시
             if (signUp.userIDModel.isIDAvailable)
               CustomTextfieldContainer(
@@ -245,13 +237,7 @@ class SignUpPage extends ConsumerWidget {
                 autofillHints: const <String>[AutofillHints.newPassword],
                 onChanged:
                     ref.read(signUpStateProvider.notifier).passwordOnChange,
-                inputFormatters: [
-                  // 소문자, 대문자, 숫자, 특수문자만 입력 가능
-                  FilteringTextInputFormatter.allow(
-                      RegExp(r'[a-zA-Z0-9!@#$%^&*()]')),
-                  // 최대 30자까지 입력 가능
-                  LengthLimitingTextInputFormatter(30),
-                ],
+                inputFormatters: signUp.userPasswordModel.inputFormatters,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 focusNode: focus[3],
                 validator: signUp.userPasswordModel.validator,

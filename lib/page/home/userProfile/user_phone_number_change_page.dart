@@ -39,11 +39,16 @@ class UserPhoneNumberChangePage extends ConsumerWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(
-              width: double.infinity,
-              height: 20,
-            ),
             // 전화번호 입력
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.only(left: 32, bottom: 8, top: 32),
+              child: const CustomText(
+                "home.userProfile.userPhoneNumberChange.newPhoneNumber",
+                isBold: true,
+                isColorful: true,
+              ),
+            ),
             CustomTextfieldContainer(
               fieldKey: 'change_phone_number',
               prefix: CountryCodePicker(
@@ -120,8 +125,10 @@ class UserPhoneNumberChangePage extends ConsumerWidget {
                   child: (auth.authCodeSent)
                       ? CustomTextButton(
                           "onboarding.signUp.changePhoneNumber",
-                          onPressed:
-                              phoneNumberNotifier.onClickChangePhoneNumber,
+                          onPressed: () {
+                            authNotifier.reset();
+                            focusNotifier.setFocusNode(0);
+                          },
                           minimumSize: const Size(80, 80),
                         )
                       : CustomTextButton(
@@ -139,45 +146,59 @@ class UserPhoneNumberChangePage extends ConsumerWidget {
 
             // 인증코드 요청 시 입력한 전화번호로 전송된 인증코드 입력창 표시
             if (auth.authCodeSent && !auth.authCompleted)
-              CustomTextfieldContainer(
-                fieldKey: 'authCodeForSignUp',
-                labelText: auth.labelText,
-                actions: [
-                  CustomTextButton(
-                    "status.authcode.resend",
-                    onPressed: authNotifier.authResendButton(
-                      phoneNumber.phoneNumber ?? "",
-                      phoneNumber.dialCode,
-                      () {},
+              Column(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    padding:
+                        const EdgeInsets.only(left: 32, bottom: 8, top: 32),
+                    child: const CustomText(
+                      "home.userProfile.userPhoneNumberChange.authCode",
+                      isBold: true,
+                      isColorful: true,
                     ),
-                    minimumSize: const Size(80, 80),
                   ),
-                  CustomTextButton(
-                    (!auth.authCompleted)
-                        ? "status.authcode.verify"
-                        : "status.authcode.verified",
-                    onPressed: authNotifier.authConfirmButton(
-                      context,
-                      () {},
-                    ),
-                    minimumSize: const Size(80, 80),
-                  ),
+                  CustomTextfieldContainer(
+                    fieldKey: 'authCodeForSignUp',
+                    labelText: auth.labelText,
+                    actions: [
+                      CustomTextButton(
+                        "status.authcode.resend",
+                        onPressed: authNotifier.authResendButton(
+                          phoneNumber.phoneNumber ?? "",
+                          phoneNumber.dialCode,
+                          () {},
+                        ),
+                        minimumSize: const Size(80, 80),
+                      ),
+                      CustomTextButton(
+                        (!auth.authCompleted)
+                            ? "status.authcode.verify"
+                            : "status.authcode.verified",
+                        onPressed: authNotifier.authConfirmButton(
+                          context,
+                          () {},
+                        ),
+                        minimumSize: const Size(80, 80),
+                      ),
+                    ],
+                    keyboardType: TextInputType.number,
+                    autofillHints: const <String>[AutofillHints.oneTimeCode],
+                    onChanged: authNotifier.updateAuthCode,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(6),
+                    ],
+                    enabled: !auth.authCompleted,
+                    textStyle: (auth.authCompleted)
+                        ? theme.textTheme.bodyMedium!.copyWith(
+                            color: Colors.grey,
+                          )
+                        : theme.primaryTextTheme.bodyMedium,
+                    focusNode: focus[1],
+                    validator: auth.validator,
+                  )
                 ],
-                keyboardType: TextInputType.number,
-                autofillHints: const <String>[AutofillHints.oneTimeCode],
-                onChanged: authNotifier.updateAuthCode,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(6),
-                ],
-                enabled: !auth.authCompleted,
-                textStyle: (auth.authCompleted)
-                    ? theme.textTheme.bodyMedium!.copyWith(
-                        color: Colors.grey,
-                      )
-                    : theme.primaryTextTheme.bodyMedium,
-                focusNode: focus[1],
-                validator: auth.validator,
               )
             else
               Container(),

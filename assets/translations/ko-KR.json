@@ -99,11 +99,13 @@
             },
             "userPhoneNumberChange" : {
                 "title" : "전화번호 변경",
-                "currentPhoneNumber" : "현재 전화번호",
                 "newPhoneNumber" : "새 전화번호",
+                "authCode" : "인증번호",
                 "changePhoneNumberButton" : "전화번호 변경"
             },
-            "userIDChange" : "아이디 변경"
+            "userIDChange" : {
+               "title": "아이디 변경"
+            }
         }
     },
     "accessibility": {

@@ -104,7 +104,9 @@
                 "changePhoneNumberButton" : "전화번호 변경"
             },
             "userIDChange" : {
-               "title": "아이디 변경"
+               "title": "아이디 변경",
+                "newUserID" : "새 아이디",
+                "changeUserIDButton" : "아이디 변경"
             }
         }
     },

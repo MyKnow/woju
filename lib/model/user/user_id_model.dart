@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/services.dart';
 import 'package:woju/model/status/status_mixin.dart';
 import 'package:woju/model/text_field_model.dart';
 import 'package:woju/service/debug_service.dart';
@@ -156,5 +157,14 @@ class UserIDModel with TextFieldModel<String> {
         return validateID(userID).toMessage;
       }
     };
+  }
+
+  List<TextInputFormatter>? get inputFormatters {
+    return [
+      // 소문자, 숫자만 입력 가능
+      FilteringTextInputFormatter.allow(RegExp(r'[a-z0-9]')),
+      // 최대 20자까지 입력 가능
+      LengthLimitingTextInputFormatter(20),
+    ];
   }
 }

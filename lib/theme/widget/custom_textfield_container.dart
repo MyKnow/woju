@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:woju/theme/widget/custom_container_decoration.dart';
+import 'package:woju/theme/widget/custom_text.dart';
 
 class CustomTextfieldContainer extends ConsumerWidget {
   final Widget? prefix;
@@ -11,6 +12,7 @@ class CustomTextfieldContainer extends ConsumerWidget {
   final Widget? suffixIcon;
   final String? labelText;
   final String? hintText;
+  final String? headerText;
   final FormFieldValidator? validator;
   final FocusNode? focusNode;
   final AutovalidateMode? autovalidateMode;
@@ -39,6 +41,7 @@ class CustomTextfieldContainer extends ConsumerWidget {
     this.suffixIcon,
     this.labelText,
     this.hintText,
+    this.headerText,
     this.validator,
     this.focusNode,
     this.autovalidateMode = AutovalidateMode.onUserInteraction,
@@ -122,31 +125,47 @@ class CustomTextfieldContainer extends ConsumerWidget {
         return previousValue + ((element.runtimeType == IconButton) ? 41 : 80);
       },
     );
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
-      child: CustomDecorationContainer(
-        width: double.infinity,
-        child: actions.isEmpty
-            ? textFormField
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  SizedBox(
-                    width: 360 - actionsWidth,
-                    child: textFormField,
-                  ),
-                  // Container(
-                  //   width: 1,
-                  //   height: verticalDividerHeight,
-                  //   color: theme.shadowColor,
-                  // ),
-                  Row(
-                    children: actions,
-                  ),
-                ],
-              ),
-      ),
+
+    return Column(
+      children: [
+        if (headerText != null)
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.only(left: 32, bottom: 15, top: 16),
+            child: CustomText(
+              headerText as String,
+              isBold: true,
+              isColorful: true,
+            ),
+          ),
+        SizedBox(
+          width: width,
+          height: 1,
+        ),
+        CustomDecorationContainer(
+          width: double.infinity,
+          child: actions.isEmpty
+              ? textFormField
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    SizedBox(
+                      width: 360 - actionsWidth,
+                      child: textFormField,
+                    ),
+                    // Container(
+                    //   width: 1,
+                    //   height: verticalDividerHeight,
+                    //   color: theme.shadowColor,
+                    // ),
+                    Row(
+                      children: actions,
+                    ),
+                  ],
+                ),
+        ),
+      ],
     );
   }
 }

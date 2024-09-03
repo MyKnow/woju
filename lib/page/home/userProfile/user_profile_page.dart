@@ -152,6 +152,8 @@ class UserProfilePage extends ConsumerWidget {
               enabled: userProfileEditState.isEditing,
               keyboardType: TextInputType.name,
               autofillHints: const [AutofillHints.nickname],
+              inputFormatters:
+                  userProfileEditState.userNicknameModel.inputFormatters,
               controller: userProfileEditState.userNicknameController,
               textInputAction: TextInputAction.done,
               onFieldSubmitted: (value) => FocusScope.of(context).unfocus(),

@@ -356,7 +356,7 @@ class UserProfilePage extends ConsumerWidget {
                       color: Theme.of(context).primaryColor,
                     ),
                     title: const CustomText(
-                      "home.userProfile.userPhoneNumberChange",
+                      "home.userProfile.userPhoneNumberChange.title",
                       isLocalize: true,
                     ),
                     onTap: () {

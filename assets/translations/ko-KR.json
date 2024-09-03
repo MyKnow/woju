@@ -97,7 +97,12 @@
                 "newPassword" : "새 비밀번호",
                 "changePassword" : "비밀번호 변경"
             },
-            "userPhoneNumberChange" : "전화번호 변경",
+            "userPhoneNumberChange" : {
+                "title" : "전화번호 변경",
+                "currentPhoneNumber" : "현재 전화번호",
+                "newPhoneNumber" : "새 전화번호",
+                "changePhoneNumberButton" : "전화번호 변경"
+            },
             "userIDChange" : "아이디 변경"
         }
     },

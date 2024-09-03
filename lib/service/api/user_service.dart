@@ -295,4 +295,62 @@ class UserService {
       return false;
     }
   }
+
+  /// ### 전화번호 변경 함수
+  ///
+  /// #### Notes
+  ///
+  /// - 사용자의 전화번호를 서버로 업데이트합니다.
+  ///
+  /// #### Parameters
+  ///
+  /// - [String] `userUUID` : 사용자 UUID
+  /// - [String] `userUID` : 사용자 UID
+  /// - [String] `userPhoneNumber` : 사용자 전화번호
+  /// - [String] `dialCode` : 국가번호
+  /// - [String] `isoCode` : 국가코드
+  /// - [String] `userPassword` : 사용자 비밀번호
+  /// - [WidgetRef] `ref` : Riverpod Ref
+  ///
+  /// #### Returns
+  ///
+  /// - `Future<String?>` : 업데이트 성공 여부 (성공: null, 실패: 에러 이유)
+  ///
+  static Future<String?> updateUserPhoneNumber(
+    String userUUID,
+    String userUID,
+    String userPhoneNumber,
+    String dialCode,
+    String isoCode,
+    String userPassword,
+    WidgetRef ref,
+  ) async {
+    final response = await HttpService.post('/user/update-user-phonenumber', {
+      "userUUID": userUUID,
+      "userUID": userUID,
+      "userPhoneNumber": userPhoneNumber,
+      "dialCode": dialCode,
+      "isoCode": isoCode,
+      "userPassword": userPassword,
+    });
+
+    if (response.statusCode == 200) {
+      final userData = ref.watch(userDetailInfoStateProvider);
+      if (userData == null) return "USER_DATA_NOT_FOUND";
+      await ref.read(userDetailInfoStateProvider.notifier).update(
+            userData.copyWith(
+              userUID: userUID,
+              userPhoneNumber: userPhoneNumber,
+              dialCode: dialCode,
+              isoCode: isoCode,
+            ),
+          );
+
+      return null;
+    } else {
+      final decode = jsonDecode(response.body);
+      final reason = decode['failureReason'] ?? "undefined";
+      return reason;
+    }
+  }
 }

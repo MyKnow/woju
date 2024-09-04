@@ -113,7 +113,9 @@
         "withdrawalDetail" : "All information will be deleted upon withdrawal.",
         "withdrawalConfirm" : "Are you sure you want to withdraw?",
         "withdrawalConfirmButton" : "Withdraw",
-        "withdrawalCancelButton" : "Cancel"
+        "withdrawalCancelButton" : "Cancel",
+        "withdrawalSuccess" : "Withdrawal successful",
+        "withdrawalFailed" : "Withdrawal failed. Pease try again later."
       }
     },
     "setting" : {

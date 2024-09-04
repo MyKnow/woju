@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:woju/provider/onboarding/sign_in_state_notifier.dart';
 import 'package:woju/provider/onboarding/user_detail_info_state_notifier.dart';
 
 import 'package:woju/theme/widget/custom_drawer_widget.dart';
@@ -15,9 +14,8 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userDetail = ref.watch(userDetailInfoStateProvider);
-    final signInNotifier = ref.watch(signInStateProvider.notifier);
     return CustomScaffold(
-      title: "Home Page",
+      title: "home.title",
       drawer: const CustomDrawerWidget(),
       body: SingleChildScrollView(
         child: Column(
@@ -54,23 +52,6 @@ class HomePage extends ConsumerWidget {
             CustomText(
               "User BirthDate: ${userDetail?.userBirthDate}",
               isLocalize: false,
-            ),
-            ElevatedButton(
-              onPressed: signInNotifier.withdrawalButtonOnClick(context),
-              child: const CustomText(
-                "Withdrawal",
-                isWhite: true,
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                ref.read(signInStateProvider.notifier).logout();
-              },
-              child: const CustomText(
-                "Sign Out",
-                isWhite: true,
-                isLocalize: false,
-              ),
             ),
           ],
         ),

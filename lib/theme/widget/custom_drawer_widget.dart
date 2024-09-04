@@ -102,7 +102,6 @@ class CustomDrawerWidget extends ConsumerWidget {
                   title: const CustomText("home.drawer.customerServiceCenter"),
                   onTap: () {
                     Navigator.pop(context);
-                    Navigator.pushNamed(context, "/customerServiceCenter");
                   },
                 ),
                 ListTile(
@@ -113,7 +112,7 @@ class CustomDrawerWidget extends ConsumerWidget {
                   title: const CustomText("home.drawer.setting"),
                   onTap: () {
                     Navigator.pop(context);
-                    Navigator.pushNamed(context, "/setting");
+                    context.push("/setting");
                   },
                 ),
               ],

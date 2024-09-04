@@ -9,6 +9,7 @@ import 'package:woju/model/onboarding/sign_in_model.dart';
 import 'package:woju/page/error/router_error_page.dart';
 import 'package:woju/page/error/server_error_page.dart';
 import 'package:woju/page/home/home_page.dart';
+import 'package:woju/page/home/setting/setting_page.dart';
 import 'package:woju/page/home/userProfile/user_id_change_page.dart';
 import 'package:woju/page/home/userProfile/user_phone_number_change_page.dart';
 import 'package:woju/page/home/userProfile/user_profile_page.dart';
@@ -124,6 +125,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
                 text: "회원 탈퇴",
               ),
             ],
+          ),
+          _buildNestedRoute(
+            path: "setting",
+            builder: (context, state) => const SettingPage(),
+            text: "설정",
+            routes: [],
           ),
         ],
       ),

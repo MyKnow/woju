@@ -115,6 +115,14 @@
         "withdrawalConfirmButton" : "Withdraw",
         "withdrawalCancelButton" : "Cancel"
       }
+    },
+    "setting" : {
+      "title" : "Settings",
+      "theme" : {
+          "title" : "Theme",
+          "brightness" : "Brightness",
+          "language" : "Language"
+      }
     }
   },
   "accessibility": {

@@ -115,6 +115,14 @@
                 "withdrawalConfirmButton" : "탈퇴",
                 "withdrawalCancelButton" : "취소"
             }
+        },
+        "setting" : {
+            "title" : "설정",
+            "theme" : {
+                "title" : "테마",
+                "brightness" : "야간 모드",
+                "language" : "언어 변경"
+            }
         }
     },
     "accessibility": {

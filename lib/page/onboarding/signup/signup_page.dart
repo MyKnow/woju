@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:country_code_picker/country_code_picker.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:woju/provider/onboarding/sign_up_state_notifier.dart';
 
 import 'package:woju/theme/widget/custom_app_bar_action_button.dart';
+import 'package:woju/theme/widget/custom_country_picker_widget.dart';
 import 'package:woju/theme/widget/custom_scaffold.dart';
 import 'package:woju/theme/widget/custom_text.dart';
 import 'package:woju/theme/widget/custom_text_button.dart';
@@ -40,20 +40,11 @@ class SignUpPage extends ConsumerWidget {
             // 전화번호 입력
             CustomTextfieldContainer(
               fieldKey: 'phoneNumberForSignUp',
-              prefix: CountryCodePicker(
+              prefix: CustomCountryPickerWidget(
                 onChanged:
                     ref.read(signUpStateProvider.notifier).onCountryCodeChanged,
-                initialSelection: 'KR',
-                favorite: const ['KR', 'US'],
-                showCountryOnly: false,
-                showOnlyCountryWhenClosed: false,
-                alignLeft: false,
-                padding: EdgeInsets.zero,
                 searchDecoration: InputDecoration(
                   labelText: "onboarding.signUp.searchCountry".tr(),
-                ),
-                boxDecoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
                 ),
                 builder: (country) {
                   if (country == null) {
@@ -84,8 +75,7 @@ class SignUpPage extends ConsumerWidget {
                     ),
                   );
                 },
-                closeIcon: const Icon(CupertinoIcons.clear),
-                enabled: !signUp.userAuthModel.authCompleted,
+                isDisabled: signUp.userAuthModel.authCompleted,
               ),
               labelText: signUp.userPhoneModel.labelTextWithParameter(
                 signUp.userAuthModel.authCompleted,

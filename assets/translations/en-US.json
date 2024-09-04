@@ -120,8 +120,15 @@
       "title" : "Settings",
       "theme" : {
           "title" : "Theme",
-          "brightness" : "Brightness",
-          "language" : "Language"
+          "appearance" :{
+              "title" : "Appearance",
+              "button_0" : "System Mode",
+              "button_1" : "Light Mode",
+              "button_2" : "Dark Mode"
+          },
+          "language" : {
+              "title" : "Language"
+          }
       }
     }
   },

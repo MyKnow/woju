@@ -1,4 +1,3 @@
-import 'package:country_code_picker/country_code_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -8,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:woju/provider/onboarding/sign_in_state_notifier.dart';
 
 import 'package:woju/theme/widget/custom_app_bar_action_button.dart';
+import 'package:woju/theme/widget/custom_country_picker_widget.dart';
 import 'package:woju/theme/widget/custom_scaffold.dart';
 import 'package:woju/theme/widget/custom_text.dart';
 import 'package:woju/theme/widget/custom_text_button.dart';
@@ -44,23 +44,13 @@ class SignInPage extends ConsumerWidget {
               // 전화번호 입력
               CustomTextfieldContainer(
                 fieldKey: 'phoneNumberForSignIn',
-                prefix: CountryCodePicker(
-                  backgroundColor: theme.cardColor,
+                prefix: CustomCountryPickerWidget(
                   onChanged: signInNotifier.countryCodeOnChange,
-                  dialogBackgroundColor: theme.cardColor,
-                  dialogTextStyle: theme.primaryTextTheme.bodyMedium,
                   dialogSize: const Size(350, 500),
-                  initialSelection: 'KR',
-                  favorite: const ['KR', 'US'],
-                  showCountryOnly: false,
-                  showOnlyCountryWhenClosed: false,
-                  alignLeft: false,
-                  padding: EdgeInsets.zero,
                   searchDecoration: InputDecoration(
                     labelText: "onboarding.signUp.searchCountry".tr(),
                     labelStyle: theme.primaryTextTheme.bodyMedium,
                   ),
-                  searchStyle: theme.primaryTextTheme.bodyMedium,
                   builder: (country) {
                     if (country == null) {
                       return const SizedBox.shrink();
@@ -80,7 +70,6 @@ class SignInPage extends ConsumerWidget {
                       ],
                     );
                   },
-                  closeIcon: const Icon(CupertinoIcons.clear),
                 ),
                 labelText: signIn.userPhoneModel.labelTextWithParameter(false),
                 validator: signIn.userPhoneModel.validator,

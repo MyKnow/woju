@@ -1,9 +1,11 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:woju/provider/theme_state_notififer.dart';
+import 'package:woju/theme/widget/custom_country_picker_widget.dart';
 
 import 'package:woju/theme/widget/custom_list_tile_group.dart';
 import 'package:woju/theme/widget/custom_scaffold.dart';
@@ -38,7 +40,7 @@ class SettingPage extends ConsumerWidget {
                     color: theme.primaryColor,
                   ),
                   title: const CustomText(
-                    "home.setting.theme.brightness",
+                    "home.setting.theme.appearance.title",
                   ),
                   trailing: AnimatedToggleSwitch.rolling(
                     values: const [0, 1, 2],
@@ -52,6 +54,9 @@ class SettingPage extends ConsumerWidget {
                                   ? CupertinoIcons.brightness_solid
                                   : CupertinoIcons.moon_fill,
                           color: Colors.white,
+                          semanticLabel:
+                              "home.setting.theme.appearance.button_$value"
+                                  .tr(),
                         );
                       }
                       return Icon(
@@ -86,12 +91,58 @@ class SettingPage extends ConsumerWidget {
                     color: theme.primaryColor,
                   ),
                   title: const CustomText(
-                    "home.setting.theme.language",
+                    "home.setting.theme.language.title",
                   ),
-                  onTap: () {},
-                  trailing: Icon(
-                    CupertinoIcons.chevron_right,
-                    color: theme.primaryColor,
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CustomCountryPickerWidget(
+                        onChanged: (countryCode) async {
+                          if (countryCode.code == context.locale.countryCode) {
+                            return;
+                          }
+
+                          if (countryCode.code == 'KR') {
+                            await context.setLocale(const Locale('ko', 'KR'));
+                          } else {
+                            await context.setLocale(const Locale('en', 'US'));
+                          }
+                        },
+                        countryFilter: const [
+                          'KR',
+                          'US',
+                        ],
+                        builder: (country) {
+                          return SizedBox(
+                            height: 48,
+                            width: 150,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                CustomText(
+                                  country?.name as String,
+                                  style: theme.textTheme.labelLarge?.copyWith(
+                                    color: theme.disabledColor,
+                                  ),
+                                  isLocalize: false,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8),
+                                  child: Icon(
+                                    Icons.arrow_forward_ios_rounded,
+                                    size: theme.textTheme.labelLarge?.fontSize,
+                                    color: theme.disabledColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        hideSearch: true,
+                        dialogSize: const Size(300, 75 * 2),
+                        showOnlyCountry: true,
+                      ),
+                    ],
                   ),
                 ),
               ],

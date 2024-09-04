@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:country_code_picker/country_code_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -13,6 +12,7 @@ import 'package:woju/provider/textfield_focus_state_notifier.dart';
 
 import 'package:woju/service/api/user_service.dart';
 import 'package:woju/service/toast_message_service.dart';
+import 'package:woju/theme/widget/custom_country_picker_widget.dart';
 
 import 'package:woju/theme/widget/custom_scaffold.dart';
 import 'package:woju/theme/widget/custom_text.dart';
@@ -52,19 +52,10 @@ class PasswordResetPageState extends ConsumerState<PasswordResetPage> {
             // 전화번호 입력
             CustomTextfieldContainer(
               fieldKey: "phoneNumberForPasswordReset",
-              prefix: CountryCodePicker(
+              prefix: CustomCountryPickerWidget(
                 onChanged: phoneNumberNotifier.updateCountryCode,
-                initialSelection: 'KR',
-                favorite: const ['KR', 'US'],
-                showCountryOnly: false,
-                showOnlyCountryWhenClosed: false,
-                alignLeft: false,
-                padding: EdgeInsets.zero,
                 searchDecoration: InputDecoration(
                   labelText: "onboarding.signUp.searchCountry".tr(),
-                ),
-                boxDecoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
                 ),
                 builder: (country) {
                   if (country == null) {
@@ -91,8 +82,7 @@ class PasswordResetPageState extends ConsumerState<PasswordResetPage> {
                     ],
                   );
                 },
-                closeIcon: const Icon(CupertinoIcons.clear),
-                enabled: !auth.authCompleted,
+                isDisabled: auth.authCompleted,
               ),
               labelText: phoneNumber.labelTextWithParameter(
                 auth.authCompleted,

@@ -120,8 +120,15 @@
             "title" : "설정",
             "theme" : {
                 "title" : "테마",
-                "brightness" : "야간 모드",
-                "language" : "언어 변경"
+                "appearance" :{
+                    "title" : "다크 모드",
+                    "button_0" : "시스템 설정에 따름",
+                    "button_1" : "라이트 모드",
+                    "button_2" : "다크 모드"
+                },
+                "language" : {
+                    "title" : "언어"
+                }
             }
         }
     },

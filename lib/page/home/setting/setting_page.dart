@@ -38,10 +38,13 @@ class SettingPage extends ConsumerWidget {
                   leading: Icon(
                     CupertinoIcons.paintbrush_fill,
                     color: theme.primaryColor,
+                    size: theme.textTheme.titleMedium?.fontSize,
+                    applyTextScaling: true,
                   ),
                   title: const CustomText(
                     "home.setting.theme.appearance.title",
                   ),
+                  titleAlignment: ListTileTitleAlignment.center,
                   trailing: AnimatedToggleSwitch.rolling(
                     values: const [0, 1, 2],
                     current: themeState.index,
@@ -57,6 +60,7 @@ class SettingPage extends ConsumerWidget {
                           semanticLabel:
                               "home.setting.theme.appearance.button_$value"
                                   .tr(),
+                          // applyTextScaling: true,
                         );
                       }
                       return Icon(
@@ -66,6 +70,7 @@ class SettingPage extends ConsumerWidget {
                                 ? CupertinoIcons.brightness_solid
                                 : CupertinoIcons.moon_fill,
                         color: theme.disabledColor,
+                        // applyTextScaling: true,
                       );
                     },
                     onTap: (index) async {
@@ -75,7 +80,7 @@ class SettingPage extends ConsumerWidget {
                       final indexInt = index.tapped?.index as int;
                       themeNotifier.updateTheme(indexInt);
                     },
-                    height: 48,
+                    // height: 48,
                     spacing: 8,
                     borderWidth: 0,
                     style: const ToggleStyle(
@@ -89,10 +94,13 @@ class SettingPage extends ConsumerWidget {
                   leading: Icon(
                     Icons.translate_rounded,
                     color: theme.primaryColor,
+                    applyTextScaling: true,
+                    size: theme.textTheme.titleMedium?.fontSize,
                   ),
                   title: const CustomText(
                     "home.setting.theme.language.title",
                   ),
+                  titleAlignment: ListTileTitleAlignment.center,
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -114,8 +122,7 @@ class SettingPage extends ConsumerWidget {
                         ],
                         builder: (country) {
                           return SizedBox(
-                            height: 48,
-                            width: 150,
+                            // height: 48,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -132,6 +139,7 @@ class SettingPage extends ConsumerWidget {
                                     Icons.arrow_forward_ios_rounded,
                                     size: theme.textTheme.labelLarge?.fontSize,
                                     color: theme.disabledColor,
+                                    applyTextScaling: true,
                                   ),
                                 ),
                               ],

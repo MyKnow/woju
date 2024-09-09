@@ -107,6 +107,7 @@
                 "newUserID" : "새 아이디",
                 "changeUserIDButton" : "아이디 변경"
             },
+            "userSignOut" : "로그아웃",
             "userWithdrawal" : {
                 "title" : "회원 탈퇴",
                 "withdrawalButton" : "탈퇴하기",

@@ -21,11 +21,13 @@ class CustomToggleSwitch extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     return CustomDecorationContainer(
-      height: 70,
+      // height: 70,
+      width: double.infinity,
       child: ToggleSwitch(
-        minWidth: 400,
-        minHeight: 70,
-        fontSize: theme.primaryTextTheme.bodyMedium!.fontSize!,
+        minWidth: double.infinity,
+        minHeight: 50,
+        fontSize: theme.primaryTextTheme.bodyMedium?.fontSize ?? 16,
+        multiLineText: true,
         initialLabelIndex: initialIndex,
         activeBgColor: [changeOnTap ? theme.primaryColor : theme.disabledColor],
         activeFgColor: Colors.white,

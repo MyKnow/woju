@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
+import 'package:woju/model/onboarding/sign_in_model.dart';
 
 import 'package:woju/model/secure_model.dart';
 import 'package:woju/model/user/user_gender_model.dart';
 import 'package:woju/model/user/user_profile_edit_model.dart';
+import 'package:woju/provider/app_state_notifier.dart';
 
 import 'package:woju/provider/onboarding/user_detail_info_state_notifier.dart';
 
@@ -311,6 +313,23 @@ extension UserProfileEditAction on UserProfileStateNotifier {
     }
     printd("onChangeUserBirthDate: $date");
     updateUserBirthDate(date);
+  }
+
+  /// ### 로그아웃 버튼 클릭 이벤트
+  ///
+  /// #### Notes
+  ///
+  /// - 로그아웃 버튼 클릭 시 호출
+  ///
+  void onClickLogoutButton() async {
+    // 자동 로그인을 위한 SecureStorage 데이터 삭제
+    await SecureStorageService.deleteSecureData(SecureModel.userPassword);
+
+    // UserDetailInfoModel 업데이트
+    await ref.read(userDetailInfoStateProvider.notifier).delete();
+
+    // 로그인 상태 업데이트
+    ref.read(appStateProvider.notifier).updateSignInStatus(SignInStatus.logout);
   }
 }
 

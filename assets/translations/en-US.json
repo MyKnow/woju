@@ -107,6 +107,7 @@
         "newUserID" : "New ID",
         "changeUserIDButton" : "Change ID"
       },
+      "userSignOut" : "Sign Out",
       "userWithdrawal" : {
         "title" : "Withdrawal",
         "withdrawalButton" : "Withdraw",

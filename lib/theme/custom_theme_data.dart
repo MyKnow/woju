@@ -11,6 +11,8 @@ class CustomThemeData {
     textTheme: textTheme,
     scaffoldBackgroundColor: Colors.white,
     primaryColor: Colors.blue[900],
+    primaryColorLight: Colors.blue[100],
+    primaryColorDark: Colors.indigo[900],
     cardColor: Colors.white,
     colorScheme: ColorScheme.fromSwatch(
       primarySwatch: Colors.blue,
@@ -83,6 +85,8 @@ class CustomThemeData {
     textTheme: textTheme,
     scaffoldBackgroundColor: Colors.black,
     primaryColor: Colors.purple,
+    primaryColorLight: Colors.purple[100],
+    primaryColorDark: Colors.purple[900],
     cardColor: const Color.fromARGB(255, 22, 22, 22),
     colorScheme: ColorScheme.fromSwatch(
       primarySwatch: Colors.purple,

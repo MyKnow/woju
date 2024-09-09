@@ -23,18 +23,19 @@ class CustomDatePicker extends ConsumerWidget {
     // isEditing이 false일 경우 수정 불가능
     if (!isEditing) {
       return CustomDecorationContainer(
-        height: 50,
+        // height: 50,
         child: Center(
           child: CustomText(
             DateFormat.yMMMMd(context.locale.toString()).format(selectedDate),
             isDisabled: !isEditing,
             isLocalize: false,
+            textAlign: TextAlign.center,
           ),
         ),
       );
     }
     return CustomDecorationContainer(
-      height: 150,
+      height: 180,
       child: ScrollDatePicker(
         // 만 14세 이상만 선택 가능
         maximumDate: DateTime.now().subtract(const Duration(days: 365 * 14)),

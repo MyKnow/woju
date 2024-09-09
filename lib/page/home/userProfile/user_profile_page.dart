@@ -211,10 +211,12 @@ class UserProfilePage extends ConsumerWidget {
                     leading: Icon(
                       CupertinoIcons.lock_shield_fill,
                       color: Theme.of(context).primaryColor,
+                      applyTextScaling: true,
                     ),
                     trailing: Icon(
                       Icons.arrow_forward_ios,
                       color: Theme.of(context).primaryColor,
+                      applyTextScaling: true,
                     ),
                     title: const CustomText(
                       "home.userProfile.userPasswordChange.title",
@@ -234,10 +236,12 @@ class UserProfilePage extends ConsumerWidget {
                     leading: Icon(
                       CupertinoIcons.phone_fill,
                       color: Theme.of(context).primaryColor,
+                      applyTextScaling: true,
                     ),
                     trailing: Icon(
                       Icons.arrow_forward_ios,
                       color: Theme.of(context).primaryColor,
+                      applyTextScaling: true,
                     ),
                     title: const CustomText(
                       "home.userProfile.userPhoneNumberChange.title",
@@ -257,10 +261,12 @@ class UserProfilePage extends ConsumerWidget {
                     leading: Icon(
                       CupertinoIcons.person_crop_circle_fill,
                       color: Theme.of(context).primaryColor,
+                      applyTextScaling: true,
                     ),
                     trailing: Icon(
                       Icons.arrow_forward_ios,
                       color: Theme.of(context).primaryColor,
+                      applyTextScaling: true,
                     ),
                     title: const CustomText(
                       "home.userProfile.userIDChange.title",
@@ -277,12 +283,38 @@ class UserProfilePage extends ConsumerWidget {
                   ),
                   ListTile(
                     leading: Icon(
-                      CupertinoIcons.person_crop_circle_fill_badge_exclam,
+                      Icons.logout_rounded,
                       color: Theme.of(context).primaryColor,
+                      applyTextScaling: true,
                     ),
                     trailing: Icon(
                       Icons.arrow_forward_ios,
                       color: Theme.of(context).primaryColor,
+                      applyTextScaling: true,
+                    ),
+                    title: const CustomText(
+                      "home.userProfile.userSignOut",
+                      isLocalize: true,
+                    ),
+                    onTap: () {
+                      userProfileStateNotifier.onClickLogoutButton();
+                    },
+                  ),
+                  Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: Theme.of(context).disabledColor.withOpacity(0.5),
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      Icons.person_remove_rounded,
+                      color: Theme.of(context).primaryColor,
+                      applyTextScaling: true,
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Theme.of(context).primaryColor,
+                      applyTextScaling: true,
                     ),
                     title: const CustomText(
                       "home.userProfile.userWithdrawal.title",

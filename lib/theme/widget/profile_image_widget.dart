@@ -10,6 +10,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 class ProfileImageWidget extends ConsumerWidget {
   final bool hasShadow;
   final bool isEditable;
+  final double radius;
   final Uint8List? image;
   final void Function()? onImageSelectedForDefault;
   final void Function()? onImageSelectedForGallery;
@@ -18,6 +19,7 @@ class ProfileImageWidget extends ConsumerWidget {
   const ProfileImageWidget({
     super.key,
     required this.image,
+    this.radius = 100,
     this.hasShadow = true,
     this.isEditable = true,
     this.onImageSelectedForDefault,
@@ -71,17 +73,17 @@ class ProfileImageWidget extends ConsumerWidget {
             child: CircleAvatar(
               foregroundColor: theme.primaryColor,
               backgroundColor: theme.cardColor,
-              radius: 100,
+              radius: radius,
               child: (image == null)
-                  ? const Icon(
+                  ? Icon(
                       CupertinoIcons.person_crop_circle,
-                      size: 100,
+                      size: radius,
                       semanticLabel:
                           "onboarding.signUp.detail.profileImage.default",
                     )
                   : // 이미지가 있을 경우 원형 이미지로 표시
                   CircleAvatar(
-                      radius: 100,
+                      radius: radius,
                       backgroundImage: MemoryImage(image as Uint8List),
                     ),
             ),
@@ -104,7 +106,7 @@ class ProfileImageWidget extends ConsumerWidget {
                     );
                   }
                 : null,
-            borderRadius: BorderRadius.circular(100),
+            borderRadius: BorderRadius.circular(radius),
             excludeFromSemantics: true,
             child: Container(
               padding: const EdgeInsets.all(8),
@@ -120,7 +122,7 @@ class ProfileImageWidget extends ConsumerWidget {
               child: Icon(
                 CupertinoIcons.camera,
                 color: theme.primaryColor,
-                size: 32,
+                size: radius / 3,
               ),
             ),
           ),

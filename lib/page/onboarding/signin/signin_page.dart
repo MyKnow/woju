@@ -159,6 +159,7 @@ class SignInPage extends ConsumerWidget {
               "onboarding.signIn.forgotPassword",
               onPressed: () =>
                   signInNotifier.resetPasswordButtonOnClick(context),
+              minimumSize: const Size(200, 48),
             ),
           ],
         ),

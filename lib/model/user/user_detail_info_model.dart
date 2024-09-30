@@ -38,6 +38,12 @@ class UserDetailInfoModel {
   @HiveField(9)
   final DateTime userBirthDate;
 
+  @HiveField(10)
+  final String? termsVersion;
+
+  @HiveField(11)
+  final String? privacyVersion;
+
   UserDetailInfoModel({
     required this.userUUID,
     this.profileImage,
@@ -49,16 +55,12 @@ class UserDetailInfoModel {
     required this.userNickName,
     required this.userGender,
     required this.userBirthDate,
+    this.termsVersion,
+    this.privacyVersion,
   });
 
   factory UserDetailInfoModel.fromJson(Map<String, dynamic> json) {
-    printd("userGender: ${json['userGender']}");
-    printd("profileImage: ${json['userProfileImage']}");
     final profileImage = json['userProfileImage'];
-
-    printd("profileImage: $profileImage");
-    printd("profileImage data : ${json['userProfileImage']?['data']}");
-
     Uint8List? decodedData;
     if (profileImage != null) {
       decodedData =
@@ -77,6 +79,8 @@ class UserDetailInfoModel {
       userNickName: json['userNickName'],
       userGender: GenderExtension.getGenderFromString(json['userGender']),
       userBirthDate: DateTime.parse(json['userBirthDate']),
+      termsVersion: json['termsVersion'],
+      privacyVersion: json['privacyVersion'],
     );
   }
 
@@ -92,6 +96,8 @@ class UserDetailInfoModel {
     Gender? userGender,
     DateTime? userBirthDate,
     bool? profileImageDelete,
+    String? termsVersion,
+    String? privacyVersion,
   }) {
     return UserDetailInfoModel(
       userUUID: userUUID ?? this.userUUID,
@@ -105,6 +111,8 @@ class UserDetailInfoModel {
       userNickName: userNickName ?? this.userNickName,
       userGender: userGender ?? this.userGender,
       userBirthDate: userBirthDate ?? this.userBirthDate,
+      termsVersion: termsVersion ?? this.termsVersion,
+      privacyVersion: privacyVersion ?? this.privacyVersion,
     );
   }
 }

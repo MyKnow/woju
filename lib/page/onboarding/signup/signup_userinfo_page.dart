@@ -23,7 +23,6 @@ class SignupUserinfoPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final signUp = ref.watch(signUpStateProvider);
     final signUpNotifier = ref.read(signUpStateProvider.notifier);
-    final focus = ref.watch(signUpAuthFocusProvider);
     final theme = Theme.of(context);
     return CustomScaffold(
       title: "onboarding.signUp.detail.title",
@@ -173,11 +172,10 @@ class SignupUserinfoPage extends ConsumerWidget {
               onChanged: signUpNotifier.nickNameOnChange,
               inputFormatters: signUp.userNickNameModel.inputFormatters,
               autovalidateMode: AutovalidateMode.onUserInteraction,
-              focusNode: focus[4],
               validator: signUp.userNickNameModel.validator,
               initialValue: signUp.userNickNameModel.nickname,
               onFieldSubmitted: () {
-                focus[4].unfocus();
+                FocusScope.of(context).unfocus();
               },
               textInputAction: TextInputAction.done,
             ),

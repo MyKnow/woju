@@ -6,6 +6,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:woju/provider/onboarding/sign_up_state_notifier.dart';
+import 'package:woju/provider/textfield_focus_state_notifier.dart';
 
 import 'package:woju/theme/widget/custom_app_bar_action_button.dart';
 import 'package:woju/theme/widget/custom_country_picker_widget.dart';
@@ -21,7 +22,7 @@ class SignUpPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final signUp = ref.watch(signUpStateProvider);
     final signUpNotifier = ref.read(signUpStateProvider.notifier);
-    final focus = ref.watch(signUpAuthFocusProvider);
+    final focus = ref.watch(textfieldFocusStateProvider(4));
     final theme = Theme.of(context);
     return CustomScaffold(
       title: "onboarding.signUp.title",
@@ -103,6 +104,7 @@ class SignUpPage extends ConsumerWidget {
               actions: [
                 SizedBox(
                   width: 80,
+                  height: 80,
                   child: (signUp.userAuthModel.authCodeSent)
                       ? CustomTextButton(
                           "onboarding.signUp.changePhoneNumber",
@@ -115,14 +117,95 @@ class SignUpPage extends ConsumerWidget {
                         )
                       : CustomTextButton(
                           "onboarding.signUp.sendCode",
-                          onPressed: ref
-                              .read(signUpStateProvider.notifier)
-                              .sendAuthCodeButton(),
+                          onPressed: signUpNotifier.sendAuthCodeButton(),
                           minimumSize: const Size(80, 80),
                         ),
                 ),
               ],
             ),
+
+            if (!signUp.userAuthModel.authCodeSent)
+              Column(
+                children: [
+                  const SizedBox(height: 8),
+                  // 약관 동의
+                  CheckboxListTile(
+                    controlAffinity: ListTileControlAffinity.leading,
+                    value: signUp.termsAgree,
+                    onChanged: signUpNotifier.onChangedTermsAgree,
+                    enabled: !signUp.userAuthModel.authCodeSent,
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: 200,
+                          child: CustomText(
+                            "onboarding.signUp.termsAgreement.title",
+                            style: theme.textTheme.labelMedium?.copyWith(
+                              color: (signUp.userAuthModel.authCodeSent)
+                                  ? Colors.grey
+                                  : theme.primaryTextTheme.bodyMedium?.color,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 100,
+                          child: CustomTextButton(
+                            "onboarding.signUp.termsAgreement.subtitle",
+                            textStyle: theme.textTheme.labelMedium?.copyWith(
+                              color: (signUp.userAuthModel.authCodeSent)
+                                  ? Colors.grey
+                                  : theme.primaryTextTheme.bodyMedium?.color,
+                            ),
+                            minimumSize: const Size(80, 48),
+                            onPressed: () {
+                              signUpNotifier.pushPolicyPage(context, "terms");
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // 개인정보처리방침 동의
+                  CheckboxListTile(
+                    controlAffinity: ListTileControlAffinity.leading,
+                    value: signUp.privacyAgree,
+                    onChanged: signUpNotifier.onChangedPrivacyAgree,
+                    enabled: !signUp.userAuthModel.authCodeSent,
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: 200,
+                          child: CustomText(
+                            "onboarding.signUp.privacyAgreement.title",
+                            style: theme.textTheme.labelMedium?.copyWith(
+                              color: (signUp.userAuthModel.authCodeSent)
+                                  ? Colors.grey
+                                  : theme.primaryTextTheme.bodyMedium!.color,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 100,
+                          child: CustomTextButton(
+                            "onboarding.signUp.privacyAgreement.subtitle",
+                            textStyle: theme.textTheme.labelMedium?.copyWith(
+                              color: (signUp.userAuthModel.authCodeSent)
+                                  ? Colors.grey
+                                  : theme.primaryTextTheme.bodyMedium!.color,
+                            ),
+                            minimumSize: const Size(80, 48),
+                            onPressed: () {
+                              signUpNotifier.pushPolicyPage(context, "privacy");
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
 
             const SizedBox(height: 20),
 

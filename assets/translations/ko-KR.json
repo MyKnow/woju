@@ -28,6 +28,26 @@
             "phoneNumber": "전화번호를 입력해주세요",
             "phoneNumberVerified" : "인증 완료",
             "phoneNumberAvailable" : "사용 가능한 전화번호입니다",
+            "termsAgreement" : {
+                "title" : "[필수] 이용약관에 동의합니다.",
+                "subtitle" : "약관 보기",
+                "page" : {
+                    "appBarTitle" : "이용약관 동의",
+                    "title" : "이용약관 버전 : {version}",
+                    "agreeSuccess" : "{date}, 이용약관에 동의하셨습니다.",
+                    "agreeButton" : "동의합니다"
+                }
+            },
+            "privacyAgreement" : {
+                "title" : "[필수] 개인정보처리방침에 동의합니다.",
+                "subtitle" : "약관 보기",
+                "page" : {
+                    "appBarTitle" : "개인정보처리방침 동의",
+                    "title" : "개인정보처리방침 버전 : {version}",
+                    "agreeSuccess" : "{date}, 개인정보처리방침에 동의하셨습니다.",
+                    "agreeButton" : "동의합니다"
+                }
+            },
             "confirmPassword": "비밀번호 확인",
             "searchCountry": "국가를 검색할 수 있어요",
             "next": "다음",
@@ -270,10 +290,13 @@
             "PHONENUMBER_NOT_AVAILABLE": "사용할 수 없는 전화번호입니다",
             "PHONENUMBER_EMPTY": "전화번호를 입력해주세요",
             "USER_LOGIN_INFO_EMPTY": "로그인 정보를 입력해주세요",
+            "USER_SIGNUP_INFO_EMPTY": "회원가입 정보를 모두 입력해주세요",
             "PASSWORD_NOT_MATCH": "현재 비밀번호가 올바르지 않습니다",
             "PASSWORD_EMPTY": "비밀번호를 입력해주세요",
             "USER_UID_EMPTY": "유저 고유 번호가 비었습니다.",
-            "SERVER_ERROR": "서버 오류가 발생했습니다"
+            "SERVER_ERROR": "서버 오류가 발생했습니다",
+            "TERMS_VERSION_EMPTY": "약관에 동의해주세요",
+            "TERMS_VERSION_NOT_MATCH": "약관 버전의 형식이 올바르지 않습니다"
         }
     },
     "theme" : {

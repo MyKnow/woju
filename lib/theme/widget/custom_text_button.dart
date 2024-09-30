@@ -10,6 +10,7 @@ class CustomTextButton extends ConsumerWidget {
   final Size? minimumSize;
   final Map<String, String>? namedArgs;
   final TextStyle? textStyle;
+  final AlignmentGeometry alignment;
 
   const CustomTextButton(
     this.text, {
@@ -22,6 +23,7 @@ class CustomTextButton extends ConsumerWidget {
     this.onPressed,
     this.namedArgs,
     this.textStyle,
+    this.alignment = Alignment.center,
   });
 
   @override
@@ -29,28 +31,30 @@ class CustomTextButton extends ConsumerWidget {
     final nowTheme = Theme.of(context);
 
     // onPressed가 null이면 비활성화된 스타일을 적용
-    return TextButton(
-      onPressed: () {
-        if (onPressed != null) {
-          onPressed!();
-        }
-      },
-      style: TextButton.styleFrom(
-        padding: padding,
-        shape: shape,
-        minimumSize: minimumSize,
-        disabledForegroundColor: nowTheme.disabledColor,
+    return Container(
+      width: minimumSize?.width,
+      alignment: alignment,
+      child: TextButton(
+        onPressed: (onPressed != null) ? onPressed : null,
+        style: TextButton.styleFrom(
+          padding: padding,
+          shape: shape,
+          minimumSize: minimumSize,
+          disabledForegroundColor: nowTheme.disabledColor,
+          alignment: alignment,
+        ),
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: textStyle ??
+              nowTheme.primaryTextTheme.bodyLarge?.copyWith(
+                color: onPressed == null
+                    ? nowTheme.disabledColor
+                    : nowTheme.primaryColor,
+              ),
+          // overflow: TextOverflow.ellipsis,
+        ).tr(namedArgs: namedArgs),
       ),
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
-        style: textStyle ??
-            nowTheme.primaryTextTheme.bodyLarge?.copyWith(
-              color: onPressed == null
-                  ? nowTheme.disabledColor
-                  : nowTheme.primaryColor,
-            ),
-      ).tr(namedArgs: namedArgs),
     );
   }
 }

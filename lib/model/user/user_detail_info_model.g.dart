@@ -27,13 +27,15 @@ class UserDetailInfoModelAdapter extends TypeAdapter<UserDetailInfoModel> {
       userNickName: fields[7] as String,
       userGender: fields[8] as Gender,
       userBirthDate: fields[9] as DateTime,
+      termsVersion: fields[10] as String?,
+      privacyVersion: fields[11] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserDetailInfoModel obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.userUUID)
       ..writeByte(1)
@@ -53,7 +55,11 @@ class UserDetailInfoModelAdapter extends TypeAdapter<UserDetailInfoModel> {
       ..writeByte(8)
       ..write(obj.userGender)
       ..writeByte(9)
-      ..write(obj.userBirthDate);
+      ..write(obj.userBirthDate)
+      ..writeByte(10)
+      ..write(obj.termsVersion)
+      ..writeByte(11)
+      ..write(obj.privacyVersion);
   }
 
   @override

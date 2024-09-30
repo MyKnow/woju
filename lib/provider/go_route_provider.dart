@@ -18,6 +18,7 @@ import 'package:woju/page/onboarding/onboarding_page.dart';
 import 'package:woju/page/onboarding/signin/password_reset_page.dart';
 import 'package:woju/page/onboarding/signin/signin_page.dart';
 import 'package:woju/page/onboarding/signup/signup_page.dart';
+import 'package:woju/page/onboarding/signup/signup_policy_page.dart';
 import 'package:woju/page/onboarding/signup/signup_userinfo_page.dart';
 import 'package:woju/page/home/userProfile/user_password_change_page.dart';
 
@@ -148,6 +149,14 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             },
             text: '회원가입',
             routes: [
+              _buildNoTransitionRoute(
+                path: "policy/:type",
+                builder: (context, state) {
+                  final type = state.pathParameters['type'].toString();
+                  return SignupPolicyPage(type: type);
+                },
+                text: "이용약관",
+              ),
               _buildNoTransitionRoute(
                 path: 'detail',
                 builder: (context, state) {

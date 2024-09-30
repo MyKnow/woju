@@ -1,4 +1,5 @@
 import 'package:image_picker/image_picker.dart';
+
 import 'package:woju/model/status/status_mixin.dart';
 import 'package:woju/model/user/user_auth_model.dart';
 import 'package:woju/model/user/user_gender_model.dart';
@@ -26,6 +27,8 @@ class SignUpModel {
   final XFile? profileImage;
   final Gender gender;
   final DateTime birthDate;
+  final bool termsAgree;
+  final bool privacyAgree;
   final String? error;
 
   SignUpModel({
@@ -37,6 +40,8 @@ class SignUpModel {
     required this.birthDate,
     this.profileImage,
     this.gender = Gender.private,
+    this.termsAgree = false,
+    this.privacyAgree = false,
     this.error,
   });
 
@@ -59,6 +64,8 @@ class SignUpModel {
     Gender? gender,
     DateTime? birthDate,
     String? error,
+    bool? termsAgree,
+    bool? privacyAgree,
   }) {
     return SignUpModel(
       userPhoneModel: (isPhoneNumberAvailableSetToDefault != null &&
@@ -89,6 +96,8 @@ class SignUpModel {
       gender: gender ?? this.gender,
       birthDate: birthDate ?? this.birthDate,
       error: error ?? this.error,
+      termsAgree: termsAgree ?? this.termsAgree,
+      privacyAgree: privacyAgree ?? this.privacyAgree,
     );
   }
 

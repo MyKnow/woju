@@ -53,6 +53,14 @@ class HomePage extends ConsumerWidget {
               "User BirthDate: ${userDetail?.userBirthDate}",
               isLocalize: false,
             ),
+            CustomText(
+              "User TermsAgreeVersion: ${userDetail?.termsVersion}",
+              isLocalize: false,
+            ),
+            CustomText(
+              "User PrivacyPolicyAgreeVersion: ${userDetail?.privacyVersion}",
+              isLocalize: false,
+            ),
           ],
         ),
       ),

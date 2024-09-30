@@ -28,6 +28,26 @@
       "phoneNumber": "Please enter your phone number",
       "phoneNumberVerified" : "Verification complete",
       "phoneNumberAvailable" : "Phone number available",
+      "termsAgreement" : {
+          "title" : "[Required] I agree to the terms of service.",
+          "subtitle" : "Read Details",
+          "page" : {
+            "appBarTitle" : "Terms of Service Agreement",
+            "title" : "Terms of Service {version}",
+            "agreeSuccess" : "{date}, You have agreed to the terms of service.",
+            "agreeButton" : "I agree"
+          }
+        },
+      "privacyAgreement" : {
+          "title" : "[Required] I agree to the privacy policy.",
+          "subtitle" : "Read Details",
+          "page" : {
+            "appBarTitle" : "Privacy Policy Agreement",
+            "title" : "Privacy Policy {version}",
+            "agreeSuccess" : "{date}, You have agreed to the privacy policy.",
+            "agreeButton" : "I agree"
+          }
+        },
       "confirmPassword": "Confirm password",
       "searchCountry": "You can search for a country",
       "next": "Next",
@@ -270,10 +290,13 @@
       "PHONENUMBER_NOT_AVAILABLE": "Phone number not available",
       "PHONENUMBER_EMPTY": "Please enter your phone number",
       "USER_LOGIN_INFO_EMPTY": "Please enter your login information",
+      "USER_SIGNUP_INFO_EMPTY": "Please enter your sign-up information",
       "PASSWORD_NOT_MATCH": "Current password is incorrect",
       "PASSWORD_EMPTY": "Please enter your password",
       "USER_UID_EMPTY": "User UUID is empty",
-      "SERVER_ERROR": "A server error occurred"
+      "SERVER_ERROR": "A server error occurred",
+      "TERMS_VERSION_EMPTY": "Please agree to the terms",
+      "TERMS_VERSION_NOT_MATCH": "Terms version does not match"
     }
   },
   "theme" : {

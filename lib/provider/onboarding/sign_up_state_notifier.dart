@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,7 +14,10 @@ import 'package:woju/model/user/user_auth_model.dart';
 import 'package:woju/model/user/user_gender_model.dart';
 import 'package:woju/model/user/user_id_model.dart';
 import 'package:woju/model/user/user_phone_model.dart';
+
 import 'package:woju/provider/app_state_notifier.dart';
+import 'package:woju/provider/textfield_focus_state_notifier.dart';
+
 import 'package:woju/service/debug_service.dart';
 import 'package:woju/service/device_info_service.dart';
 import 'package:woju/service/api/http_service.dart';
@@ -131,12 +135,52 @@ class SignUpStateNotifier extends StateNotifier<SignUpModel> {
     updateError(null);
   }
 
+  /// ### 약관 동의 여부 업데이트 메서드
+  ///
+  /// - 약관 동의 여부를 업데이트한다.
+  ///
+  /// #### Parameters
+  ///
+  /// - [bool] termsAgree: 이용약관 동의 여부
+  ///
+  void updateTermsAgree(bool termsAgree) {
+    state = state.copyWith(termsAgree: termsAgree);
+  }
+
+  /// ### 개인정보 처리방침 동의 여부 업데이트 메서드
+  ///
+  /// - 개인정보 처리방침 동의 여부를 업데이트한다.
+  ///
+  /// #### Parameters
+  ///
+  /// - [bool] privacyAgree: 개인정보 처리방침 동의 여부
+  ///
+  void updatePrivacyAgree(bool privacyAgree) {
+    state = state.copyWith(privacyAgree: privacyAgree);
+  }
+
   SignUpModel get getSignUpModel => state;
 }
 
 /// ### 회원가입 페이지의 Action을 확장하는 Extension
 ///
 extension SignUpAction on SignUpStateNotifier {
+  /// ### 회원가입 페이지 진입 메서드
+  ///
+  /// - 회원가입 페이지 진입 후 초기화를 진행한다.
+  ///
+  /// #### Parameters
+  ///
+  /// - [BuildContext] context: BuildContext
+  ///
+  /// #### Returns
+  ///
+  /// - [void] 회원가입 페이지 진입 메서드
+  ///
+  void enterSignUpPage(BuildContext context) async {
+    printd("enterSignUpPage");
+  }
+
   /// ### CountryCodePicker onChanged 메서드
   ///
   /// - 국가 코드를 변경하면 실행된다.
@@ -166,7 +210,7 @@ extension SignUpAction on SignUpStateNotifier {
 
   /// ### 전화번호로 인증번호를 전송하는 메서드
   ///
-  /// - State에서 [getPhoneNumberWithFormat]을 통해 전화번호를 가져와 인증번호를 전송한다.
+  /// - State에서 [getPhoneNumberWithFormat]을 통해 포맷화된 전화번호를 가져와 인증번호를 전송한다.
   ///
   Future<void> verifyPhoneNumber() async {
     final nowPhoneNumber =
@@ -212,7 +256,7 @@ extension SignUpAction on SignUpStateNotifier {
           resendToken: resendToken,
           authCodeSent: true,
         );
-        ref.read(signUpAuthFocusProvider.notifier).requestFocusAuthCode();
+        ref.read(textfieldFocusStateProvider(4).notifier).nextFocusNode();
       },
       codeAutoRetrievalTimeout: (String verificationId) {
         printd('인증번호 입력 시간 초과');
@@ -289,10 +333,10 @@ extension SignUpAction on SignUpStateNotifier {
       final bool isVerified = await verifyAuthCode();
       if (isVerified) {
         updateUserAuthModel(authCompleted: true);
-        ref.read(signUpAuthFocusProvider.notifier).requestFocusUserID();
+        ref.read(textfieldFocusStateProvider(4).notifier).nextFocusNode();
       } else {
         updateUserAuthModel(authCompleted: false);
-        ref.read(signUpAuthFocusProvider.notifier).requestFocusAuthCode();
+        ref.read(textfieldFocusStateProvider(4).notifier).setFocusNode(2);
       }
     };
   }
@@ -306,8 +350,10 @@ extension SignUpAction on SignUpStateNotifier {
   /// Function: 인증번호 전송 메서드
   ///
   VoidCallback? sendAuthCodeButton() {
-    if (!getSignUpModel.userPhoneModel.isPhoneNumberValid ||
-        getSignUpModel.userAuthModel.authCodeSent) {
+    if (getSignUpModel.userPhoneModel.isPhoneNumberValid == false ||
+        getSignUpModel.userAuthModel.authCodeSent == true ||
+        getSignUpModel.termsAgree == false ||
+        getSignUpModel.privacyAgree == false) {
       return null;
     }
     return () {
@@ -357,7 +403,7 @@ extension SignUpAction on SignUpStateNotifier {
       printd("resendAuthCodeButton");
       updateUserAuthModel(authCodeSent: false);
       verifyPhoneNumber();
-      ref.read(signUpAuthFocusProvider.notifier).requestFocusAuthCode();
+      ref.read(textfieldFocusStateProvider(4).notifier).nextFocusNode();
     };
   }
 
@@ -495,12 +541,12 @@ extension SignUpAction on SignUpStateNotifier {
 
       if (isAvailable == UserIDStatus.available) {
         updateIDAvailable(true);
-        ref.read(signUpAuthFocusProvider.notifier).requestFocusUserPassword();
+        ref.read(textfieldFocusStateProvider(4).notifier).nextFocusNode();
       } else {
         updateIDAvailable(false);
         updateError(UserIDStatus.notAvailable.toMessage);
         showToastMessage();
-        ref.read(signUpAuthFocusProvider.notifier).requestFocusUserID();
+        ref.read(textfieldFocusStateProvider(4).notifier).setFocusNode(3);
       }
     };
   }
@@ -535,6 +581,88 @@ extension SignUpAction on SignUpStateNotifier {
   void passwordOnChange(String password) {
     printd("updatePassword: $password");
     updatePassword(password);
+  }
+
+  /// ### 약관 페이지 이동 메서드
+  ///
+  /// 사용자가 약관 페이지로 이동하기 위해 버튼을 누르면 실행된다.
+  ///
+  /// #### Parameters
+  /// - [BuildContext] context: BuildContext
+  /// - [String] policyType: 약관 종류 (terms: 이용약관, privacy: 개인정보 처리방침)
+  ///
+  void pushPolicyPage(BuildContext context, String policyType) {
+    context.push('/onboarding/signup/policy/$policyType');
+  }
+
+  /// ### 약관 페이지에서 동의 버튼 클릭 메서드
+  ///
+  /// 사용자가 약관 페이지에서 동의 버튼을 클릭하면 실행된다.
+  ///
+  /// #### Parameters
+  ///
+  /// - [BuildContext] context: BuildContext
+  /// - [String] policyType: 약관 종류 (terms: 이용약관, privacy: 개인정보 처리방침)
+  ///
+  void agreePolicyButton(
+      BuildContext context, String policyType, String version) {
+    if (policyType == "terms" || policyType == "privacy") {
+      printd("agree ${policyType}Button");
+      updateTermsAgree(true);
+      ToastMessageService.nativeSnackbar(
+        "onboarding.signUp.${policyType}Agreement.page.agreeSuccess",
+        context,
+        namedArgs: {
+          "date": DateFormat.yMMMd(context.locale.toString())
+              .format(DateTime.now()),
+          "version": version,
+        },
+      );
+      context.pop();
+    }
+  }
+
+  /// ### 약관 Type에 따라 약관 내용과 버전 반환 메서드
+  ///
+  /// Type에 따라 서버에서 데이터를 읽어와, 약관 내용과 버전을 반환한다.
+  ///
+  /// #### Parameters
+  ///
+  /// - [BuildContext] context: BuildContext
+  /// - [String] policyType: 약관 종류 (terms: 이용약관, privacy: 개인정보 처리방침)
+  ///
+  /// #### Returns
+  ///
+  /// - [Future<Map<String, String>?>] : 약관 버전과 내용, 실패 시 null 반환
+  ///
+  Future<Map<String, String>?> getPolicyContent(
+      BuildContext context, String policyType) async {
+    if (policyType != "terms" && policyType != "privacy") {
+      return Future.value(null);
+    }
+
+    if (policyType == "terms") {
+      policyType = "termsOfService";
+    } else {
+      policyType = "privacyPolicy";
+    }
+
+    String locale = context.locale.countryCode ?? "KR";
+    if (locale != "KR" && locale != "US") {
+      locale = "US";
+    }
+
+    final result =
+        await HttpService.get("/policy/terms?type=$policyType&country=$locale");
+
+    if (result.statusCode == 200) {
+      final data = jsonDecode(result.body);
+      final version = data["version"];
+      final content = data["content"];
+      return {"version": version, "content": content};
+    } else {
+      return null;
+    }
   }
 }
 
@@ -648,6 +776,8 @@ extension SignUpUserInfoAction on SignUpStateNotifier {
       "userNickName": getSignUpModel.userNickNameModel.nickname,
       "userGender": getSignUpModel.gender.value,
       "userBirthDate": getSignUpModel.birthDate.toIso8601String(),
+      "termsVersion": getSignUpModel.termsAgree,
+      "privacyVersion": getSignUpModel.privacyAgree,
     };
 
     // 백엔드로 회원가입 정보 전송
@@ -667,6 +797,7 @@ extension SignUpUserInfoAction on SignUpStateNotifier {
         }
       } else {
         printd("회원가입 실패 : ${response.statusCode}");
+        printd("회원가입 실패 : ${jsonDecode(response.body)["failureReason"]}");
 
         if (response.statusCode == 400) {
           return SignUpError.signUpFailure;
@@ -717,63 +848,44 @@ extension SignUpUserInfoAction on SignUpStateNotifier {
     updateBirthDate(birthDate);
     printd("birthDate: ${getSignUpModel.birthDate}");
   }
-}
 
-/// ### 회원가입 페이지의 포커스 상태 Provider
-///
-/// - 포커스 상태를 관리한다.
-///
-final signUpAuthFocusProvider =
-    StateNotifierProvider.autoDispose<SignUpAuthFocusNotifier, List<FocusNode>>(
-  (ref) => SignUpAuthFocusNotifier(),
-);
-
-/// ### 회원가입 페이지의 FocusNode StateNotifier Provider
-///
-/// - 전화번호 입력 필드와 인증번호 입력 필드의 포커스를 관리한다.
-///
-class SignUpAuthFocusNotifier extends StateNotifier<List<FocusNode>> {
-  SignUpAuthFocusNotifier()
-      : super(
-            [FocusNode(), FocusNode(), FocusNode(), FocusNode(), FocusNode()]);
-
-  void requestFocusPhoneNumber() {
-    state[0].requestFocus();
+  /// ### 이용약관 동의 메서드
+  ///
+  /// - 사용자가 이용약관에 동의할 때마다 실행된다.
+  ///
+  /// #### Note
+  ///
+  /// - 이용약관 버전을 업데이트한다.
+  ///
+  /// #### Parameters
+  ///
+  /// - [bool?] isAgree: 동의 여부
+  ///
+  void onChangedTermsAgree(bool? isAgree) {
+    if (isAgree == true) {
+      updateTermsAgree(true);
+    } else {
+      updateTermsAgree(false);
+    }
   }
 
-  void requestFocusAuthCode() {
-    state[1].requestFocus();
-  }
-
-  void requestFocusUserID() {
-    state[2].requestFocus();
-  }
-
-  void requestFocusUserPassword() {
-    state[3].requestFocus();
-  }
-
-  void requestFocusNickName() {
-    state[4].requestFocus();
-  }
-
-  void unfocusPhoneNumber() {
-    state[0].unfocus();
-  }
-
-  void unfocusAuthCode() {
-    state[1].unfocus();
-  }
-
-  void unfocusUserID() {
-    state[2].unfocus();
-  }
-
-  void unfocusUserPassword() {
-    state[3].unfocus();
-  }
-
-  void unfocusNickName() {
-    state[4].unfocus();
+  /// ### 개인정보 처리방침 동의 메서드
+  ///
+  /// - 사용자가 개인정보 처리방침에 동의할 때마다 실행된다.
+  ///
+  /// #### Note
+  ///
+  /// - 개인정보 처리방침 버전을 업데이트한다.
+  ///
+  /// #### Parameters
+  ///
+  /// - [bool?] isAgree: 동의 여부
+  ///
+  void onChangedPrivacyAgree(bool? isAgree) {
+    if (isAgree == true) {
+      updatePrivacyAgree(true);
+    } else {
+      updatePrivacyAgree(false);
+    }
   }
 }

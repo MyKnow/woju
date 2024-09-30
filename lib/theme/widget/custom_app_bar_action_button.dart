@@ -21,29 +21,36 @@ class CustomAppBarTextButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return (children != null && children!.isNotEmpty)
-        ? Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ...children!.map(
-                (widget) => Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: widget,
+        ? Container(
+            width: MediaQuery.of(context).size.width * 0.55,
+            alignment: Alignment.centerRight,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ...children!.map(
+                  (widget) => Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: widget,
+                  ),
                 ),
-              ),
-              Padding(
-                padding: padding.subtract(
-                  const EdgeInsets.only(right: 8),
+                Padding(
+                  padding: padding.subtract(
+                    const EdgeInsets.only(right: 8),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           )
         : (text != null)
-            ? Padding(
+            ? Container(
+                width: MediaQuery.of(context).size.width * 0.55,
+                alignment: Alignment.centerRight,
                 padding: padding,
                 child: CustomTextButton(
                   text!,
                   onPressed: onPressed,
-                  minimumSize: const Size(48, 48),
+                  minimumSize: const Size(200, 48),
+                  alignment: Alignment.centerRight,
                 ),
               )
             : Container();

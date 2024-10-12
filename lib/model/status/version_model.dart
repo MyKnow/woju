@@ -97,6 +97,10 @@ class Version {
   /// ```
   ///
   static bool isRightFormat(String version) {
+    if (version == "latest") {
+      return true;
+    }
+
     final versionList = version.split('.');
     if (versionList.length < 3) {
       return false;
@@ -110,6 +114,20 @@ class Version {
     return true;
   }
 
+  /// ### updateVersion
+  ///
+  /// - 버전 문자열을 받아 Version 객체를 업데이트
+  ///
+  /// #### Parameters
+  ///
+  /// - [String?] nowVersion: 현재 버전
+  /// - [String?] latestVersion: 최신 버전
+  /// - [String?] requiredVersion: 필수 버전
+  ///
+  /// #### Returns
+  ///
+  /// - [Version] 업데이트된 Version 객체
+  ///
   Version updateVersion({
     String? nowVersion,
     String? latestVersion,

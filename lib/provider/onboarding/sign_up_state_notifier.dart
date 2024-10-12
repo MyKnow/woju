@@ -35,9 +35,40 @@ final signUpStateProvider =
   (ref) => SignUpStateNotifier(ref),
 );
 
+/// ### SignUpStateNotifier
+///
+/// - 회원가입 페이지의 상태를 관리한다.
+///
+/// #### Fields
+///
+/// - [SignUpModel] state: 회원가입 상태 모델
+/// - [FirebaseAuth] _firebaseAuth: FirebaseAuth 인스턴스
+/// - [Ref] ref: Provider를 사용하기 위한 ref
+///
+/// #### Methods
+///
+/// - [void] [updatePhoneNumber] ([String] phoneNumber): 전화번호 업데이트 메서드
+/// - [void] [updateCountryCode] ([String] dialCode, [String] isoCode): 국가 코드 업데이트 메서드
+/// - [void] [updateUserAuthModel] ({[String]? authCode, [String]? verificationId, [String]? userUid, [int]? resendToken, [bool]? authCodeSent, [bool]? authCompleted, [bool]? isClear}): 사용자 인증 모델 업데이트 메서드
+/// - [void] [updateError] ([String]? error): 에러 업데이트 메서드
+/// - [void] [updateUserID] ([String] userID): 아이디 업데이트 메서드
+/// - [void] [updateIDAvailable] ([bool] isIDAvailable): 아이디 가능 여부 업데이트 메서드
+/// - [void] [updatePassword] ([String] password): 비밀번호 업데이트 메서드
+/// - [void] [updatePasswordVisible] ([bool] isPasswordVisible): 비밀번호 가리기/보이기 토글 메서드
+/// - [void] [updatePasswordAvailable] ([bool] isPasswordAvailable): 비밀번호 가능 여부 업데이트 메서드
+/// - [void] [updateNickName] ([String] nickName): 닉네임 업데이트 메서드
+/// - [void] [updateProfileImage] ([XFile]? profileImage): 프로필 이미지 업데이트 메서드
+/// - [void] [updateGender] ([Gender] gender): 성별 업데이트 메서드
+/// - [void] [updateBirthDate] ([DateTime]? birthDate): 생년월일 업데이트 메서드
+/// - [void] [errorReset] (): 에러 상태 초기화 메서드
+/// - [void] [updateTermsAgree] ([bool] termsAgree): 이용약관 동의 여부 업데이트 메서드
+/// - [void] [updatePrivacyAgree] ([bool] privacyAgree): 개인정보 처리방침 동의 여부 업데이트 메서드
+/// - [SignUpModel] get [getSignUpModel]: 회원가입 상태 모델 반환 메서드
+///
 class SignUpStateNotifier extends StateNotifier<SignUpModel> {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final Ref ref;
+
   SignUpStateNotifier(this.ref) : super(SignUpModel.initial());
 
   void updatePhoneNumber(String phoneNumber) {
@@ -162,7 +193,33 @@ class SignUpStateNotifier extends StateNotifier<SignUpModel> {
   SignUpModel get getSignUpModel => state;
 }
 
-/// ### 회원가입 페이지의 Action을 확장하는 Extension
+/// ### SignUpAction
+///
+/// - 회원가입 페이지에서의
+///
+/// #### Methods
+///
+/// - [void] [initStateEnterSignUpPage] ([BuildContext] context): 회원가입 페이지 진입 메서드
+/// - [VoidCallback]? [onChangedCountryCode] ([CountryCode] countryCode): 국가 코드 변경 메서드
+/// - Future<[void]> [sendAuthCodeMethod] (): 전화번호로 인증번호를 전송하는 메서드
+/// - Future<[bool]> [verifyAuthCodeMethod] (): 인증번호 확인 메서드
+/// - [VoidCallback]? [onClickVerifyAuthCodeButton] (): 인증번호 확인 버튼 활성화 여부 확인 메서드
+/// - [VoidCallback]? [onClickSendAuthCodeButton] (): 인증번호 전송 버튼 활성화 여부 확인 메서드
+/// - [void] [showToastMessage] (): Toast 메시지 출력 메서드
+/// - [void] [onClickChangePhoneNumberButton] (): 번호 변경 메서드
+/// - [VoidCallback]? [onClickResendAuthCodeButton] (): 인증번호 재전송 버튼 활성화 여부 확인 메서드
+/// - Future<[bool]> [checkSignUpMethod] (): 회원가입 유무 확인 메서드
+/// - [VoidCallback]? [onClickNextPageButton] (): 다음 버튼 활성화 여부 확인 메서드
+/// - [void] [onChangePhoneNumberField] ([String] phoneNumber): 전화번호 변경 메서드
+/// - [VoidCallback]? [checkAvailableIDButtonMethod] (): 아이디 중복 확인 버튼 활성화 여부 확인 메서드
+/// - [void] [onClickModifyIDButton] (): 아이디 수정 메서드
+/// - [void] [onClickChangePasswordVisibilityButton] (): 비밀번호 가리기/보이기 토글 메서드
+/// - [void] [onChangePasswordField] ([String] password): 비밀번호 변경 메서드
+/// - [void] [onClickPushPolicyPageButton] (): 이용약관 및 개인정보 처리방침 페이지 이동 메서드
+/// - [void] [onClickAgreePolicyButton] ([BuildContext] context, [String] policyType): 이용약관 및 개인정보 처리방침 동의 버튼 메서드
+/// - Future<[Map<String, dynamic>]> [getPolicyContentMethod] ([BuildContext] context, [String] policyType): 이용약관 및 개인정보 처리방침 내용 가져오기 메서드
+/// - [void] [onClickTermsAgreeButton] ([bool]? isAgree): 이용약관 동의 버튼 메서드
+/// - [void] [onClickPrivacyAgreeButton] ([bool]? isAgree): 개인정보 처리방침 동의 버튼 메서드
 ///
 extension SignUpAction on SignUpStateNotifier {
   /// ### 회원가입 페이지 진입 메서드
@@ -177,7 +234,7 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   /// - [void] 회원가입 페이지 진입 메서드
   ///
-  void enterSignUpPage(BuildContext context) async {
+  void initStateEnterSignUpPage(BuildContext context) async {
     printd("enterSignUpPage");
   }
 
@@ -193,7 +250,7 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   /// - Function: 국가 코드 변경 메서드
   ///
-  VoidCallback? onCountryCodeChanged(CountryCode countryCode) {
+  VoidCallback? onChangedCountryCode(CountryCode countryCode) {
     if (countryCode.code == null && countryCode.dialCode == null) {
       printd("countryCode is null");
       return null;
@@ -212,7 +269,7 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   /// - State에서 [getPhoneNumberWithFormat]을 통해 포맷화된 전화번호를 가져와 인증번호를 전송한다.
   ///
-  Future<void> verifyPhoneNumber() async {
+  Future<void> sendAuthCodeMethod() async {
     final nowPhoneNumber =
         getSignUpModel.userPhoneModel.getPhoneNumberWithFormat();
     final nowDialCode = getSignUpModel.userPhoneModel.dialCode;
@@ -256,7 +313,7 @@ extension SignUpAction on SignUpStateNotifier {
           resendToken: resendToken,
           authCodeSent: true,
         );
-        ref.read(textfieldFocusStateProvider(4).notifier).nextFocusNode();
+        ref.read(textfieldFocusStateProvider(4).notifier).nextFocusNodeMethod();
       },
       codeAutoRetrievalTimeout: (String verificationId) {
         printd('인증번호 입력 시간 초과');
@@ -279,7 +336,7 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   /// [bool] 인증 성공 여부
   ///
-  Future<bool> verifyAuthCode() async {
+  Future<bool> verifyAuthCodeMethod() async {
     final String authCode = getSignUpModel.userAuthModel.authCode ?? "";
     printd("verifyAuthCode: $authCode");
     if (authCode.isEmpty) {
@@ -300,7 +357,7 @@ extension SignUpAction on SignUpStateNotifier {
       updateUserAuthModel(userUid: result.user?.uid);
 
       // 백엔드로 인증 정보 전송하여 가입 유무 확인
-      return checkSignUp();
+      return checkSignUpMethod();
     } catch (e) {
       printd("인증 실패: $e");
       updateError(SignUpError.authCodeInvalid.toMessage);
@@ -317,7 +374,7 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   /// Function: 인증번호 확인 함수 반환 메서드
   ///
-  VoidCallback? verifyAuthCodeButton() {
+  VoidCallback? onClickVerifyAuthCodeButton() {
     if (!getSignUpModel.userAuthModel.authCodeSent ||
         getSignUpModel.userAuthModel.authCompleted) {
       return null;
@@ -330,10 +387,10 @@ extension SignUpAction on SignUpStateNotifier {
 
     return () async {
       printd("verifyAuthCodeButton");
-      final bool isVerified = await verifyAuthCode();
+      final bool isVerified = await verifyAuthCodeMethod();
       if (isVerified) {
         updateUserAuthModel(authCompleted: true);
-        ref.read(textfieldFocusStateProvider(4).notifier).nextFocusNode();
+        ref.read(textfieldFocusStateProvider(4).notifier).nextFocusNodeMethod();
       } else {
         updateUserAuthModel(authCompleted: false);
         ref.read(textfieldFocusStateProvider(4).notifier).setFocusNode(2);
@@ -349,7 +406,7 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   /// Function: 인증번호 전송 메서드
   ///
-  VoidCallback? sendAuthCodeButton() {
+  VoidCallback? onClickSendAuthCodeButton() {
     if (getSignUpModel.userPhoneModel.isPhoneNumberValid == false ||
         getSignUpModel.userAuthModel.authCodeSent == true ||
         getSignUpModel.termsAgree == false ||
@@ -358,7 +415,7 @@ extension SignUpAction on SignUpStateNotifier {
     }
     return () {
       printd("sendAuthCodeButton");
-      verifyPhoneNumber();
+      sendAuthCodeMethod();
     };
   }
 
@@ -381,7 +438,7 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   /// 사용자가 인증번호를 발송할 번호를 변경하기 위해 버튼을 누르면 실행된다.
   ///
-  void changePhoneNumber() {
+  void onClickChangePhoneNumberButton() {
     printd("changePhoneNumber");
     updateUserAuthModel(isClear: true);
   }
@@ -394,7 +451,7 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   /// Function: 인증번호 재전송 메서드
   ///
-  VoidCallback? resendAuthCodeButton() {
+  VoidCallback? onClickResendAuthCodeButton() {
     if (!getSignUpModel.userAuthModel.authCodeSent ||
         getSignUpModel.userAuthModel.authCompleted) {
       return null;
@@ -402,8 +459,8 @@ extension SignUpAction on SignUpStateNotifier {
     return () {
       printd("resendAuthCodeButton");
       updateUserAuthModel(authCodeSent: false);
-      verifyPhoneNumber();
-      ref.read(textfieldFocusStateProvider(4).notifier).nextFocusNode();
+      sendAuthCodeMethod();
+      ref.read(textfieldFocusStateProvider(4).notifier).nextFocusNodeMethod();
     };
   }
 
@@ -415,7 +472,7 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   /// [bool] 회원가입 여부
   ///
-  Future<bool> checkSignUp() async {
+  Future<bool> checkSignUpMethod() async {
     final json = {
       "userDeviceID": await DeviceInfoService.getDeviceId(),
       "userPhoneNumber": getSignUpModel.userPhoneModel.phoneNumber,
@@ -451,7 +508,7 @@ extension SignUpAction on SignUpStateNotifier {
         updatePhoneNumberAvailable(false);
         updateError(PhoneNumberStatus.notAvailable.toMessage);
         showToastMessage();
-        changePhoneNumber();
+        onClickChangePhoneNumberButton();
         return false;
       } else {
         printd("회원가입 여부 확인 실패 : ${response.statusCode}");
@@ -482,7 +539,7 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   /// [VoidCallback] 다음 페이지 이동 버튼 활성화 여부 확인 메서드
   ///
-  VoidCallback? nextButton(BuildContext context) {
+  VoidCallback? onClickNextPageButton(BuildContext context) {
     if (!getSignUpModel.userAuthModel.authCompleted ||
         !getSignUpModel.userIDModel.isIDAvailable ||
         !getSignUpModel.userPasswordModel.isPasswordAvailable) {
@@ -502,7 +559,7 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   /// [String] phoneNumber: 전화번호
   ///
-  void phoneNumberOnChange(String phoneNumber) {
+  void onChangePhoneNumberField(String phoneNumber) {
     updatePhoneNumber(phoneNumber);
   }
 
@@ -514,7 +571,7 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   /// Function: 중복 ID 확인 메서드
   ///
-  VoidCallback? checkAvailableIDButton() {
+  VoidCallback? checkAvailableIDButtonMethod() {
     if (getSignUpModel.userIDModel.isIDAvailable) {
       printd("isIDAvailable: ${getSignUpModel.userIDModel.isIDAvailable}");
       return null;
@@ -541,7 +598,7 @@ extension SignUpAction on SignUpStateNotifier {
 
       if (isAvailable == UserIDStatus.available) {
         updateIDAvailable(true);
-        ref.read(textfieldFocusStateProvider(4).notifier).nextFocusNode();
+        ref.read(textfieldFocusStateProvider(4).notifier).nextFocusNodeMethod();
       } else {
         updateIDAvailable(false);
         updateError(UserIDStatus.notAvailable.toMessage);
@@ -555,7 +612,7 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   /// 사용자가 ID를 변경하기 위해 버튼을 누르면 실행된다.
   ///
-  void modifyIDButton() {
+  void onClickModifyIDButton() {
     printd("isIDAvailable: ${getSignUpModel.userIDModel.isIDAvailable}");
 
     updateIDAvailable(false);
@@ -565,7 +622,7 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   /// 사용자가 비밀번호 가시성을 변경하기 위해 버튼을 누르면 실행된다.
   ///
-  void changePasswordVisibilityButton() {
+  void onClickChangePasswordVisibilityButton() {
     printd("changePasswordVisibility");
     updatePasswordVisible(!getSignUpModel.userPasswordModel.isPasswordVisible);
   }
@@ -578,7 +635,7 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   /// [String] password: 비밀번호
   ///
-  void passwordOnChange(String password) {
+  void onChangePasswordField(String password) {
     printd("updatePassword: $password");
     updatePassword(password);
   }
@@ -591,7 +648,7 @@ extension SignUpAction on SignUpStateNotifier {
   /// - [BuildContext] context: BuildContext
   /// - [String] policyType: 약관 종류 (terms: 이용약관, privacy: 개인정보 처리방침)
   ///
-  void pushPolicyPage(BuildContext context, String policyType) {
+  void onClickPushPolicyPageButton(BuildContext context, String policyType) {
     context.push('/onboarding/signup/policy/$policyType');
   }
 
@@ -604,18 +661,23 @@ extension SignUpAction on SignUpStateNotifier {
   /// - [BuildContext] context: BuildContext
   /// - [String] policyType: 약관 종류 (terms: 이용약관, privacy: 개인정보 처리방침)
   ///
-  void agreePolicyButton(
+  void onClickAgreePolicyButton(
       BuildContext context, String policyType, String version) {
     if (policyType == "terms" || policyType == "privacy") {
       printd("agree ${policyType}Button");
-      updateTermsAgree(true);
+      if (policyType == "terms") {
+        updateTermsAgree(true);
+      } else {
+        updatePrivacyAgree(true);
+      }
+
       ToastMessageService.nativeSnackbar(
         "onboarding.signUp.${policyType}Agreement.page.agreeSuccess",
         context,
         namedArgs: {
-          "date": DateFormat.yMMMd(context.locale.toString())
-              .format(DateTime.now()),
-          "version": version,
+          "date": DateFormat.yMMMd(context.locale.toString()).format(
+            DateTime.now(),
+          ),
         },
       );
       context.pop();
@@ -635,7 +697,7 @@ extension SignUpAction on SignUpStateNotifier {
   ///
   /// - [Future<Map<String, String>?>] : 약관 버전과 내용, 실패 시 null 반환
   ///
-  Future<Map<String, String>?> getPolicyContent(
+  Future<Map<String, String>?> getPolicyContentMethod(
       BuildContext context, String policyType) async {
     if (policyType != "terms" && policyType != "privacy") {
       return Future.value(null);
@@ -664,11 +726,60 @@ extension SignUpAction on SignUpStateNotifier {
       return null;
     }
   }
+
+  /// ### 이용약관 동의 메서드
+  ///
+  /// - 사용자가 이용약관에 동의할 때마다 실행된다.
+  ///
+  /// #### Note
+  ///
+  /// - 이용약관 버전을 업데이트한다.
+  ///
+  /// #### Parameters
+  ///
+  /// - [bool?] isAgree: 동의 여부
+  ///
+  void onClickTermsAgreeButton(bool? isAgree) {
+    if (isAgree == true) {
+      updateTermsAgree(true);
+    } else {
+      updateTermsAgree(false);
+    }
+  }
+
+  /// ### 개인정보 처리방침 동의 메서드
+  ///
+  /// - 사용자가 개인정보 처리방침에 동의할 때마다 실행된다.
+  ///
+  /// #### Note
+  ///
+  /// - 개인정보 처리방침 버전을 업데이트한다.
+  ///
+  /// #### Parameters
+  ///
+  /// - [bool?] isAgree: 동의 여부
+  ///
+  void onClickPrivacyAgreeButton(bool? isAgree) {
+    if (isAgree == true) {
+      updatePrivacyAgree(true);
+    } else {
+      updatePrivacyAgree(false);
+    }
+  }
 }
 
 /// ### 회원가입 페이지의 유저 정보 입력 Action을 확장하는 Extension
 ///
 /// - 유저 정보 입력 페이지에서 사용되는 Action을 확장한다.
+///
+/// #### Methods
+///
+/// - Future<[void]> [pickImage] ([bool] isGallery, [BuildContext] context): 이미지 가져오기 메서드
+/// - [void] [onChangeNickNameField] ([String] nickName): 닉네임 변경 메서드
+/// - [VoidCallback]? [onClickCompleteButton] ([BuildContext] context): 완료 버튼 활성화 여부 확인 메서드
+/// - Future<[SignUpError]?> [signUpMethod] (): 회원가입 메서드
+/// - [void] [onChangeGenderRadioButton] ([Gender]? gender): 성별 선택 메서드
+/// - [void] [onChangeBirthDateWheel] ([DateTime] birthDate): 생년월일 선택 메서드
 ///
 extension SignUpUserInfoAction on SignUpStateNotifier {
   /// ### ImagePickerService를 통해 이미지를 가져오는 메서드
@@ -708,7 +819,7 @@ extension SignUpUserInfoAction on SignUpStateNotifier {
   ///
   /// - [String] nickName: 닉네임
   ///
-  void nickNameOnChange(String nickName) {
+  void onChangeNickNameField(String nickName) {
     printd("updateNickName: $nickName");
     updateNickName(nickName);
   }
@@ -723,7 +834,7 @@ extension SignUpUserInfoAction on SignUpStateNotifier {
   ///
   /// - 완료 버튼을 누를 수 있으면 로그인 페이지로 이동한다.
   ///
-  VoidCallback? completeButton(BuildContext context) {
+  VoidCallback? onClickCompleteButton(BuildContext context) {
     if (!getSignUpModel.userPhoneModel.isPhoneNumberValid ||
         getSignUpModel.userPhoneModel.dialCode.isEmpty ||
         getSignUpModel.userPhoneModel.isoCode.isEmpty ||
@@ -736,7 +847,7 @@ extension SignUpUserInfoAction on SignUpStateNotifier {
     return () async {
       printd("completeButton");
 
-      final result = await signUp();
+      final result = await signUpMethod();
 
       if (result != null) {
         updateError(result.toMessage);
@@ -762,23 +873,8 @@ extension SignUpUserInfoAction on SignUpStateNotifier {
   ///
   /// - 회원가입 성공 시 null, 실패 시 에러 메시지 반환
   ///
-  Future<SignUpError?> signUp() async {
-    final json = {
-      "userDeviceID": await DeviceInfoService.getDeviceId(),
-      "userUID": getSignUpModel.userAuthModel.userUid,
-      "userPhoneNumber":
-          getSignUpModel.userPhoneModel.getPhoneNumberWithFormat(),
-      "dialCode": getSignUpModel.userPhoneModel.dialCode,
-      "isoCode": getSignUpModel.userPhoneModel.isoCode,
-      "userID": getSignUpModel.userIDModel.userID,
-      "userPassword": getSignUpModel.userPasswordModel.userPassword,
-      "userProfileImage": await getSignUpModel.profileImage?.readAsBytes(),
-      "userNickName": getSignUpModel.userNickNameModel.nickname,
-      "userGender": getSignUpModel.gender.value,
-      "userBirthDate": getSignUpModel.birthDate.toIso8601String(),
-      "termsVersion": getSignUpModel.termsAgree,
-      "privacyVersion": getSignUpModel.privacyAgree,
-    };
+  Future<SignUpError?> signUpMethod() async {
+    final json = await getSignUpModel.toJson();
 
     // 백엔드로 회원가입 정보 전송
     try {
@@ -798,6 +894,7 @@ extension SignUpUserInfoAction on SignUpStateNotifier {
       } else {
         printd("회원가입 실패 : ${response.statusCode}");
         printd("회원가입 실패 : ${jsonDecode(response.body)["failureReason"]}");
+        printd("회원가입 실패 : ${jsonDecode(response.body)["message"]}");
 
         if (response.statusCode == 400) {
           return SignUpError.signUpFailure;
@@ -823,7 +920,7 @@ extension SignUpUserInfoAction on SignUpStateNotifier {
   ///
   /// [VoidCallback] 성별 선택 메서드
   ///
-  void genderSelect(Gender? gender) {
+  void onChangeGenderRadioButton(Gender? gender) {
     if (gender == null) {
       return;
     }
@@ -843,49 +940,9 @@ extension SignUpUserInfoAction on SignUpStateNotifier {
   ///
   /// - [VoidCallback] 생년월일 선택 메서드
   ///
-  void birthDateSelect(DateTime birthDate) {
+  void onChangeBirthDateWheel(DateTime birthDate) {
     printd("birthDate: $birthDate");
     updateBirthDate(birthDate);
     printd("birthDate: ${getSignUpModel.birthDate}");
-  }
-
-  /// ### 이용약관 동의 메서드
-  ///
-  /// - 사용자가 이용약관에 동의할 때마다 실행된다.
-  ///
-  /// #### Note
-  ///
-  /// - 이용약관 버전을 업데이트한다.
-  ///
-  /// #### Parameters
-  ///
-  /// - [bool?] isAgree: 동의 여부
-  ///
-  void onChangedTermsAgree(bool? isAgree) {
-    if (isAgree == true) {
-      updateTermsAgree(true);
-    } else {
-      updateTermsAgree(false);
-    }
-  }
-
-  /// ### 개인정보 처리방침 동의 메서드
-  ///
-  /// - 사용자가 개인정보 처리방침에 동의할 때마다 실행된다.
-  ///
-  /// #### Note
-  ///
-  /// - 개인정보 처리방침 버전을 업데이트한다.
-  ///
-  /// #### Parameters
-  ///
-  /// - [bool?] isAgree: 동의 여부
-  ///
-  void onChangedPrivacyAgree(bool? isAgree) {
-    if (isAgree == true) {
-      updatePrivacyAgree(true);
-    } else {
-      updatePrivacyAgree(false);
-    }
   }
 }

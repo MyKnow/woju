@@ -7,6 +7,7 @@ import 'package:woju/model/user/user_id_model.dart';
 import 'package:woju/model/user/user_nickname_model.dart';
 import 'package:woju/model/user/user_password_model.dart';
 import 'package:woju/model/user/user_phone_model.dart';
+import 'package:woju/service/device_info_service.dart';
 
 enum SignUpError with StatusMixin {
   authCodeEmpty,
@@ -110,5 +111,33 @@ class SignUpModel {
       userNickNameModel: UserNicknameModel.initial(),
       birthDate: DateTime(2000),
     );
+  }
+
+  /// # toJson
+  ///
+  /// - 회원가입 정보를 JSON 형식으로 변환하는 메서드
+  ///
+  /// ### Returns
+  ///
+  /// - [Map<String, dynamic>] JSON 데이터
+  ///
+  Future<Map<String, dynamic>> toJson() async {
+    final json = {
+      "userDeviceID": await DeviceInfoService.getDeviceId(),
+      "userUID": userAuthModel.userUid,
+      "userPhoneNumber": userPhoneModel.getPhoneNumberWithFormat(),
+      "dialCode": userPhoneModel.dialCode,
+      "isoCode": userPhoneModel.isoCode,
+      "userID": userIDModel.userID,
+      "userPassword": userPasswordModel.userPassword,
+      "userProfileImage": await profileImage?.readAsBytes(),
+      "userNickName": userNickNameModel.nickname,
+      "userGender": gender.value,
+      "userBirthDate": birthDate.toIso8601String(),
+      // "termsVersion": getSignUpModel.termsAgree,
+      // "privacyVersion": getSignUpModel.privacyAgree,
+    };
+
+    return json;
   }
 }

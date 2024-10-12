@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:woju/model/user/user_gender_model.dart';
 import 'package:woju/provider/home/user_profile_state_notifier.dart';
 import 'package:woju/theme/widget/custom_app_bar_action_button.dart';
 
@@ -49,7 +50,7 @@ class UserProfilePage extends ConsumerWidget {
               ),
             ],
           )
-        else if (userProfileEditState.isLoding)
+        else if (userProfileEditState.isLoading)
           CustomAppBarTextButton(
             children: [
               CupertinoActivityIndicator(
@@ -171,7 +172,7 @@ class UserProfilePage extends ConsumerWidget {
             ),
             CustomToggleSwitch(
               initialIndex: userProfileEditState.userGender.index,
-              labels: userProfileStateNotifier.getGenderList(),
+              labels: GenderExtension.getGenderList(),
               onToggle: (index) {
                 userProfileStateNotifier.onChangeUserGender(index);
               },

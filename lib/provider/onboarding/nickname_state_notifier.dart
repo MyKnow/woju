@@ -13,6 +13,26 @@ final nicknameStateProvider =
   return NicknameStateNotifier(ref);
 });
 
+/// ### NicknameStateNotifier
+///
+/// - 유저 닉네임 상태를 관리하는 StateNotifier
+///
+/// #### Fields
+///
+/// - [UserNicknameModel] state: 유저 닉네임 상태 모델
+/// - [Ref] ref: Ref
+/// - [TextEditingController] nicknameController: 유저 닉네임 입력 필드 컨트롤러
+/// - [String]? nicknameBackup: 유저 닉네임 변경 전 백업
+///
+/// #### Methods
+///
+/// - [void] updateNickname([String] nickname): 유저 닉네임 업데이트
+/// - [void] enableEditing(): 유저 닉네임 편집 활성화
+/// - [void] disableEditing(): 유저 닉네임 편집 비활성화
+/// - [void] clearNickname(): 유저 닉네임 초기화
+/// - [void] readFromDB(): 유저 닉네임 초기화
+/// - [UserNicknameModel] getNickNameModel: 유저 닉네임 상태 모델 반환
+///
 class NicknameStateNotifier extends StateNotifier<UserNicknameModel> {
   late Ref ref;
   final TextEditingController nicknameController = TextEditingController();
@@ -50,6 +70,17 @@ class NicknameStateNotifier extends StateNotifier<UserNicknameModel> {
   UserNicknameModel get getNickNameModel => state;
 }
 
+/// ### NicknameAction
+///
+/// - 유저 닉네임 상태를 관리하는 StateNotifier의 액션 확장
+///
+/// #### Methods
+///
+/// - [void] onChangeNickname([String] nickname): 유저 닉네임 입력 onChange 이벤트
+/// - [VoidCallback]? onClickChangeNickname(): 유저 닉네임 변경 버튼 클릭 이벤트
+/// - [void] onClickCancelChangeNickname(): 유저 닉네임 변경 취소 버튼 클릭 이벤트
+/// - [VoidCallback]? onClickCompleteChangeNickname([BuildContext] context): 유저 닉네임 변경 완료 버튼 클릭 이벤트
+///
 extension NicknameAction on NicknameStateNotifier {
   /// ### Nickname 입력 onChange 이벤트
   ///

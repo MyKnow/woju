@@ -43,7 +43,7 @@ class SignUpPage extends ConsumerWidget {
               fieldKey: 'phoneNumberForSignUp',
               prefix: CustomCountryPickerWidget(
                 onChanged:
-                    ref.read(signUpStateProvider.notifier).onCountryCodeChanged,
+                    ref.read(signUpStateProvider.notifier).onChangedCountryCode,
                 searchDecoration: InputDecoration(
                   labelText: "onboarding.signUp.searchCountry".tr(),
                 ),
@@ -87,7 +87,7 @@ class SignUpPage extends ConsumerWidget {
               onChanged: (value) {
                 ref
                     .read(signUpStateProvider.notifier)
-                    .phoneNumberOnChange(value);
+                    .onChangePhoneNumberField(value);
               },
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.done,
@@ -111,13 +111,13 @@ class SignUpPage extends ConsumerWidget {
                           onPressed: () {
                             ref
                                 .read(signUpStateProvider.notifier)
-                                .changePhoneNumber();
+                                .onClickChangePhoneNumberButton();
                           },
                           minimumSize: const Size(80, 80),
                         )
                       : CustomTextButton(
                           "onboarding.signUp.sendCode",
-                          onPressed: signUpNotifier.sendAuthCodeButton(),
+                          onPressed: signUpNotifier.onClickSendAuthCodeButton(),
                           minimumSize: const Size(80, 80),
                         ),
                 ),
@@ -132,7 +132,7 @@ class SignUpPage extends ConsumerWidget {
                   CheckboxListTile(
                     controlAffinity: ListTileControlAffinity.leading,
                     value: signUp.termsAgree,
-                    onChanged: signUpNotifier.onChangedTermsAgree,
+                    onChanged: signUpNotifier.onClickTermsAgreeButton,
                     enabled: !signUp.userAuthModel.authCodeSent,
                     title: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -159,7 +159,8 @@ class SignUpPage extends ConsumerWidget {
                             ),
                             minimumSize: const Size(80, 48),
                             onPressed: () {
-                              signUpNotifier.pushPolicyPage(context, "terms");
+                              signUpNotifier.onClickPushPolicyPageButton(
+                                  context, "terms");
                             },
                           ),
                         ),
@@ -170,7 +171,7 @@ class SignUpPage extends ConsumerWidget {
                   CheckboxListTile(
                     controlAffinity: ListTileControlAffinity.leading,
                     value: signUp.privacyAgree,
-                    onChanged: signUpNotifier.onChangedPrivacyAgree,
+                    onChanged: signUpNotifier.onClickPrivacyAgreeButton,
                     enabled: !signUp.userAuthModel.authCodeSent,
                     title: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -197,7 +198,8 @@ class SignUpPage extends ConsumerWidget {
                             ),
                             minimumSize: const Size(80, 48),
                             onPressed: () {
-                              signUpNotifier.pushPolicyPage(context, "privacy");
+                              signUpNotifier.onClickPushPolicyPageButton(
+                                  context, "privacy");
                             },
                           ),
                         ),
@@ -218,14 +220,14 @@ class SignUpPage extends ConsumerWidget {
                 actions: [
                   CustomTextButton(
                     "status.authcode.resend",
-                    onPressed: signUpNotifier.resendAuthCodeButton(),
+                    onPressed: signUpNotifier.onClickResendAuthCodeButton(),
                     minimumSize: const Size(80, 80),
                   ),
                   CustomTextButton(
                     (!signUp.userAuthModel.authCompleted)
                         ? "status.authcode.verify"
                         : "status.authcode.verified",
-                    onPressed: signUpNotifier.verifyAuthCodeButton(),
+                    onPressed: signUpNotifier.onClickVerifyAuthCodeButton(),
                     minimumSize: const Size(80, 80),
                   ),
                 ],
@@ -278,7 +280,7 @@ class SignUpPage extends ConsumerWidget {
                             onPressed: () {
                               ref
                                   .read(signUpStateProvider.notifier)
-                                  .modifyIDButton();
+                                  .onClickModifyIDButton();
                             },
                             minimumSize: const Size(80, 80),
                           )
@@ -286,7 +288,7 @@ class SignUpPage extends ConsumerWidget {
                             "onboarding.signUp.userIDCheck",
                             onPressed: ref
                                 .read(signUpStateProvider.notifier)
-                                .checkAvailableIDButton(),
+                                .checkAvailableIDButtonMethod(),
                             minimumSize: const Size(80, 80),
                           ),
                   ),
@@ -308,8 +310,9 @@ class SignUpPage extends ConsumerWidget {
                 labelText: signUp.userPasswordModel.labelText,
                 keyboardType: TextInputType.visiblePassword,
                 autofillHints: const <String>[AutofillHints.newPassword],
-                onChanged:
-                    ref.read(signUpStateProvider.notifier).passwordOnChange,
+                onChanged: ref
+                    .read(signUpStateProvider.notifier)
+                    .onChangePasswordField,
                 inputFormatters: signUp.userPasswordModel.inputFormatters,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 focusNode: focus[3],
@@ -323,7 +326,7 @@ class SignUpPage extends ConsumerWidget {
                       onPressed: () {
                         ref
                             .read(signUpStateProvider.notifier)
-                            .changePasswordVisibilityButton();
+                            .onClickChangePasswordVisibilityButton();
                       },
                       style: IconButton.styleFrom(
                         shape: RoundedRectangleBorder(
@@ -347,7 +350,8 @@ class SignUpPage extends ConsumerWidget {
           ],
         ),
       ),
-      floatingActionButtonCallback: signUpNotifier.nextButton(context),
+      floatingActionButtonCallback:
+          signUpNotifier.onClickNextPageButton(context),
       floatingActionButtonText: "onboarding.signUp.next",
     );
   }

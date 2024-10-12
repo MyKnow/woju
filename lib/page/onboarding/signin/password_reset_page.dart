@@ -109,22 +109,22 @@ class PasswordResetPageState extends ConsumerState<PasswordResetPage> {
                   child: (auth.authCodeSent)
                       ? CustomTextButton(
                           "onboarding.signUp.changePhoneNumber",
-                          onPressed: authNotifier.authStatusResetButton(
+                          onPressed: authNotifier.onClickAuthStatusResetButton(
                               phoneNumberNotifier.reset,
-                              focusNotifier.nextFocusNode),
+                              focusNotifier.nextFocusNodeMethod),
                           minimumSize: const Size(80, 80),
                         )
                       : CustomTextButton(
                           "onboarding.signUp.sendCode",
-                          onPressed: authNotifier.authSendButton(
+                          onPressed: authNotifier.onClickAuthSendButton(
                               phoneNumber.phoneNumber ?? "",
                               phoneNumber.dialCode,
-                              focusNotifier.nextFocusNode),
+                              focusNotifier.nextFocusNodeMethod),
                           minimumSize: const Size(80, 80),
                         ),
                 ),
               ],
-              onFieldSubmitted: () => focusNotifier.nextFocusNode(),
+              onFieldSubmitted: () => focusNotifier.nextFocusNodeMethod(),
             ),
 
             const SizedBox(height: 20),
@@ -137,10 +137,10 @@ class PasswordResetPageState extends ConsumerState<PasswordResetPage> {
                 actions: [
                   CustomTextButton(
                     "status.authcode.resend",
-                    onPressed: authNotifier.authResendButton(
+                    onPressed: authNotifier.onClickAuthResendButton(
                       phoneNumber.phoneNumber ?? "",
                       phoneNumber.dialCode,
-                      focusNotifier.nextFocusNode,
+                      focusNotifier.nextFocusNodeMethod,
                     ),
                     minimumSize: const Size(80, 80),
                   ),
@@ -148,9 +148,9 @@ class PasswordResetPageState extends ConsumerState<PasswordResetPage> {
                     (!auth.authCompleted)
                         ? "status.authcode.verify"
                         : "status.authcode.verified",
-                    onPressed: authNotifier.authConfirmButton(
+                    onPressed: authNotifier.onClickAuthConfirmButton(
                       context,
-                      focusNotifier.nextFocusNode,
+                      focusNotifier.nextFocusNodeMethod,
                     ),
                     minimumSize: const Size(80, 80),
                   ),
@@ -167,7 +167,7 @@ class PasswordResetPageState extends ConsumerState<PasswordResetPage> {
                     : theme.primaryTextTheme.bodyMedium,
                 focusNode: focus[1],
                 validator: auth.validator,
-                onFieldSubmitted: () => focusNotifier.nextFocusNode(),
+                onFieldSubmitted: () => focusNotifier.nextFocusNodeMethod(),
               )
             else
               Container(),

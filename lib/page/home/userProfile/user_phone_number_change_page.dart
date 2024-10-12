@@ -120,10 +120,10 @@ class UserPhoneNumberChangePage extends ConsumerWidget {
                         )
                       : CustomTextButton(
                           "onboarding.signUp.sendCode",
-                          onPressed: authNotifier.authSendButton(
+                          onPressed: authNotifier.onClickAuthSendButton(
                             phoneNumber.phoneNumber ?? "",
                             phoneNumber.dialCode,
-                            focusNotifier.nextFocusNode,
+                            focusNotifier.nextFocusNodeMethod,
                           ),
                           minimumSize: const Size(80, 80),
                         ),
@@ -151,7 +151,7 @@ class UserPhoneNumberChangePage extends ConsumerWidget {
                     actions: [
                       CustomTextButton(
                         "status.authcode.resend",
-                        onPressed: authNotifier.authResendButton(
+                        onPressed: authNotifier.onClickAuthResendButton(
                           phoneNumber.phoneNumber ?? "",
                           phoneNumber.dialCode,
                           () {},
@@ -162,7 +162,7 @@ class UserPhoneNumberChangePage extends ConsumerWidget {
                         (!auth.authCompleted)
                             ? "status.authcode.verify"
                             : "status.authcode.verified",
-                        onPressed: authNotifier.authConfirmButton(
+                        onPressed: authNotifier.onClickAuthConfirmButton(
                           context,
                           () {},
                         ),

@@ -169,7 +169,7 @@ class SignupUserinfoPage extends ConsumerWidget {
               labelText: signUp.userNickNameModel.labelText,
               keyboardType: TextInputType.name,
               autofillHints: const <String>[AutofillHints.nickname],
-              onChanged: signUpNotifier.nickNameOnChange,
+              onChanged: signUpNotifier.onChangeNickNameField,
               inputFormatters: signUp.userNickNameModel.inputFormatters,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: signUp.userNickNameModel.validator,
@@ -210,7 +210,8 @@ class SignupUserinfoPage extends ConsumerWidget {
                 dividerColor: theme.shadowColor,
                 onToggle: (index) {
                   if (index == null) return;
-                  signUpNotifier.genderSelect(Gender.values[index]);
+                  signUpNotifier
+                      .onChangeGenderRadioButton(Gender.values[index]);
                 },
               ),
             ),
@@ -257,7 +258,7 @@ class SignupUserinfoPage extends ConsumerWidget {
                     alignment: Alignment.center,
                   ),
                 ),
-                onDateTimeChanged: signUpNotifier.birthDateSelect,
+                onDateTimeChanged: signUpNotifier.onChangeBirthDateWheel,
                 options: DatePickerOptions(
                   backgroundColor: theme.cardTheme.color!,
                   diameterRatio: 1.7,
@@ -280,7 +281,8 @@ class SignupUserinfoPage extends ConsumerWidget {
           ],
         ),
       ),
-      floatingActionButtonCallback: signUpNotifier.completeButton(context),
+      floatingActionButtonCallback:
+          signUpNotifier.onClickCompleteButton(context),
       floatingActionButtonText: "onboarding.signUp.detail.done",
     );
   }

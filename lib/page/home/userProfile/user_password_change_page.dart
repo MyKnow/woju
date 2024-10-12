@@ -49,7 +49,7 @@ class UserPasswordChangePage extends ConsumerWidget {
               autofillHints: const [AutofillHints.password],
               textInputAction: TextInputAction.next,
               onFieldSubmitted: (value) {
-                focusNotifier.nextFocusNode();
+                focusNotifier.nextFocusNodeMethod();
               },
               inputFormatters: password.currentPassword.inputFormatters,
               obscureText: !password.currentPassword.isPasswordVisible,

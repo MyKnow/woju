@@ -11,11 +11,36 @@ import 'package:woju/service/image_picker_service.dart';
 import 'package:woju/service/secure_storage_service.dart';
 import 'package:woju/service/toast_message_service.dart';
 
+/// ### profileImageStateProvider
+///
+/// - 유저 프로필 이미지 상태를 관리하는 StateNotifier
+///
+/// #### Notes
+///
+/// - autoDispose 속성을 가지므로, 해당 Provider가 더 이상 필요 없을 때 자동으로 해제됨
+/// - [ProfileImageStateNotifier] 유저 프로필 이미지 상태를 관리하는 StateNotifier
+///
 final profileImageStateProvider =
     StateNotifierProvider<ProfileImageStateNotifier, Uint8List?>((ref) {
   return ProfileImageStateNotifier(ref);
 });
 
+/// ### ProfileImageStateNotifier
+///
+/// - 유저 프로필 이미지 상태를 관리하는 StateNotifier
+///
+/// #### Fields
+///
+/// - [Uint8List]? state: 유저 프로필 이미지 상태
+/// - [Ref] ref: Ref
+///
+/// #### Methods
+///
+/// - [void] init(): 유저 프로필 이미지 초기화
+/// - [void] update(Uint8List newState): 유저 프로필 이미지 업데이트
+/// - [void] delete(): 유저 프로필 이미지 삭제
+/// - [Uint8List]? get getImage: 유저 프로필 이미지 반환
+///
 class ProfileImageStateNotifier extends StateNotifier<Uint8List?> {
   late final Ref ref;
   ProfileImageStateNotifier(this.ref) : super(null) {
@@ -47,6 +72,16 @@ class ProfileImageStateNotifier extends StateNotifier<Uint8List?> {
   Uint8List? get getImage => state;
 }
 
+/// ### ProfileImageAction
+///
+/// - ProfileImageStateNotifier의 액션 확장
+///
+/// #### Methods
+///
+/// - Future<[void]> pickImage([bool]? isGallery, [BuildContext] context): 이미지 선택 메서드
+/// - Future<[void]> saveImage(): 이미지를 DB에 저장하는 메서드
+/// - Future<[bool]> uploadProfileImage(): 이미지를 서버에 업로드하는 메서드
+///
 extension ProfileImageAction on ProfileImageStateNotifier {
   /// ### ImagePickerService를 통해 이미지를 가져오는 메서드
   ///

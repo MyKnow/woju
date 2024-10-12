@@ -32,7 +32,7 @@ class SignInPage extends ConsumerWidget {
               : "onboarding.signIn.signInWithPhoneNumber",
           onPressed: () {
             FocusScope.of(context).unfocus();
-            signInNotifier.changeLoginButton();
+            signInNotifier.onClickChangeLoginMethodButton();
           },
         ),
       ],
@@ -45,7 +45,7 @@ class SignInPage extends ConsumerWidget {
               CustomTextfieldContainer(
                 fieldKey: 'phoneNumberForSignIn',
                 prefix: CustomCountryPickerWidget(
-                  onChanged: signInNotifier.countryCodeOnChange,
+                  onChanged: signInNotifier.onClickCountryChangeButton,
                   dialogSize: const Size(350, 500),
                   searchDecoration: InputDecoration(
                     labelText: "onboarding.signUp.searchCountry".tr(),
@@ -75,7 +75,7 @@ class SignInPage extends ConsumerWidget {
                 validator: signIn.userPhoneModel.validator,
                 // focusNode: focus[0],
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                onChanged: signInNotifier.phoneNumberOnChange,
+                onChanged: signInNotifier.onChangePhoneNumberField,
                 keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.next,
                 inputFormatters: signIn.userPhoneModel.inputFormatters,
@@ -98,7 +98,7 @@ class SignInPage extends ConsumerWidget {
                 ),
                 validator: signIn.userIDModel.validator,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                onChanged: signInNotifier.userIDOnChange,
+                onChanged: signInNotifier.onChangeUserIDField,
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
                 inputFormatters: signIn.userIDModel.inputFormatters,
@@ -120,7 +120,7 @@ class SignInPage extends ConsumerWidget {
               autofillHints: const <String>[
                 AutofillHints.password,
               ],
-              onChanged: signInNotifier.passwordOnChange,
+              onChanged: signInNotifier.onChangePasswordField,
               inputFormatters: signIn.userPasswordModel.inputFormatters,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               // focusNode: focus[3],
@@ -128,14 +128,14 @@ class SignInPage extends ConsumerWidget {
               obscureText: !signIn.userPasswordModel.isPasswordVisible,
               initialValue: signIn.userPasswordModel.userPassword,
               textInputAction: TextInputAction.done,
-              onFieldSubmitted: signInNotifier.loginButtonOnClick(context),
+              onFieldSubmitted: signInNotifier.onClickLoginButton(context),
               actions: [
                 SizedBox(
                   height: 50,
                   width: 70,
                   child: IconButton(
                     onPressed: () {
-                      signInNotifier.togglePasswordVisibilityButton();
+                      signInNotifier.onClickPasswordVisibilityButton();
                     },
                     style: IconButton.styleFrom(
                       shape: RoundedRectangleBorder(
@@ -164,7 +164,7 @@ class SignInPage extends ConsumerWidget {
           ],
         ),
       ),
-      floatingActionButtonCallback: signInNotifier.loginButtonOnClick(context),
+      floatingActionButtonCallback: signInNotifier.onClickLoginButton(context),
       floatingActionButtonText: "onboarding.signIn.signIn",
     );
   }

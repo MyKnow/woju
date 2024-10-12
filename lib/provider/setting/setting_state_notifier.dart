@@ -5,7 +5,7 @@ import 'package:woju/model/setting/setting.dart';
 
 /// ### 환경 설정을 관리하는 StateNotifier
 ///
-/// Hive를 사용하여 환경 설정의 상태를 저장하고 업데이트합니다.
+/// - Hive를 사용하여 환경 설정의 상태를 저장하고 업데이트합니다.
 ///
 final settingStateProvider =
     StateNotifierProvider<SettingStateNotifier, SettingModel>(
@@ -15,6 +15,22 @@ final settingStateProvider =
   },
 );
 
+/// ### SettingStateNotifier
+///
+/// - [SettingModel] 환경 설정 상태를 관리하는 StateNotifier
+///
+/// #### Fields
+///
+/// - [SettingModel] state: 환경 설정 상태
+/// - [Box]<[SettingModel]> _box: 환경 설정 상태를 저장하는 Hive Box
+/// - [String] _boxName: 환경 설정 상태를 저장하는 Hive Box 이름
+///
+/// #### Methods
+///
+/// - [Future]<[void]> [update] ([SettingModel] newState): 환경 설정 상태를 업데이트하는 메서드
+/// - [Future]<[void]> [delete] (): 환경 설정 상태를 삭제하는 메서드
+/// - [Future]<[SettingModel]> [read] (): 환경 설정 상태를 불러오는 메서드
+///
 class SettingStateNotifier extends StateNotifier<SettingModel> {
   final Box<SettingModel> _box;
   final String _boxName = HiveBox.settingBox.name;

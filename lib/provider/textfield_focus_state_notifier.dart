@@ -8,6 +8,24 @@ final textfieldFocusStateProvider = StateNotifierProvider.family
   },
 );
 
+/// ### TextfieldFocusStateNotifier
+///
+/// - [List]<[FocusNode]> 포커스 노드 상태를 관리하는 StateNotifier
+///
+/// #### Fields
+///
+/// - [List]<[FocusNode]> state: 포커스 노드 상태
+/// - [int] index: 현재 포커스 노드 인덱스
+///
+/// #### Methods
+///
+/// - [void] [setFocusNode] ([int] index): 포커스 노드 설정 메서드
+/// - [void] [disposeFocusNode] ([int] index): 포커스 노드 해제 메서드
+/// - [void] [clearFocus] (): 모든 포커스 노드 해제 메서드
+/// - [void] [updateIndex] ([int] index): 포커스 노드 인덱스 업데이트 메서드
+/// - [void] [dispose] (): 포커스 노드 해제 메서드
+/// - [List]<[FocusNode]> get [getFocusNode] : 포커스 노드 반환 메서드
+///
 class TextfieldFocusStateNotifier extends StateNotifier<List<FocusNode>> {
   int index = 0;
   TextfieldFocusStateNotifier(length) : super([]) {
@@ -56,8 +74,16 @@ class TextfieldFocusStateNotifier extends StateNotifier<List<FocusNode>> {
   List<FocusNode> get getFocusNode => state;
 }
 
+/// ### TextfieldFocusAction
+///
+/// - [TextfieldFocusStateNotifier] 포커스 노드 상태를 관리하는 StateNotifier에 대한 확장 메서드
+///
+/// #### Methods
+///
+/// - [void] [nextFocusNodeMethod] (): 다음 포커스 노드 설정 메서드
+///
 extension TextfieldFocusAction on TextfieldFocusStateNotifier {
-  void nextFocusNode() {
+  void nextFocusNodeMethod() {
     if (index < getFocusNode.length - 1) {
       setFocusNode(index + 1);
     }

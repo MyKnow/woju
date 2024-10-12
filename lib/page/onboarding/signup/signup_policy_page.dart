@@ -24,7 +24,7 @@ class SignupPolicyPage extends ConsumerWidget {
               height: 24,
             ),
             FutureBuilder(
-              future: signUpNotifier.getPolicyContent(context, type),
+              future: signUpNotifier.getPolicyContentMethod(context, type),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
@@ -70,7 +70,8 @@ class SignupPolicyPage extends ConsumerWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                signUpNotifier.agreePolicyButton(context, type, "version");
+                signUpNotifier.onClickAgreePolicyButton(
+                    context, type, "version");
               },
               child: CustomText(
                 "onboarding.signUp.${type}Agreement.page.agreeButton",

@@ -20,6 +20,22 @@ final appStateProvider = StateNotifierProvider<AppStateNotifier, AppState>(
   },
 );
 
+/// ### AppStateNotifier
+///
+/// - [AppState] 앱 전반의 상태를 관리하는 StateNotifier
+///
+/// #### Fields
+///
+/// - [AppState] state: 앱 전반의 상태
+/// - [Ref] ref: Ref
+///
+/// #### Methods
+///
+/// - [void] [updateSignInStatus] ([SignInStatus] signInStatus): 로그인 상태 업데이트 메서드
+/// - [void] [updateBootComplete] ([bool] bootComplete): 부팅 완료 상태 업데이트 메서드
+/// - [void] [updateAppError] ([AppError] appError): 에러 상태 업데이트 메서드
+/// - [AppState] get [appState] : 현재 AppState 반환 메서드
+///
 class AppStateNotifier extends StateNotifier<AppState> {
   late final Ref ref;
   AppStateNotifier(this.ref) : super(AppState.initialState) {

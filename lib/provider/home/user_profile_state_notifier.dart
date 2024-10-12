@@ -3,15 +3,14 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
-import 'package:woju/model/onboarding/sign_in_model.dart';
 
+import 'package:woju/model/onboarding/sign_in_model.dart';
 import 'package:woju/model/secure_model.dart';
 import 'package:woju/model/user/user_gender_model.dart';
 import 'package:woju/model/user/user_profile_edit_model.dart';
-import 'package:woju/provider/app_state_notifier.dart';
 
+import 'package:woju/provider/app_state_notifier.dart';
 import 'package:woju/provider/onboarding/user_detail_info_state_notifier.dart';
 
 import 'package:woju/service/api/user_service.dart';
@@ -29,6 +28,29 @@ final userProfileStateNotifierProvider = StateNotifierProvider.autoDispose<
   return UserProfileStateNotifier(ref);
 });
 
+/// ### UserProfileStateNotifier
+///
+/// #### Fields
+///
+/// - [state]: 유저 프로필 수정 모델 상태
+/// - [ref]: Riverpod Ref
+///
+/// #### Methods
+///
+/// - [readFromDB]: DB에서 유저 프로필 정보 읽기
+/// - [updateUserImage]: 유저 프로필 이미지 업데이트
+/// - [updateUserNicknameModel]: 유저 닉네임 모델 업데이트
+/// - [updateUserNicknameController]: 유저 닉네임 컨트롤러 업데이트
+/// - [updateUserGenderModel]: 유저 성별 모델 업데이트
+/// - [updateUserBirthDate]: 유저 생년월일 업데이트
+/// - [updateIsEditing]: 유저 프로필 수정 상태 업데이트
+/// - [backupUserProfile]: 유저 프로필 정보 백업
+/// - [clearBackupUserProfile]: 백업된 유저 프로필 정보 삭제
+/// - [rollbackUserProfile]: 백업된 유저 프로필 정보 복구
+/// - [updateIsLoading]: 로딩 상태 업데이트
+/// - [getGenderList]: 성별 리스트 반환
+/// - [getUserProfileEditState]: 유저 프로필 수정 모델 반환
+///
 class UserProfileStateNotifier extends StateNotifier<UserProfileEditState> {
   late Ref ref;
   UserProfileStateNotifier(this.ref) : super(UserProfileEditState.initial()) {
@@ -117,23 +139,28 @@ class UserProfileStateNotifier extends StateNotifier<UserProfileEditState> {
     updateUserBirthDate(state.userBirthDateBackup!);
   }
 
-  void updateIsLoding(bool isLoding) {
-    state = state.copyWith(isLoding: isLoding);
-  }
-
-  /// ### 성별 리스트 반환
-  ///
-  /// #### Returns
-  ///
-  /// - `List<String>`: 성별 리스트 반환
-  ///
-  List<String> getGenderList() {
-    return Gender.values.map((e) => e.toMessage.tr()).toList();
+  void updateIsLoading(bool isLoading) {
+    state = state.copyWith(isLoading: isLoading);
   }
 
   UserProfileEditState get getUserProfileEditState => state;
 }
 
+/// ### UserProfileEditAction
+///
+/// - UserProfileStateNotifier를 활용하는 액션을 정의하는 Extensionon
+///
+/// #### Methods
+///
+/// - [onChangeUserNickname]: 유저 닉네임 변경 onChage 이벤트
+/// - [onClickUserProfileEditButton]: 프로필 수정 버튼 클릭 이벤트
+/// - [onClickUserProfileEditCancelButton]: 프로필 수정 취소 버튼 클릭 이벤트
+/// - [onClickUserProfileEditCompletButton]: 프로필 수정 완료 버튼 클릭 이벤트
+/// - [onClickUserProfileImage]: 프로필 이미지 클릭 이벤트
+/// - [onChangeUserGender]: 성별 변경 이벤트
+/// - [onChangeUserBirthDate]: 생년월일 변경 이벤트
+/// - [onClickLogoutButton]: 로그아웃 버튼 클릭 이벤트
+///
 extension UserProfileEditAction on UserProfileStateNotifier {
   /// ### 유저 닉네임 변경 onChage 이벤트
   ///
@@ -200,7 +227,7 @@ extension UserProfileEditAction on UserProfileStateNotifier {
     return () async {
       // 버튼을 누른 직후, 변경을 하지 못하도록 isEditing 상태를 false로 변경하고 loading 상태를 true로 변경
       updateIsEditing(false);
-      updateIsLoding(true);
+      updateIsLoading(true);
 
       final userData = ref.read(userDetailInfoStateProvider);
       final userPassword =
@@ -225,7 +252,7 @@ extension UserProfileEditAction on UserProfileStateNotifier {
       final result =
           await UserService.updateUser(updatedUserData, userPassword);
 
-      updateIsLoding(false);
+      updateIsLoading(false);
       if (result) {
         printd("UserProfile update success");
         if (context.mounted) {
@@ -333,7 +360,16 @@ extension UserProfileEditAction on UserProfileStateNotifier {
   }
 }
 
-/// ### 다른 페이지로 이동하는 Action을 정의하는 Extension
+/// ### UserProfileEditNavigationAction
+///
+/// - 다른 페이지로 이동하는 Action을 정의하는 Extension
+///
+/// #### Methods
+///
+/// - [navigateToChangePasswordPage]: 비밀번호 변경 페이지로 이동
+/// - [navigateToChangePhoneNumberPage]: 전화번호 변경 페이지로 이동
+/// - [navigateToChangeIdPage]: 아이디 변경 페이지로 이동
+/// - [navigateToWithdrawalPage]: 회원 탈퇴 페이지로 이동
 ///
 extension UserProfileEditNavigationAction on UserProfileStateNotifier {
   /// ### 비밀번호 변경 페이지로 이동

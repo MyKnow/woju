@@ -16,11 +16,41 @@ import 'package:woju/service/api/http_service.dart';
 import 'package:woju/service/secure_storage_service.dart';
 import 'package:woju/service/toast_message_service.dart';
 
+/// ### signInStateProvider
+///
+/// #### Notes
+///
+/// - autoDispose 속성을 가지므로, 해당 Provider가 더 이상 필요 없을 때 자동으로 해제됨
+/// - [SignInStateNotifier] 로그인 상태를 관리하는 StateNotifier
+///
 final signInStateProvider =
     StateNotifierProvider.autoDispose<SignInStateNotifier, SignInModel>(
   (ref) => SignInStateNotifier(ref),
 );
 
+/// ### SignInStateNotifier
+///
+/// - 로그인 상태를 관리하는 StateNotififer
+///
+/// #### Fields
+///
+/// - [SignInModel] state: 로그인 상태 모델
+/// - [Ref] ref: Ref 객체
+///
+/// #### Methods
+///
+/// - [void] [changeLoginMethod] (): 로그인 방법 변경 메서드
+/// - [void] [updateCountryCode] ([String] dialCode, [String] isoCode): 국가 코드 업데이트 메서드
+/// - [void] [updatePhoneNumber] ([String] phoneNumber): 전화번호 업데이트 메서드
+/// - [void] [updatePassword] ([String] password): 비밀번호 업데이트 메서드
+/// - [void] [togglePasswordVisibility] (): 비밀번호 가리기/보이기 토글 메서드
+/// - [void] [updateUserID] ([String] userID): 아이디 업데이트 메서드
+/// - [void] [clearPhoneNumber] (): 전화번호 초기화 메서드
+/// - [void] [clearUserID] (): 아이디 초기화 메서드
+/// - [void] [updateSignInStatus] ([SignInStatus] signInStatus): 로그인 상태 업데이트 메서드
+/// - [SignInModel] get [getSignInModel]: 로그인 상태 모델 반환 메서드
+/// - [bool] get [canLogin]: 로그인 가능 여부 반환 메서드
+///
 class SignInStateNotifier extends StateNotifier<SignInModel> {
   late final Ref ref;
   SignInStateNotifier(this.ref) : super(SignInModel.initial());
@@ -98,17 +128,33 @@ class SignInStateNotifier extends StateNotifier<SignInModel> {
       state.userPasswordModel.isPasswordAvailable;
 }
 
-extension SignInModelExtension on SignInStateNotifier {
+/// ### SignInAction
+///
+/// - [SignInStateNotifier] 로그인 관련 메서드 확장
+///
+/// #### Methods
+///
+/// - [void] onClickChangeLoginMethodButton(): 로그인 방법 변경 버튼 클릭
+/// - [void] onClickCountryChangeButton([CountryCode]? countryCode): 국가 코드 변경
+/// - [void] onChangePhoneNumberField([String] phoneNumber): 전화번호 입력 OnChange 메서드
+/// - [void] onChangePasswordField([String] password): 비밀번호 입력 OnChange 메서드
+/// - [void] onClickPasswordVisibilityButton(): 비밀번호 가리기/보이기 버튼 클릭
+/// - [void] onChangeUserIDField([String] userID): 아이디 입력 OnChange 메서드
+/// - [VoidCallback]? onClickLoginButton([BuildContext] context): 로그인 버튼 클릭
+/// - [VoidCallback]? onClickWithdrawalButton([BuildContext] context): 탈퇴 버튼 클릭
+///
+extension SignInAction on SignInStateNotifier {
   /// ### 로그인 방법 변경 버튼 클릭
-  /// 로그인 방법을 변경합니다.
+  /// - 로그인 방법을 변경합니다.
   ///
   /// #### Notes
   /// - 로그인 방법을 변경합니다.
   /// - 로그인 방법이 변경되면, [loginWithPhoneNumber] 값이 변경됩니다.
   /// - [loginWithPhoneNumber] 값이 `true`이면, 전화번호로 로그인합니다.
   /// - [loginWithPhoneNumber] 값이 `false`이면, 아이디로 로그인합니다.
+  /// - 방법을 변경할 때 전화번호 또는 아이디 입력 필드를 초기화합니다.
   ///
-  void changeLoginButton() {
+  void onClickChangeLoginMethodButton() {
     if (getSignInModel.loginWithPhoneNumber) {
       clearPhoneNumber();
     } else {
@@ -128,7 +174,7 @@ extension SignInModelExtension on SignInStateNotifier {
   ///
   /// - `CountryCode?`: 국가 코드
   ///
-  void countryCodeOnChange(CountryCode? countryCode) {
+  void onClickCountryChangeButton(CountryCode? countryCode) {
     if (countryCode == null) {
       return;
     } else {
@@ -154,7 +200,7 @@ extension SignInModelExtension on SignInStateNotifier {
   ///
   /// - `void`
   ///
-  void phoneNumberOnChange(String phoneNumber) {
+  void onChangePhoneNumberField(String phoneNumber) {
     updatePhoneNumber(phoneNumber);
     printd("phoneNumber: ${getSignInModel.userPhoneModel.phoneNumber}");
     printd("id: ${getSignInModel.userIDModel.userID}");
@@ -170,7 +216,7 @@ extension SignInModelExtension on SignInStateNotifier {
   ///
   /// - `password`: 비밀번호
   ///
-  void passwordOnChange(String password) {
+  void onChangePasswordField(String password) {
     updatePassword(password);
   }
 
@@ -180,7 +226,7 @@ extension SignInModelExtension on SignInStateNotifier {
   ///
   /// - 사용자가 비밀번호 가리기/보이기 버튼을 클릭하면 호출됩니다.
   ///
-  void togglePasswordVisibilityButton() {
+  void onClickPasswordVisibilityButton() {
     togglePasswordVisibility();
   }
 
@@ -194,7 +240,7 @@ extension SignInModelExtension on SignInStateNotifier {
   ///
   /// - `userID`: 아이디
   ///
-  void userIDOnChange(String userID) {
+  void onChangeUserIDField(String userID) {
     updateUserID(userID);
     printd("phoneNumber: ${getSignInModel.userPhoneModel.phoneNumber}");
     printd("id: ${getSignInModel.userIDModel.userID}");
@@ -217,7 +263,7 @@ extension SignInModelExtension on SignInStateNotifier {
   ///
   /// - `VoidCallback?(BuildContext)` : 로그인 버튼 클릭 시 호출할 콜백 함수
   ///
-  VoidCallback? loginButtonOnClick(BuildContext context) {
+  VoidCallback? onClickLoginButton(BuildContext context) {
     if (!canLogin) {
       // 로그인이 가능한 상태가 아니므로 null 반환
       return null;
@@ -272,7 +318,7 @@ extension SignInModelExtension on SignInStateNotifier {
   ///
   /// - `VoidCallback?(BuildContext)` : 탈퇴 버튼 클릭 시 호출할 콜백 함수
   ///
-  VoidCallback? withdrawalButtonOnClick(BuildContext context) {
+  VoidCallback? onClickWithdrawalButton(BuildContext context) {
     return () async {
       final result = await withdrawal();
 

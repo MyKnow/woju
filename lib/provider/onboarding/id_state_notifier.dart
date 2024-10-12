@@ -13,6 +13,24 @@ final userIDStateProvider =
   return UserIDStateNotifier(ref);
 });
 
+/// ### UserIDStateNotifier
+///
+/// - 유저 아이디 상태를 관리하는 StateNotifier
+///
+/// #### Fields
+/// - [UserIDModel] state: 유저 아이디 상태 모델
+/// - [Ref] ref : Riverpod Ref
+/// - [TextEditingController] userIDController: 유저 아이디 입력 컨트롤러
+/// - [String]? userIDBackup: 유저 아이디 변경 시 백업할 유저 아이디
+///
+/// #### Methods
+/// - [void] updateUserID([String] userID): 유저 아이디 업데이트
+/// - [void] enableEditing(): 유저 아이디 입력 활성화
+/// - [void] disableEditing(): 유저 아이디 입력 비활성화
+/// - [void] clearUserID(): 유저 아이디 초기화
+/// - [void] readFromDB(): 데이터베이스에서 유저 아이디 읽어오기
+/// - [UserIDModel] getUserIDModel(): 유저 아이디 상태 모델 반환
+///
 class UserIDStateNotifier extends StateNotifier<UserIDModel> {
   late Ref ref;
   final TextEditingController userIDController = TextEditingController();
@@ -50,6 +68,17 @@ class UserIDStateNotifier extends StateNotifier<UserIDModel> {
   UserIDModel get getUserIDModel => state;
 }
 
+/// ### UserIDAction
+///
+/// - 유저 아이디 상태를 관리하는 StateNotifier의 액션 확장
+///
+/// #### Methods
+///
+/// - [void] onChangeUserID([String] userID): 유저 아이디 입력 onChange 이벤트
+/// - [void] onClickChangeUserID(): 유저 아이디 변경 버튼 클릭 이벤트
+/// - [void] onClickCancelChangeUserID(): 유저 아이디 변경 취소 버튼 클릭 이벤트
+/// - [VoidCallback?] onClickCompleteChangeUserID([BuildContext] context): 유저 아이디 변경 완료 버튼 클릭 이벤트
+///
 extension UserIDAction on UserIDStateNotifier {
   /// ### UserID 입력 onChange 이벤트
   ///

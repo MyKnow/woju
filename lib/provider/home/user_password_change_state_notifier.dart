@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:woju/model/user/user_password_model.dart';
+import 'package:woju/model/user/user_password_change_model.dart';
 
 import 'package:woju/provider/onboarding/user_detail_info_state_notifier.dart';
 import 'package:woju/service/api/http_service.dart';
@@ -10,46 +10,30 @@ import 'package:woju/service/api/http_service.dart';
 import 'package:woju/service/api/user_service.dart';
 import 'package:woju/service/toast_message_service.dart';
 
-class UserPasswordChangeModel {
-  final UserPasswordModel currentPassword;
-  final UserPasswordModel newPassword;
-  final bool isLoading;
-
-  UserPasswordChangeModel({
-    required this.currentPassword,
-    required this.newPassword,
-    required this.isLoading,
-  });
-
-  UserPasswordChangeModel copyWith({
-    UserPasswordModel? currentPassword,
-    UserPasswordModel? newPassword,
-    bool? isLoading,
-  }) {
-    return UserPasswordChangeModel(
-      currentPassword: currentPassword ?? this.currentPassword,
-      newPassword: newPassword ?? this.newPassword,
-      isLoading: isLoading ?? this.isLoading,
-    );
-  }
-
-  static UserPasswordChangeModel initial() {
-    return UserPasswordChangeModel(
-      currentPassword: UserPasswordModel.initial(),
-      newPassword: UserPasswordModel.initial(),
-      isLoading: false,
-    );
-  }
-
-  String get currentPasswordFieldKey => "user_profile_password_current";
-  String get newPasswordFieldKey => "user_profile_password_new";
-}
-
 final userPasswordChangeStateProvider = StateNotifierProvider.autoDispose<
     UserPasswordChangeStateNotifier, UserPasswordChangeModel>(
   (ref) => UserPasswordChangeStateNotifier(ref),
 );
 
+/// ### UserPasswordChangeStateNotifier
+///
+/// - 비밀번호 변경 페이지에서 사용하는 StateNotifier
+///
+/// #### Fields
+///
+/// - [state]: 비밀번호 변경 모델 상태
+/// - [ref]: Riverpod Ref
+///
+/// #### Methods
+///
+/// - [updateCurrentPassword]: 현재 비밀번호 업데이트
+/// - [updateNewPassword]: 새로운 비밀번호 업데이트
+/// - [updateVisibleCurrentPassword]: 현재 비밀번호 보임 여부 토글
+/// - [updateVisibleNewPassword]: 새로운 비밀번호 보임 여부 토글
+/// - [updateLoading]: 로딩 상태 업데이트
+/// - [reset]: 초기화
+/// - [getUserPasswordChangeModel]: 비밀번호 변경 모델 반환
+///
 class UserPasswordChangeStateNotifier
     extends StateNotifier<UserPasswordChangeModel> {
   late Ref ref;
@@ -92,10 +76,16 @@ class UserPasswordChangeStateNotifier
     state = UserPasswordChangeModel.initial();
   }
 
-  UserPasswordChangeModel get getUserPasswordChangeModel => super.state;
+  UserPasswordChangeModel get getUserPasswordChangeModel => state;
 }
 
 /// ### Password Page에서의 Action을 정의하는 Extension
+///
+/// #### Methods
+///
+/// - [onChangeUpdatePassword]: 비밀번호 입력 시 observable을 업데이트하는 함수
+/// - [onPressedUpdateVisiblePassword]: 비밀번호 보임 여부 토글 함수
+/// - [onPressedChangePasswordAPI]: 비밀번호 변경 API 호출 버튼
 ///
 extension UserPasswordChangeAction on UserPasswordChangeStateNotifier {
   /// ### 비밀번호 입력 시 observable을 업데이트하는 함수

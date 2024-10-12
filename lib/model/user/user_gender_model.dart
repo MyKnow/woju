@@ -42,4 +42,15 @@ extension GenderExtension on Gender {
         return Gender.private;
     }
   }
+
+  /// ### 성별 리스트 반환
+  ///
+  /// - Gender Enum을 기준으로 모든 객체를 String으로 변환하여 리스트로 반환
+  ///
+  /// #### Returns
+  /// - `List<String>`: 성별 리스트 반환
+  ///
+  static List<String> getGenderList() {
+    return Gender.values.map((e) => e.toMessage).toList();
+  }
 }

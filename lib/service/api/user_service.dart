@@ -8,11 +8,12 @@ import 'package:woju/model/user/user_auth_model.dart';
 import 'package:woju/model/user/user_detail_info_model.dart';
 import 'package:woju/model/user/user_gender_model.dart';
 import 'package:woju/model/user/user_password_model.dart';
+
 import 'package:woju/provider/app_state_notifier.dart';
 import 'package:woju/provider/onboarding/user_detail_info_state_notifier.dart';
+
 import 'package:woju/service/api/http_service.dart';
 import 'package:woju/service/debug_service.dart';
-import 'package:woju/service/device_info_service.dart';
 import 'package:woju/service/secure_storage_service.dart';
 
 class UserService {
@@ -46,14 +47,15 @@ class UserService {
     }
     printd(
         "phoneNumber: $phoneNumber, password: $password, dialCode: $dialCode, isoCode: $isoCode, userID: $userID");
-    final json = {
-      "userPhoneNumber": phoneNumber,
-      "dialCode": dialCode,
-      "isoCode": isoCode,
-      "userID": userID,
-      "userPassword": password,
-      "userDeviceID": await DeviceInfoService.getDeviceId(),
-    };
+
+    final json = await SignInModel.initial().toJson(
+      phoneNumber,
+      password,
+      dialCode,
+      isoCode,
+      userID,
+      password,
+    );
 
     printd("json : $json");
 

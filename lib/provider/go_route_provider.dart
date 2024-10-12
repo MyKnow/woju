@@ -27,6 +27,25 @@ import 'package:woju/provider/app_state_notifier.dart';
 import 'package:woju/service/debug_service.dart';
 import 'package:woju/theme/widget/custom_scaffold.dart';
 
+/// ### RouterObserver
+///
+/// - [NavigatorObserver] 라우터 관찰자
+///
+/// #### Fields
+///
+/// - [Provider]<[GoRouter]> goRouterProvider: GoRouter 프로바이더, 경로 관리 객체
+///
+/// #### Methods
+///
+/// - [void] [didPush] ([Route]<[dynamic]> route, [Route]<[dynamic]>? previousRoute): 라우트 푸시 메서드
+/// - [void] [didPop] ([Route]<[dynamic]> route, [Route]<[dynamic]>? previousRoute): 라우트 팝 메서드
+/// - [void] [didRemove] ([Route]<[dynamic]> route, [Route]<[dynamic]>? previousRoute): 라우트 제거 메서드
+/// - [void] [didReplace] ([Route]<[dynamic]> newRoute, [Route]<[dynamic]>? oldRoute): 라우트 교체 메서드
+///
+/// - [GoRoute] : [_buildNoTransitionRoute] ({required [String] path, required [Widget] Function([BuildContext], [GoRouterState]) builder, required [String] text}): 라우트 생성 메서드
+/// - [GoRoute] : [_buildNestedRoute] ({required [String] path, required [Widget] Function([BuildContext], [GoRouterState]) builder, required [String] text, required [List]<[GoRoute]> routes}): 라우트 생성 메서드
+/// - [GoRoute] : [_buildCustomTransitionRoute] ({required [String] path, required [Widget] Function([BuildContext], [GoRouterState]) builder, required [String] text}): 라우트 생성 메서드
+///
 class RouterObserver extends NavigatorObserver {
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {

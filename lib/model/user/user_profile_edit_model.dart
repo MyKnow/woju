@@ -19,7 +19,7 @@ class UserProfileEditState {
   final DateTime? userBirthDateBackup;
 
   final bool isEditing;
-  final bool isLoding;
+  final bool isLoading;
 
   UserProfileEditState({
     required this.userImage,
@@ -32,7 +32,7 @@ class UserProfileEditState {
     required this.userBirthDate,
     this.userBirthDateBackup,
     required this.isEditing,
-    required this.isLoding,
+    required this.isLoading,
   });
 
   UserProfileEditState copyWith({
@@ -48,7 +48,7 @@ class UserProfileEditState {
     DateTime? userBirthDateBackup,
     bool? isEditing,
     bool? isBackupClear,
-    bool? isLoding,
+    bool? isLoading,
   }) {
     if (isBackupClear == true) {
       return UserProfileEditState(
@@ -62,7 +62,7 @@ class UserProfileEditState {
         userGenderBackup: null,
         userBirthDateBackup: null,
         isEditing: this.isEditing,
-        isLoding: this.isLoding,
+        isLoading: this.isLoading,
       );
     } else {
       return UserProfileEditState(
@@ -77,7 +77,7 @@ class UserProfileEditState {
         userBirthDate: userBirthDate ?? this.userBirthDate,
         userBirthDateBackup: userBirthDateBackup ?? this.userBirthDateBackup,
         isEditing: isEditing ?? this.isEditing,
-        isLoding: isLoding ?? this.isLoding,
+        isLoading: isLoading ?? this.isLoading,
       );
     }
   }
@@ -90,7 +90,7 @@ class UserProfileEditState {
       userGender: Gender.private,
       userBirthDate: DateTime.now(),
       isEditing: false,
-      isLoding: false,
+      isLoading: false,
     );
   }
 }

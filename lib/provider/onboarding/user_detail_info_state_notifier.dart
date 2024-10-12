@@ -15,6 +15,22 @@ final userDetailInfoStateProvider =
   },
 );
 
+/// ### UserDetailInfoStateNotifier
+///
+/// - [UserDetailInfoModel] 유저 세부 정보 상태를 관리하는 StateNotifier
+///
+/// #### Fields
+///
+/// - [UserDetailInfoModel]? state: 유저 세부 정보 상태
+/// - [Box]<[UserDetailInfoModel]> _box: 유저 세부 정보 상태를 저장하는 Hive Box
+/// - [String] _boxName: 유저 세부 정보 상태를 저장하는 Hive Box 이름
+///
+/// #### Methods
+///
+/// - [Future]<void> [update] ([UserDetailInfoModel] newState): 유저 세부 정보 상태를 업데이트하는 메서드
+/// - [Future]<void> [delete] (): 유저 세부 정보 상태를 삭제하는 메서드
+/// - [Future]<[UserDetailInfoModel]?> [read] (): 유저 세부 정보 상태를 불러오는 메서드
+///
 class UserDetailInfoStateNotifier extends StateNotifier<UserDetailInfoModel?> {
   final Box<UserDetailInfoModel> _box;
   final String _boxName = HiveBox.userDetailInfoBox.name;

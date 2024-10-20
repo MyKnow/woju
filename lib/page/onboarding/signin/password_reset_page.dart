@@ -223,31 +223,40 @@ class PasswordResetPageState extends ConsumerState<PasswordResetPage> {
           ],
         ),
       ),
-      floatingActionButtonCallback: (auth.userUid == null ||
-              !password.isPasswordAvailable)
-          ? null
-          : () async {
-              if (auth.userUid == null || !password.isPasswordAvailable) {
-                return;
-              }
+      floatingActionButtonCallback:
+          (auth.userUid == null || !password.isPasswordAvailable)
+              ? null
+              : () async {
+                  if (auth.userUid == null || !password.isPasswordAvailable) {
+                    return;
+                  }
 
-              final userUID = auth.userUid as String;
-              final userPassword = password.userPassword as String;
+                  final userUID = auth.userUid as String;
+                  final userPhoneNumber = phoneNumber.phoneNumber;
+                  final dialCode = phoneNumber.dialCode;
+                  final isoCode = phoneNumber.isoCode;
+                  final userPassword = password.userPassword as String;
 
-              final result =
-                  await UserService.resetPassword(userUID, userPassword, ref);
+                  final result = await UserService.resetPassword(
+                    userUID,
+                    userPhoneNumber,
+                    dialCode,
+                    isoCode,
+                    userPassword,
+                    ref,
+                  );
 
-              if (context.mounted) {
-                if (result) {
-                  ToastMessageService.nativeSnackbar(
-                      "onboarding.signIn.resetPassword.success", context);
-                  context.go('/onboarding/signin');
-                } else {
-                  ToastMessageService.nativeSnackbar(
-                      "onboarding.signIn.resetPassword.error", context);
-                }
-              }
-            },
+                  if (context.mounted) {
+                    if (result) {
+                      ToastMessageService.nativeSnackbar(
+                          "onboarding.signIn.resetPassword.success", context);
+                      context.go('/onboarding/signin');
+                    } else {
+                      ToastMessageService.nativeSnackbar(
+                          "onboarding.signIn.resetPassword.error", context);
+                    }
+                  }
+                },
       floatingActionButtonText: "onboarding.signIn.resetPassword.done",
     );
   }

@@ -180,15 +180,25 @@ class UserService {
   ///
   static Future<bool> resetPassword(
     String? userUID,
+    String? userPhoneNumber,
+    String? dialCode,
+    String? isoCode,
     String? newPassword,
     WidgetRef ref,
   ) async {
-    if (userUID == null || newPassword == null) {
+    if (userUID == null ||
+        newPassword == null ||
+        userPhoneNumber == null ||
+        dialCode == null ||
+        isoCode == null) {
       return false;
     }
 
     final response = await HttpService.post('/user/reset-user-password', {
       "userUID": userUID,
+      "userPhoneNumber": userPhoneNumber,
+      "dialCode": dialCode,
+      "isoCode": isoCode,
       "newPassword": newPassword,
     });
 

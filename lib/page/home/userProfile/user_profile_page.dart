@@ -174,7 +174,9 @@ class UserProfilePage extends ConsumerWidget {
               initialIndex: userProfileEditState.userGender.index,
               labels: GenderExtension.getGenderList(),
               onToggle: (index) {
-                userProfileStateNotifier.onChangeUserGender(index);
+                if (userProfileEditState.isEditing) {
+                  userProfileStateNotifier.onChangeUserGender(index);
+                }
               },
               changeOnTap: userProfileEditState.isEditing,
             ),

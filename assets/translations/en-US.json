@@ -155,6 +155,15 @@
       }
     }
   },
+  "matching" : {
+    "title" : "Matching"
+  },
+  "chat" : {
+    "title" : "Chat"
+  },
+  "addItem" : {
+    "title" : "Add Item"
+  },
   "accessibility": {
     "hideKeyboardButton": "Hide keyboard button",
     "hidePasswordFieldButton": "Hide password field button",

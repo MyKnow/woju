@@ -12,6 +12,7 @@ class CustomScaffold extends ConsumerWidget {
   final VoidCallback? floatingActionButtonCallback;
   final String? floatingActionButtonText;
   final Widget? floatingActionButtonChild;
+  final Widget? bottomNavigationBar;
 
   const CustomScaffold({
     super.key,
@@ -23,6 +24,7 @@ class CustomScaffold extends ConsumerWidget {
     this.floatingActionButtonCallback,
     this.floatingActionButtonChild,
     this.floatingActionButtonText,
+    this.bottomNavigationBar,
   });
 
   @override
@@ -51,6 +53,7 @@ class CustomScaffold extends ConsumerWidget {
         floatingActionButtonText,
         child: floatingActionButtonChild,
       ),
+      bottomNavigationBar: bottomNavigationBar,
     );
   }
 }

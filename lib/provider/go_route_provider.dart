@@ -8,7 +8,7 @@ import 'package:woju/model/onboarding/sign_in_model.dart';
 
 import 'package:woju/page/error/router_error_page.dart';
 import 'package:woju/page/error/server_error_page.dart';
-import 'package:woju/page/home/home_page.dart';
+import 'package:woju/page/home/main/main_page.dart';
 import 'package:woju/page/home/setting/setting_page.dart';
 import 'package:woju/page/home/userProfile/user_id_change_page.dart';
 import 'package:woju/page/home/userProfile/user_phone_number_change_page.dart';
@@ -115,7 +115,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       _buildNestedRoute(
         path: '/',
         builder: (context, state) {
-          return const HomePage();
+          return const MainPage();
         },
         text: '홈',
         routes: [

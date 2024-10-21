@@ -155,6 +155,15 @@
             }
         }
     },
+    "matching" : {
+        "title" : "매칭"
+    },
+    "chat" : {
+        "title" : "채팅"
+    },
+    "addItem" : {
+        "title" : "물품 추가"
+    },
     "accessibility": {
         "hideKeyboardButton": "키보드 숨기기 버튼",
         "hidePasswordFieldButton": "비밀번호 숨기기 버튼",

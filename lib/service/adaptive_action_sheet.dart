@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:woju/service/debug_service.dart';
 
 /// # AdaptiveActionSheet
 ///
@@ -43,6 +44,7 @@ class AdaptiveActionSheet {
           cancelButton: CupertinoActionSheetAction(
             child: const Text("common.cancel").tr(), // TODO: 추후 json에 추가
             onPressed: () {
+              printd("Navigator pop by cancel button");
               Navigator.pop(context);
             },
           ),

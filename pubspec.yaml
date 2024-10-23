@@ -34,6 +34,7 @@ dependencies:
   http: ^1.2.2
   image_picker: ^1.1.2
   modal_bottom_sheet: ^3.0.0
+  pro_image_editor: ^2.7.11
   scroll_date_picker: ^3.8.0
   stylish_bottom_bar: ^1.1.0
   toggle_switch: ^2.3.0

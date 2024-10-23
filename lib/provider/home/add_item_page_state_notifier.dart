@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:woju/model/item/add_item_state_model.dart';
 import 'package:woju/model/item/category_model.dart';
 import 'package:woju/service/debug_service.dart';
+import 'package:woju/service/image_editor_service.dart';
+import 'package:woju/service/image_picker_service.dart';
 import 'package:woju/service/toast_message_service.dart';
 
 final addItemPageStateProvider =
@@ -103,42 +105,95 @@ extension AddItemPageAction on AddItemPageStateNotifier {
     Function onPressed,
   ) {
     return () async {
-      final result = await onPressed();
-
-      printd("result: $result");
+      // 버튼 클릭 시 실행할 함수 호출
+      // onPressed가 async 함수라면 비동기 함수로 호출
+      if (onPressed is Future Function()) {
+        await onPressed();
+      } else {
+        onPressed();
+      }
 
       if (context.mounted) {
+        printd("Navigator pop by onClickAdaptiveActionSheetButton");
         Navigator.pop(context);
       }
     };
   }
 
   /// ### 이미지 추가 버튼 클릭 메서드
-  void onClickImageAddButton() {
-    printd('이미지 추가 버튼 클릭');
-    if (!getState.itemModel.isMaxCountOfItemImageList()) {
-      updateItemImageList(getState.itemModel.itemImageList + [Uint8List(0)]);
-    } else {
-      printd("최대 이미지 개수를 초과했습니다.");
-      ToastMessageService.show(
-        "addItem.imageAddButton.toast.maxCount",
-      );
-    }
+  VoidCallback onClickImageAddButton(BuildContext context,
+      {bool isFromCamera = false}) {
+    return () async {
+      printd('이미지 추가 버튼 클릭');
+      if (!getState.itemModel.isMaxCountOfItemImageList()) {
+        Uint8List? originalResult;
+        if (isFromCamera) {
+          originalResult =
+              await ImagePickerService().pickImageForCameraWithUint8List();
+        } else {
+          originalResult =
+              await ImagePickerService().pickImageForGalleryWithUint8List();
+        }
+
+        if (originalResult != null && context.mounted) {
+          final editResult = await ImageEditorService.openImageEditor(
+            originalResult,
+            context,
+          );
+          if (editResult != null) {
+            updateItemImageList(
+              getState.itemModel.itemImageList + [editResult],
+            );
+          }
+        }
+      } else {
+        printd("최대 이미지 개수를 초과했습니다.");
+        ToastMessageService.show(
+          "addItem.imageAddButton.toast.maxCount",
+        );
+      }
+    };
   }
 
   /// ### 이미지 삭제 버튼 클릭 메서드
-  void onClickImageDeleteButton(int index) {
-    printd('이미지 삭제 버튼 클릭 : $index');
-    if (getState.itemModel.countOfItemImage() > 1) {
-      List<Uint8List> newItemImageList =
-          List.from(getState.itemModel.itemImageList);
-      newItemImageList.removeAt(index);
-      updateItemImageList(newItemImageList);
-    }
+  VoidCallback onClickImageDeleteButton(int index) {
+    return () {
+      printd('이미지 삭제 버튼 클릭 : $index');
+      if (getState.itemModel.countOfItemImage() > 1) {
+        List<Uint8List> newItemImageList =
+            List.from(getState.itemModel.itemImageList);
+        newItemImageList.removeAt(index);
+        updateItemImageList(newItemImageList);
+      }
+    };
   }
 
   /// ### 이미지 수정 버튼 클릭 메서드
-  void onClickImageEditButton(int index) {
-    printd('이미지 수정 버튼 클릭 : $index');
+  ///
+  /// #### Parameters
+  /// - [int] - [index] : 수정할 이미지의 인덱스
+  /// - [BuildContext] - [context] : 현재 컨텍스트
+  ///
+  VoidCallback onClickImageEditButton(int index, BuildContext context) {
+    return () async {
+      printd('이미지 수정 버튼 클릭 : $index');
+
+      final original = getState.itemModel.itemImageList[index];
+      printd("itemImageList: ${getState.itemModel.itemImageList}");
+
+      final editResult =
+          await ImageEditorService.openImageEditor(original, context);
+
+      printd("editResult: $editResult");
+
+      if (editResult != null) {
+        /// 인덱스에 해당하는 이미지를 수정한 이미지로 리스트를 업데이트
+        final editList = getState.itemModel.itemImageList;
+        editList[index] = editResult;
+        updateItemImageList(editList);
+      } else {
+        printd('이미지 수정 취소');
+      }
+    };
   }
 }

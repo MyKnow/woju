@@ -141,19 +141,21 @@ class AddItemPage extends ConsumerWidget {
           title: "addItem.imageAddButton.actionSheet.title",
           message: "addItem.imageAddButton.actionSheet.message",
           actions: {
-            const Text("addItem.imageAddButton.actionSheet.camera").tr():
+            const Text("addItem.imageAddButton.actionSheet.fromCamera").tr():
                 addItemStateNotifier.onClickAdaptiveActionSheetButton(
               context,
-              () {
-                addItemStateNotifier.onClickImageAddButton();
-              },
+              addItemStateNotifier.onClickImageAddButton(
+                context,
+                isFromCamera: true,
+              ),
             ),
-            const Text("addItem.imageAddButton.actionSheet.gallery").tr():
+            const Text("addItem.imageAddButton.actionSheet.fromGallery").tr():
                 addItemStateNotifier.onClickAdaptiveActionSheetButton(
               context,
-              () {
-                addItemStateNotifier.onClickImageAddButton();
-              },
+              addItemStateNotifier.onClickImageAddButton(
+                context,
+                isFromCamera: false,
+              ),
             ),
           },
         );
@@ -184,6 +186,27 @@ class AddItemPage extends ConsumerWidget {
       size,
       Stack(
         children: [
+          SizedBox(
+            height: size,
+            width: size,
+            child: Image(
+              image: MemoryImage(
+                addItemStateNotifier.getState.itemModel.itemImageList[index],
+              ),
+              fit: BoxFit.fill,
+              frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(24),
+                  child: child,
+                );
+              },
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  color: theme.disabledColor,
+                );
+              },
+            ),
+          ),
           Positioned(
             right: 4,
             top: 4,
@@ -191,6 +214,11 @@ class AddItemPage extends ConsumerWidget {
               CupertinoIcons.pencil_circle_fill,
               color: theme.disabledColor,
               size: 32,
+              semanticLabel: "addItem.imageItem.actionSheet.edit".tr(
+                namedArgs: {
+                  "index": index.toString(),
+                },
+              ),
             ),
           ),
         ],
@@ -204,9 +232,7 @@ class AddItemPage extends ConsumerWidget {
             const Text("addItem.imageItem.actionSheet.edit").tr():
                 addItemStateNotifier.onClickAdaptiveActionSheetButton(
               context,
-              () {
-                addItemStateNotifier.onClickImageEditButton(index);
-              },
+              addItemStateNotifier.onClickImageEditButton(index, context),
             ),
             Text(
               "addItem.imageItem.actionSheet.delete",
@@ -215,9 +241,7 @@ class AddItemPage extends ConsumerWidget {
               ),
             ).tr(): addItemStateNotifier.onClickAdaptiveActionSheetButton(
               context,
-              () {
-                addItemStateNotifier.onClickImageDeleteButton(index);
-              },
+              addItemStateNotifier.onClickImageDeleteButton(index),
             ),
           },
         );

@@ -2,10 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 
 import 'package:woju/page/home/main/chat_page.dart';
-
 import 'package:woju/page/home/main/home_page.dart';
 import 'package:woju/page/home/main/matching_page.dart';
 
@@ -107,7 +107,9 @@ class MainPage extends ConsumerWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          context.push("/addItem");
+        },
         backgroundColor: theme.cardTheme.color,
         child: Icon(
           Icons.add,

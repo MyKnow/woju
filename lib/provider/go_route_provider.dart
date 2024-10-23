@@ -8,6 +8,7 @@ import 'package:woju/model/onboarding/sign_in_model.dart';
 
 import 'package:woju/page/error/router_error_page.dart';
 import 'package:woju/page/error/server_error_page.dart';
+import 'package:woju/page/home/main/add_item_page.dart';
 import 'package:woju/page/home/main/main_page.dart';
 import 'package:woju/page/home/setting/setting_page.dart';
 import 'package:woju/page/home/userProfile/user_id_change_page.dart';
@@ -151,6 +152,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => const SettingPage(),
             text: "설정",
             routes: [],
+          ),
+          _buildCustomTransitionRoute(
+            path: 'addItem',
+            builder: (context, state) => const AddItemPage(),
+            text: "아이템 추가",
           ),
         ],
       ),

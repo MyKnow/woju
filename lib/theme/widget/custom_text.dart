@@ -62,6 +62,8 @@ class CustomText extends ConsumerWidget {
             fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
           ),
       textAlign: textAlign,
+      overflow: TextOverflow.ellipsis,
+      maxLines: 2,
     );
   }
 }

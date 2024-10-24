@@ -92,7 +92,7 @@ class AddItemPage extends ConsumerWidget {
         context,
         ref,
         () {},
-        "addItem.button",
+        "addItem.doneButton",
       ),
     );
   }
@@ -110,6 +110,7 @@ class AddItemPage extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
   ) {
+    final addItemState = ref.watch(addItemPageStateProvider);
     final addItemStateNotifier = ref.read(addItemPageStateProvider.notifier);
     final size = addItemStateNotifier.getState.itemModel.squareHeightOfImage();
 
@@ -127,10 +128,11 @@ class AddItemPage extends ConsumerWidget {
               color: theme.disabledColor,
             ),
             CustomText(
-              "addItem.imageAddButton",
+              "${addItemState.itemModel.countOfItemImage() - 1}/${addItemState.itemModel.maxCountOfItemImage()}",
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.disabledColor,
               ),
+              isLocalize: false,
             )
           ],
         ),
@@ -214,9 +216,10 @@ class AddItemPage extends ConsumerWidget {
               CupertinoIcons.pencil_circle_fill,
               color: theme.disabledColor,
               size: 32,
-              semanticLabel: "addItem.imageItem.actionSheet.edit".tr(
+              semanticLabel:
+                  "addItem.imageItem.actionSheet.editMenuOpenButton".tr(
                 namedArgs: {
-                  "index": index.toString(),
+                  "index": (index + 1).toString(),
                 },
               ),
             ),

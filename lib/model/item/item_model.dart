@@ -137,7 +137,7 @@ class ItemModel {
   /// - [bool] - 최대 개수 초과 여부
   ///
   bool isMaxCountOfItemImageList() {
-    return countOfItemImage() >= maxCountOfItemImage();
+    return countOfItemImage() > maxCountOfItemImage();
   }
 
   /// ### 상품 이름 유효성 검사
@@ -217,7 +217,7 @@ class ItemModel {
 
   /// ### 상품 이미지 리스트 최대 개수 반환
   int maxCountOfItemImage() {
-    return 6;
+    return 5;
   }
 
   /// ### 상품 이미지 정사각형 높이 반환

@@ -162,7 +162,25 @@
         "title" : "채팅"
     },
     "addItem" : {
-        "title" : "물품 추가"
+        "title" : "물품 추가",
+        "doneButton" : "등록하기",
+        "imageAddButton" : {
+            "actionSheet" : {
+                "title" : "물품 이미지 추가",
+                "message" : "이미지를 추가하는 방법을 선택해주세요",
+                "fromCamera" : "카메라로 촬영하기",
+                "fromGallery" : "갤러리에서 선택하기"
+            }
+        },
+        "imageItem" : {
+            "actionSheet" : {
+                "title" : "이미지 편집",
+                "message" : "이미지를 편집하는 방법을 선택해주세요",
+                "edit" : "이미지 편집하기",
+                "editMenuOpenButton" : "{index}번 이미지 수정 메뉴창 열기",
+                "delete" : "이미지 삭제하기"
+            }
+        }
     },
     "accessibility": {
         "hideKeyboardButton": "키보드 숨기기 버튼",
@@ -316,5 +334,75 @@
         "defaultLabel" : "내용을 입력해주세요",
         "defaultHint" : "내용을 입력해주세요",
         "defaultError" : "입력한 내용이 올바르지 않습니다"
+    },
+    "common" : {
+        "cancel" : "취소",
+        "done" : "완료",
+        "more" : "더보기"
+    },
+    "imageEditor" : {
+        "paintEditor" : {
+            "bottomNavigationBarText" : "그리기",
+            "freestyle" : "펜",
+            "arrow" : "화살표",
+            "line" : "직선",
+            "rectangle" : "사각형",
+            "circle" : "원",
+            "dashLine" : "점선",
+            "lineWidth" : "선 두께",
+            "toggleFill" : "색 채우기",
+            "smallScreenMoreTooltip" : "더보기",
+            "back" : "그리기 취소",
+            "done" : "그리기 완료"
+        },
+        "textEditor" : {
+            "inputHintText" : "텍스트 입력",
+            "bottomNavigationBarText" : "텍스트 추가",
+            "textAlign" : "텍스트 정렬",
+            "fontScale" : "텍스트 크기",
+            "backgroundMode" : "배경 색상",
+            "smallScreenMoreTooltip" : "더보기",
+            "back" : "텍스트 입력 취소",
+            "done" : "텍스트 입력 완료"
+        },
+        "cropRotateEditor" : {
+            "bottomNavigationBarText" : "크롭/회전",
+            "rotate" : "회전",
+            "ratio" : "이미지 비율",
+            "back" : "크롭/회전 취소",
+            "done" : "크롭/회전 완료",
+            "cancel" : "취소",
+            "prepareImageDialogMsg" : "이미지를 준비중입니다",
+            "applyChangesDialogMsg" : "이미지를 적용중입니다",
+            "smallScreenMoreTooltip" : "더보기",
+            "reset" : "초기화"
+        },
+        "filterEditor" : {
+            "applyFilterDialogMsg" : "필터를 적용중입니다",
+            "bottomNavigationBarText" : "필터 적용",
+            "back" : "필터 적용 취소",
+            "done" : "필터 적용 완료",
+            "filters" : {
+                "none" : "필터 미적용"
+            }
+        },
+        "blurEditor" : {
+            "applyBlurDialogMsg" : "블러를 적용중입니다",
+            "bottomNavigationBarText" : "블러 적용",
+            "back" : "블러 적용 취소",
+            "done" : "블러 적용 완료"
+        },
+        "emojiEditor" : {
+            "bottomNavigationBarText" : "이모지 추가",
+            "search" : "검색",
+            "noRecents" : "최근 사용한 이모지가 없습니다"
+        },
+        "cancel" : "편집 취소",
+        "done" : "편집 완료",
+        "undo" : "실행 취소",
+        "redo" : "재실행",
+        "back" : "뒤로가기",
+        "remove" : "이미지 삭제",
+        "doneLoadingMsg" : "이미지 편집이 완료되었습니다"
     }
 }

@@ -136,7 +136,7 @@ extension AddItemPageAction on AddItemPageStateNotifier {
         }
 
         if (originalResult != null && context.mounted) {
-          final editResult = await ImageEditorService.openImageEditor(
+          final editResult = await ImageEditorService.openCropEditor(
             originalResult,
             context,
           );

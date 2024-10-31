@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:woju/model/item/category_model.dart';
 
 /// # ItemModel
@@ -8,18 +10,18 @@ import 'package:woju/model/item/category_model.dart';
 ///
 /// ### Fields
 ///
-/// - [List]<[CategoryModel]> - [itemCategoryList] : 상품 카테고리 리스트
+/// - [CategoryModel]? - [itemCategory] : 상품 카테고리 리스트
 /// - [List]<[Uint8List]> - [itemImageList] : 상품 이미지 리스트
-/// - [String?] - [itemName] : 상품 이름
-/// - [String?] - [itemDescription] : 상품 설명
-/// - [int?] - [itemPrice] : 상품 가격
-/// - [int?] - [feelingOfUse] : 사용감 정보
+/// - [String]? - [itemName] : 상품 이름
+/// - [String]? - [itemDescription] : 상품 설명
+/// - [int]? - [itemPrice] : 상품 가격
+/// - [double]? - [feelingOfUse] : 사용감 정보
 ///
 /// ### Methods
 ///
 /// - [ItemModel] -[initial] : 초기 상태 반환
 /// - [int] - [countOfItemImage] : 상품 이미지 개수 반환
-/// - [bool] - [isValidItemCategoryList] : 상품 카테고리 리스트 유효성 검사
+/// - [bool] - [isValidItemCategory] : 상품 카테고리 리스트 유효성 검사
 /// - [bool] - [isValidItemImageList] : 상품 이미지 리스트 유효성 검사
 /// - [bool] - [isValidItemName] : 상품 이름 유효성 검사
 /// - [bool] - [isValidItemDescription] : 상품 설명 유효성 검사
@@ -31,10 +33,14 @@ import 'package:woju/model/item/category_model.dart';
 /// - [double] - [squareHeightOfImage] : 상품 이미지 정사각형 높이 반환
 /// - [int] - [crossAxisCountOfImageList] : 상품 이미지 가로 개수 반환
 /// - [double] - [containerHeightOfImageList] : 상품 이미지 Container 높이 반환
+/// - [String] - [printItemCategoryToString] : 상품 카테고리 리스트 문자열 반환
+/// - [String] - [printItemFeelingOfUseToString] : 사용감 정보 문자열 반환
+/// - [IconData] - [feelingOfUseIcon] : 사용감 아이콘 반환
+/// - [void] - [swapItemImageListIndex] : 상품 이미지 리스트 인덱스 변경
 ///
 class ItemModel {
   /// ### 상품 카테고리 리스트
-  final List<CategoryModel> itemCategoryList;
+  final CategoryModel? itemCategory;
 
   /// ### 상품 이미지 리스트
   final List<Uint8List> itemImageList;
@@ -59,36 +65,40 @@ class ItemModel {
   /// - 3 : 사용감 많음
   /// - 4 : 파손 흔적 또는 고장 있음
   ///
-  final int? feelingOfUse;
+  final double feelingOfUse;
 
   ItemModel({
-    required this.itemCategoryList,
+    required this.itemCategory,
     required this.itemImageList,
     this.itemName,
     this.itemDescription,
     this.itemPrice,
-    this.feelingOfUse,
+    required this.feelingOfUse,
   });
 
   /// ### 초기 상태 반환
   static ItemModel initial() {
     return ItemModel(
-      itemCategoryList: [],
+      itemCategory: null,
       itemImageList: [],
+      feelingOfUse: 0,
     );
   }
 
   /// ### 모델 업데이트 메서드
   ItemModel copyWith({
-    List<CategoryModel>? itemCategoryList,
+    CategoryModel? itemCategory,
+    bool? setToNullItemCategory,
     List<Uint8List>? itemImageList,
     String? itemName,
     String? itemDescription,
     int? itemPrice,
-    int? feelingOfUse,
+    double? feelingOfUse,
   }) {
     return ItemModel(
-      itemCategoryList: itemCategoryList ?? this.itemCategoryList,
+      itemCategory: (setToNullItemCategory == true)
+          ? null
+          : (itemCategory ?? this.itemCategory),
       itemImageList: itemImageList ?? this.itemImageList,
       itemName: itemName ?? this.itemName,
       itemDescription: itemDescription ?? this.itemDescription,
@@ -110,13 +120,13 @@ class ItemModel {
 
   /// ### 상품 카테고리 리스트 유효성 검사
   ///
-  /// - 상품 카테고리 리스트가 비어있는 경우 false 반환
+  /// - 상품 카테고리가 null인 경우 false 반환
   ///
   /// #### Returns
   /// - [bool] - 유효성 검사 결과
   ///
-  bool isValidItemCategoryList() {
-    return itemCategoryList.isNotEmpty;
+  bool isValidItemCategory() {
+    return itemCategory != null;
   }
 
   /// ### 상품 이미지 리스트 유효성 검사
@@ -181,7 +191,7 @@ class ItemModel {
   /// - [bool] - 유효성 검사 결과
   ///
   bool isValidFeelingOfUse() {
-    return feelingOfUse != null && feelingOfUse! >= 0 && feelingOfUse! <= 4;
+    return feelingOfUse >= 0 && feelingOfUse <= 4;
   }
 
   /// ### ItemModel 유효성 검사
@@ -192,7 +202,7 @@ class ItemModel {
   /// - [bool] - 유효성 검사 결과
   ///
   bool isValidItemModel() {
-    return isValidItemCategoryList() &&
+    return isValidItemCategory() &&
         isValidItemImageList() &&
         isValidItemName() &&
         isValidItemDescription() &&
@@ -222,7 +232,7 @@ class ItemModel {
 
   /// ### 상품 이미지 정사각형 높이 반환
   double squareHeightOfImage() {
-    return 100;
+    return 130;
   }
 
   /// ### 상품 이미지 가로 개수 반환
@@ -245,8 +255,108 @@ class ItemModel {
     int crossAxisCountOfImageList =
         (screenWidth / squareHeightOfImage()).floor();
 
-    // Container 높이 구하기 (현재 아이템 갯수 / 가로 개수 * 정사각형 높이).ceilToDouble()
+    // Container 높이 구하기 (현재 아이템 갯수 / 가로 개수 * 정사각형 높이).ceilToDouble() + 16(여백)
     return ((countOfItemImage()) / crossAxisCountOfImageList).ceilToDouble() *
-        squareHeightOfImage();
+            squareHeightOfImage() +
+        16;
+  }
+
+  /// ### 상품 카테고리 문자열 반환
+  ///
+  /// - 상품 카테고리를 문자열로 반환
+  ///
+  /// #### Returns
+  /// - [String] - 상품 카테고리 문자열
+  ///
+  String printItemCategoryToString() {
+    if (itemCategory == null) {
+      return "addItem.itemCategory.selectCategory";
+    }
+
+    return (itemCategory as CategoryModel).category.name;
+  }
+
+  /// ### 사용감 정보 문자열 반환
+  ///
+  /// - 사용감 정보를 문자열로 반환
+  ///
+  /// #### Returns
+  /// - [String] 사용감 정보 문자열
+  ///
+  String printItemFeelingOfUseToString() {
+    return printItemFeelingOfUseToStringFromIndex(feelingOfUse);
+  }
+
+  /// ### 사용감 정보 문자열 반환
+  ///
+  /// #### Parameters
+  /// - [double] - [index] : 사용감 정보
+  ///
+  /// #### Returns
+  /// - [String] 사용감 정보 문자열
+  ///
+  String printItemFeelingOfUseToStringFromIndex(double index) {
+    switch (index.toInt()) {
+      case 0:
+        return "addItem.feelingOfUse.label.unopened";
+      case 1:
+        return "addItem.feelingOfUse.label.simpleUnpack";
+      case 2:
+        return "addItem.feelingOfUse.label.used";
+      case 3:
+        return "addItem.feelingOfUse.label.muchUsed";
+      case 4:
+        return "addItem.feelingOfUse.label.broken";
+      default:
+        return "addItem.feelingOfUse.description";
+    }
+  }
+
+  /// TODO: 아이콘 변경
+  /// ### 사용감 아이콘 반환
+  ///
+  /// - 사용감 정보에 따라 아이콘 반환
+  ///
+  /// #### Parameters
+  /// - [double] - [index] : 사용감 정보
+  ///
+  /// #### Returns
+  /// - [IconData] - 사용감 아이콘
+  ///
+  IconData feelingOfUseIcon(double index) {
+    switch (index) {
+      case 0:
+        return CupertinoIcons.sparkles;
+      case 1:
+        return CupertinoIcons.envelope_open_fill;
+      case 2:
+        return CupertinoIcons.star_lefthalf_fill;
+      case 3:
+        return CupertinoIcons.star;
+      case 4:
+        return Icons.broken_image;
+      default:
+        return Icons.circle;
+    }
+  }
+
+  /// ### 상품 이미지 리스트 인덱스 변경
+  ///
+  /// - 상품 이미지 리스트의 인덱스를 변경
+  ///
+  /// #### Parameters
+  ///
+  /// - [int] - [oldIndex] : 변경 전 인덱스
+  /// - [int] - [newIndex] : 변경 후 인덱스
+  ///
+  void swapItemImageListIndex(int oldIndex, int newIndex) {
+    // newIndex가 oldIndex보다 큰 경우, newIndex를 1 감소
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+
+    // 상품 이미지 리스트에서 이미지를 꺼내고, 새로운 인덱스에 추가
+    final Uint8List image = itemImageList.removeAt(oldIndex);
+    itemImageList.insert(newIndex, image);
   }
 }

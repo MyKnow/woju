@@ -1,15 +1,19 @@
+import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:woju/provider/home/add_item_page_state_notifier.dart';
 
 import 'package:woju/service/adaptive_action_sheet.dart';
+import 'package:woju/service/toast_message_service.dart';
+import 'package:woju/theme/widget/custom_container_decoration.dart';
 
-import 'package:woju/theme/widget/bottom_floating_button.dart';
 import 'package:woju/theme/widget/custom_scaffold.dart';
 import 'package:woju/theme/widget/custom_text.dart';
+import 'package:woju/theme/widget/custom_textfield_container.dart';
 
 class AddItemPage extends ConsumerWidget {
   const AddItemPage({super.key});
@@ -77,23 +81,235 @@ class AddItemPage extends ConsumerWidget {
                   ),
                 ),
 
-                // 구분선
-                Divider(
-                  height: 16,
-                  thickness: 1,
-                  color: theme.disabledColor,
+                // 여백
+                const SizedBox(height: 16),
+
+                // 상품 카테고리 페이지 이동 컨테이너
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomDecorationContainer(
+                      margin: const EdgeInsets.only(top: 16.0),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                      ),
+                      height: 48,
+                      headerText: "addItem.itemCategory.title",
+                      hearderTextPadding: EdgeInsets.zero,
+                      child: InkWell(
+                        onTap: () {
+                          // addItemPageStateNotifier.onClickItemCategoryButton(context);
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CustomText(
+                              addItemPageState.itemModel
+                                  .printItemCategoryToString(),
+                              style:
+                                  theme.primaryTextTheme.bodyMedium?.copyWith(
+                                color: theme.disabledColor,
+                              ),
+                            ),
+                            Icon(
+                              CupertinoIcons.forward,
+                              color: theme.disabledColor,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
+
+                // 상품 제목 컨테이너
+                CustomTextfieldContainer(
+                  fieldKey: "addItem.textField.itemName",
+                  hintText: "addItem.itemName.hintText".tr(),
+                  labelTextEnable: false,
+                  margin: const EdgeInsets.only(top: 16.0),
+                  headerText: "addItem.itemName.title",
+                  hearderTextPadding: EdgeInsets.zero,
+                ),
+
+                // 상품 설명 컨테이너
+                CustomTextfieldContainer(
+                  fieldKey: "addItem.textField.itemDescription",
+                  headerText: "addItem.itemDescription.title",
+                  hintText: "addItem.itemDescription.hintText".tr(),
+                  labelTextEnable: false,
+                  margin: const EdgeInsets.only(top: 16.0),
+                  hearderTextPadding: EdgeInsets.zero,
+                  keyboardType: TextInputType.multiline,
+                  textInputAction: TextInputAction.newline,
+                  // inputFormatters: [],
+                  maxLines: 5,
+                ),
+
+                // 여백
+                const SizedBox(height: 16),
+
+                // 사용감 슬라이더 컨테이너 (5단계)
+                Column(
+                  children: [
+                    // 사용감 슬라이더 헤더 (설명 및 설명 페이지 이동 버튼)
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const CustomText(
+                          "addItem.feelingOfUse.description",
+                          isBold: true,
+                          isColorful: true,
+                        ),
+
+                        // 설명 페이지 이동 버튼
+                        IconButton(
+                          icon: Icon(
+                            CupertinoIcons.info_circle_fill,
+                            color: theme.disabledColor,
+                          ),
+                          onPressed: () {
+                            // addItemPageStateNotifier.onClickFeelingOfUseInfoButton(context);
+                          },
+                          tooltip: "addItem.feelingOfUse.infoButton".tr(),
+                          iconSize: 24,
+                          splashRadius: 24,
+                        ),
+                      ],
+                    ),
+
+                    // 슬라이더
+                    Container(
+                      width: double.infinity,
+                      margin: EdgeInsets.zero,
+                      decoration: BoxDecoration(
+                        color: theme.cardTheme.color ?? theme.cardColor,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: theme.cardTheme.shadowColor ??
+                                theme.shadowColor,
+                            blurRadius: 2,
+                          ),
+                        ],
+                      ),
+                      child: AnimatedToggleSwitch<double>.size(
+                        current: addItemPageState.itemModel.feelingOfUse,
+                        borderWidth: 1,
+                        style: ToggleStyle(
+                          backgroundColor: theme.cardTheme.color,
+                          borderColor: Colors.transparent,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        values: const [0.0, 1.0, 2.0, 3.0, 4.0],
+                        selectedIconScale: 1.0,
+                        indicatorSize: const Size.fromWidth(double.infinity),
+                        iconAnimationType: AnimationType.onHover,
+                        styleAnimationType: AnimationType.onHover,
+                        spacing: 1.0,
+                        customIconBuilder: (context, local, global) {
+                          return Icon(
+                            addItemPageState.itemModel
+                                .feelingOfUseIcon(local.index.toDouble()),
+                            // 현재 index가 선택된 항목이라면 흰색으로 출력
+                            color: local.index ==
+                                    addItemPageState.itemModel.feelingOfUse
+                                ? Colors.white
+                                : theme.disabledColor,
+                          );
+                        },
+                        onChanged: (value) {
+                          addItemPageStateNotifier.updateFeelingOfUse(value);
+                        },
+                      ),
+                    ),
+
+                    // 라벨
+                    Container(
+                      width: double.infinity,
+                      height: 24,
+                      margin: const EdgeInsets.only(top: 8.0),
+                      alignment: Alignment.center,
+                      child: CustomText(
+                        addItemPageState.itemModel
+                            .printItemFeelingOfUseToString(),
+                        style: theme.primaryTextTheme.bodyMedium?.copyWith(
+                          color: theme.disabledColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                // TODO: 입력창 활성화 때 스크롤이 더 올라가도록 수정 (키보드 액션바가 가리는 문제)
+                // 상품 가격 컨테이너
+                CustomTextfieldContainer(
+                  fieldKey: "addItem.textField.itemPrice",
+                  hintText: "addItem.itemPrice.hintText".tr(),
+                  headerText: "addItem.itemPrice.title",
+                  hearderTextPadding: EdgeInsets.zero,
+                  margin: EdgeInsets.zero,
+                  labelTextEnable: false,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(
+                      // 숫자만 입력 받고, context에 따라 구분자를 추가한다.
+                      RegExp("""[0-9,]"""),
+                    ),
+                  ],
+                ),
+
+                // 여백
+                const SizedBox(height: 16),
+
+                // 상품 교환 장소 컨테이너
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomDecorationContainer(
+                      margin: const EdgeInsets.only(top: 16.0),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                      ),
+                      height: 48,
+                      headerText: "addItem.barterPlace.title",
+                      hearderTextPadding: EdgeInsets.zero,
+                      child: InkWell(
+                        onTap: () {
+                          // addItemPageStateNotifier.onClickItemCategoryButton(context);
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CustomText(
+                              addItemPageState.printBarterPlace(),
+                              style:
+                                  theme.primaryTextTheme.bodyMedium?.copyWith(
+                                color: theme.disabledColor,
+                              ),
+                            ),
+                            Icon(
+                              CupertinoIcons.forward,
+                              color: theme.disabledColor,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                // 하단 여백
+                const SizedBox(height: 80),
               ],
             ),
           ),
         ),
       ),
-      bottomNavigationBar: BottomFloatingButton.build(
-        context,
-        ref,
-        () {},
-        "addItem.doneButton",
-      ),
+      floatingActionButtonText: "addItem.doneButton",
+      // floatingActionButtonCallback: () {},
     );
   }
 
@@ -127,17 +343,45 @@ class AddItemPage extends ConsumerWidget {
               CupertinoIcons.camera,
               color: theme.disabledColor,
             ),
-            CustomText(
-              "${addItemState.itemModel.countOfItemImage() - 1}/${addItemState.itemModel.maxCountOfItemImage()}",
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.disabledColor,
-              ),
-              isLocalize: false,
-            )
+            const SizedBox(
+              height: 4,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CustomText(
+                  "${addItemState.itemModel.countOfItemImage() - 1}",
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.disabledColor,
+                  ),
+                  isLocalize: false,
+                ),
+                CustomText(
+                  " / ",
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.disabledColor,
+                  ),
+                  isLocalize: false,
+                ),
+                CustomText(
+                  "${addItemState.itemModel.maxCountOfItemImage()}",
+                  isLocalize: false,
+                  isColorful: true,
+                  isBold: true,
+                ),
+              ],
+            ),
           ],
         ),
       ),
-      () {
+      onTap: () {
+        if (addItemState.itemModel.isMaxCountOfItemImageList()) {
+          ToastMessageService.show(
+            "addItem.imageAddButton.toast.maxCount".tr(),
+          );
+          return;
+        }
+
         AdaptiveActionSheet.show(
           context,
           title: "addItem.imageAddButton.actionSheet.title",
@@ -212,21 +456,53 @@ class AddItemPage extends ConsumerWidget {
           Positioned(
             right: 4,
             top: 4,
-            child: Icon(
-              CupertinoIcons.pencil_circle_fill,
-              color: theme.disabledColor,
-              size: 32,
-              semanticLabel:
-                  "addItem.imageItem.actionSheet.editMenuOpenButton".tr(
-                namedArgs: {
-                  "index": (index + 1).toString(),
-                },
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                CupertinoIcons.pencil_circle_fill,
+                color: theme.primaryColor,
+                size: 32,
+                semanticLabel:
+                    "addItem.imageItem.actionSheet.editMenuOpenButton".tr(
+                  namedArgs: {
+                    "index": (index + 1).toString(),
+                  },
+                ),
               ),
             ),
           ),
+
+          // index가 0번이라면 대표 이미지 배너 출력
+          if (index == 0)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                height: 24,
+                decoration: BoxDecoration(
+                  color: theme.cardTheme.surfaceTintColor?.withOpacity(0.8),
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(24),
+                    bottomRight: Radius.circular(24),
+                  ),
+                ),
+                child: Center(
+                  child: CustomText(
+                    "addItem.imageItem.mainImageBanner",
+                    style: theme.primaryTextTheme.labelLarge?.copyWith(
+                      color: theme.cardTheme.color,
+                    ),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
-      () {
+      onTap: () {
         AdaptiveActionSheet.show(
           context,
           title: "addItem.imageItem.actionSheet.title",
@@ -237,15 +513,36 @@ class AddItemPage extends ConsumerWidget {
               context,
               addItemStateNotifier.onClickImageEditButton(index, context),
             ),
-            Text(
+            const Text("addItem.imageItem.actionSheet.setToMainImage").tr():
+                addItemStateNotifier.onClickAdaptiveActionSheetButton(
+              context,
+              addItemStateNotifier.onClickSetMainImageButton(index, context),
+            ),
+            const Text(
               "addItem.imageItem.actionSheet.delete",
-              style: theme.textTheme.bodyMedium?.copyWith(
+              style: TextStyle(
                 color: Colors.red,
               ),
             ).tr(): addItemStateNotifier.onClickAdaptiveActionSheetButton(
               context,
               addItemStateNotifier.onClickImageDeleteButton(index),
             ),
+          },
+        );
+      },
+      onLongPress: () {
+        // 사진을 길게 누르면 크게 보여주기
+        // 손을 땔 때까지 이미지를 보여줌
+        // 핀치 줌과, 스와이프하여 이미지 닫기 구현해야 함.
+
+        showDialog(
+          context: context,
+          barrierColor: Colors.black.withOpacity(0.9),
+          builder: (context) {
+            return _imageZoomDialog(
+              context,
+              addItemStateNotifier.getState.itemModel.itemImageList[index],
+            );
           },
         );
       },
@@ -264,9 +561,10 @@ class AddItemPage extends ConsumerWidget {
   Widget _imageContainer(
     ThemeData theme,
     double size,
-    Widget child,
-    VoidCallback onTap,
-  ) {
+    Widget child, {
+    VoidCallback? onTap,
+    VoidCallback? onLongPress,
+  }) {
     return Container(
       height: size,
       width: size,
@@ -277,9 +575,39 @@ class AddItemPage extends ConsumerWidget {
         ),
       ),
       child: InkWell(
-        onTap: onTap,
         borderRadius: BorderRadius.circular(24),
+        onTap: onTap,
+        onLongPress: onLongPress,
         child: child,
+      ),
+    );
+  }
+
+  /// ### 상품 이미지 확대 다이얼로그
+  Widget _imageZoomDialog(BuildContext context, Uint8List image) {
+    return GestureDetector(
+      excludeFromSemantics: true,
+      onTap: () {
+        Navigator.of(context).pop(); // 다이얼로그를 닫음
+      },
+      child: Dialog(
+        backgroundColor: Colors.transparent,
+        child: InteractiveViewer(
+          minScale: 1.0,
+          maxScale: 4.0,
+          child: GestureDetector(
+            excludeFromSemantics: true,
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: Image.memory(
+              image,
+              fit: BoxFit.cover,
+              excludeFromSemantics: true,
+              semanticLabel: "addItem.imageZoomDialog.image".tr(),
+            ),
+          ),
+        ),
       ),
     );
   }

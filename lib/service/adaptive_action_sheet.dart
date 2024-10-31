@@ -19,8 +19,8 @@ class AdaptiveActionSheet {
   /// #### Parameters
   ///
   /// - [BuildContext] - [context] : 컨텍스트
-  /// - [String?] - [title] : 제목
-  /// - [String?] - [message] : 메시지
+  /// - [String]? - [title] : 제목
+  /// - [String]? - [message] : 메시지
   /// - [Map]<[Widget], [VoidCallback]> - [actions] : 표시할 Text Widget, Function의 Dictionary
   ///
   static void show(

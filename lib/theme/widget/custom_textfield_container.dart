@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:woju/theme/widget/custom_container_decoration.dart';
-import 'package:woju/theme/widget/custom_text.dart';
 
 class CustomTextfieldContainer extends ConsumerWidget {
   final Widget? prefix;
@@ -31,6 +30,10 @@ class CustomTextfieldContainer extends ConsumerWidget {
   final Function? onFieldSubmitted;
   final String fieldKey;
   final double? width;
+  final EdgeInsetsGeometry? margin;
+  final EdgeInsetsGeometry? hearderTextPadding;
+  final bool? labelTextEnable;
+  final int? maxLines;
 
   const CustomTextfieldContainer({
     super.key,
@@ -59,6 +62,11 @@ class CustomTextfieldContainer extends ConsumerWidget {
     this.actions = const [],
     this.onFieldSubmitted,
     this.controller,
+    this.margin = const EdgeInsets.symmetric(horizontal: 20),
+    this.hearderTextPadding =
+        const EdgeInsets.only(left: 32, bottom: 15, top: 16),
+    this.labelTextEnable = true,
+    this.maxLines = 1,
   });
 
   @override
@@ -66,6 +74,7 @@ class CustomTextfieldContainer extends ConsumerWidget {
     final defaultLabel = "input.defaultLabel".tr();
     final nowTheme = Theme.of(context);
     final TextFormField textFormField = TextFormField(
+      maxLines: maxLines,
       key: Key(fieldKey),
       decoration: InputDecoration(
         border: InputBorder.none,
@@ -76,8 +85,15 @@ class CustomTextfieldContainer extends ConsumerWidget {
         prefixIcon: prefixIcon,
         suffix: suffix,
         suffixIcon: suffixIcon,
-        labelText: (labelText != null) ? (labelText as String) : defaultLabel,
+        labelText: (labelText != null)
+            ? (labelText as String)
+            : (labelTextEnable == true)
+                ? defaultLabel
+                : null,
         hintText: (hintText != null) ? (hintText as String) : null,
+        hintStyle: nowTheme.primaryTextTheme.bodyMedium?.copyWith(
+          color: nowTheme.disabledColor.withOpacity(0.7),
+        ),
         labelStyle: (enabled ?? false)
             ? nowTheme.primaryTextTheme.titleMedium?.copyWith(
                 color: nowTheme.primaryTextTheme.bodyMedium?.color,
@@ -126,46 +142,31 @@ class CustomTextfieldContainer extends ConsumerWidget {
       },
     );
 
-    return Column(
-      children: [
-        if (headerText != null)
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.only(left: 32, bottom: 15, top: 16),
-            child: CustomText(
-              headerText as String,
-              isBold: true,
-              isColorful: true,
-            ),
-          ),
-        SizedBox(
-          width: width,
-          height: 1,
-        ),
-        CustomDecorationContainer(
-          width: double.infinity,
-          child: actions.isEmpty
-              ? textFormField
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    SizedBox(
-                      width: 360 - actionsWidth,
-                      child: textFormField,
-                    ),
-                    // Container(
-                    //   width: 1,
-                    //   height: verticalDividerHeight,
-                    //   color: theme.shadowColor,
-                    // ),
-                    Row(
-                      children: actions,
-                    ),
-                  ],
+    return CustomDecorationContainer(
+      margin: margin,
+      width: double.infinity,
+      headerText: headerText,
+      hearderTextPadding: hearderTextPadding,
+      child: actions.isEmpty
+          ? textFormField
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                SizedBox(
+                  width: 360 - actionsWidth,
+                  child: textFormField,
                 ),
-        ),
-      ],
+                // Container(
+                //   width: 1,
+                //   height: verticalDividerHeight,
+                //   color: theme.shadowColor,
+                // ),
+                Row(
+                  children: actions,
+                ),
+              ],
+            ),
     );
   }
 }

@@ -4,13 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:woju/model/item/add_item_state_model.dart';
 import 'package:woju/model/item/category_model.dart';
+
 import 'package:woju/service/debug_service.dart';
 import 'package:woju/service/image_editor_service.dart';
 import 'package:woju/service/image_picker_service.dart';
-import 'package:woju/service/toast_message_service.dart';
 
-final addItemPageStateProvider =
-    StateNotifierProvider<AddItemPageStateNotifier, AddItemStateModel>(
+final addItemPageStateProvider = StateNotifierProvider.autoDispose<
+    AddItemPageStateNotifier, AddItemStateModel>(
   (ref) => AddItemPageStateNotifier(),
 );
 
@@ -39,9 +39,13 @@ class AddItemPageStateNotifier extends StateNotifier<AddItemStateModel> {
   }
 
   /// ### 상품 카테고리 업데이트 메서드
-  void updateItemCategoryList(List<CategoryModel> itemCategoryList) {
+  void updateItemCategoryList(CategoryModel? itemCategory) {
+    if (itemCategory == null) {
+      return;
+    }
+
     state = state.copyWith(
-      itemModel: state.itemModel.copyWith(itemCategoryList: itemCategoryList),
+      itemModel: state.itemModel.copyWith(itemCategory: itemCategory),
     );
   }
 
@@ -67,7 +71,7 @@ class AddItemPageStateNotifier extends StateNotifier<AddItemStateModel> {
   }
 
   /// ### 사용감 정보 업데이트 메서드
-  void updateFeelingOfUse(int feelingOfUse) {
+  void updateFeelingOfUse(double feelingOfUse) {
     state = state.copyWith(
       itemModel: state.itemModel.copyWith(feelingOfUse: feelingOfUse),
     );
@@ -125,32 +129,25 @@ extension AddItemPageAction on AddItemPageStateNotifier {
       {bool isFromCamera = false}) {
     return () async {
       printd('이미지 추가 버튼 클릭');
-      if (!getState.itemModel.isMaxCountOfItemImageList()) {
-        Uint8List? originalResult;
-        if (isFromCamera) {
-          originalResult =
-              await ImagePickerService().pickImageForCameraWithUint8List();
-        } else {
-          originalResult =
-              await ImagePickerService().pickImageForGalleryWithUint8List();
-        }
-
-        if (originalResult != null && context.mounted) {
-          final editResult = await ImageEditorService.openCropEditor(
-            originalResult,
-            context,
-          );
-          if (editResult != null) {
-            updateItemImageList(
-              getState.itemModel.itemImageList + [editResult],
-            );
-          }
-        }
+      Uint8List? originalResult;
+      if (isFromCamera) {
+        originalResult =
+            await ImagePickerService().pickImageForCameraWithUint8List();
       } else {
-        printd("최대 이미지 개수를 초과했습니다.");
-        ToastMessageService.show(
-          "addItem.imageAddButton.toast.maxCount",
+        originalResult =
+            await ImagePickerService().pickImageForGalleryWithUint8List();
+      }
+
+      if (originalResult != null && context.mounted) {
+        final editResult = await ImageEditorService.openCropEditor(
+          originalResult,
+          context,
         );
+        if (editResult != null) {
+          updateItemImageList(
+            getState.itemModel.itemImageList + [editResult],
+          );
+        }
       }
     };
   }
@@ -194,6 +191,22 @@ extension AddItemPageAction on AddItemPageStateNotifier {
       } else {
         printd('이미지 수정 취소');
       }
+    };
+  }
+
+  /// ### 대표 이미지로 변경 버튼 클릭 메서드
+  ///
+  /// #### Parameters
+  /// - [int] - [index] : 대표 이미지로 변경할 이미지의 인덱스
+  /// - [BuildContext] - [context] : 현재 컨텍스트
+  ///
+  VoidCallback onClickSetMainImageButton(int index, BuildContext context) {
+    return () {
+      printd('대표 이미지로 변경 버튼 클릭 : $index');
+
+      getState.itemModel.swapItemImageListIndex(index, 0);
+
+      updateItemImageList(getState.itemModel.itemImageList);
     };
   }
 }

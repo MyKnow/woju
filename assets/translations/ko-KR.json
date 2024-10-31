@@ -167,19 +167,53 @@
         "imageAddButton" : {
             "actionSheet" : {
                 "title" : "물품 이미지 추가",
-                "message" : "이미지를 추가하는 방법을 선택해주세요",
+                "message" : "이미지를 추가할 방법을 선택해주세요",
                 "fromCamera" : "카메라로 촬영하기",
                 "fromGallery" : "갤러리에서 선택하기"
             }
         },
         "imageItem" : {
             "actionSheet" : {
-                "title" : "이미지 편집",
-                "message" : "이미지를 편집하는 방법을 선택해주세요",
+                "title" : "물품 이미지 수정",
+                "message" : "이미지를 수정할 방법을 선택해주세요",
                 "edit" : "이미지 편집하기",
                 "editMenuOpenButton" : "{index}번 이미지 수정 메뉴창 열기",
+                "setToMainImage" : "대표 이미지로 설정하기",
                 "delete" : "이미지 삭제하기"
-            }
+            },
+            "mainImageBanner" : "대표 이미지"
+        },
+        "itemCategory" : {
+            "title" : "카테고리 선택",
+            "selectCategory" : "카테고리를 선택해주세요"
+        },
+        "itemName" : {
+            "title" : "물품 이름",
+            "hintText": "물품의 이름을 입력해주세요"
+        },
+        "itemDescription" : {
+            "title" : "물품 설명",
+            "hintText": "물품에 대한 설명을 입력해주세요"
+        },
+        "feelingOfUse" : {
+            "title" : "사용감 선택",
+            "description" : "물품의 사용감을 선택해주세요",
+            "label" : {
+                "unopened" : "미개봉",
+                "simpleUnpack" : "단순 개봉",
+                "used" : "사용감 있음",
+                "muchUsed" : "사용감 많음",
+                "broken" : "파손 흔적 또는 고장 있음"
+            },
+            "infoButton" : "사용감 선택 가이드 보기"
+        }, 
+        "itemPrice" : {
+            "title" : "물품 가격",
+            "hintText": "물품의 가격을 입력해주세요"
+        },
+        "barterPlace" : {
+            "title": "교환 장소",
+            "empty" : "교환 장소를 정해주세요"
         }
     },
     "accessibility": {

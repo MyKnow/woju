@@ -13,6 +13,8 @@ import 'package:woju/model/item/item_model.dart';
 ///
 /// - [AddItemStateModel] - [initial] : 초기 상태 반환
 /// - [bool] - [isValidBarterPlace] : 교환 장소 유효성 검사
+/// - [String] - [printBarterPlace] : 교환 장소 문자열 반환
+///
 ///
 class AddItemStateModel {
   /// ### 상품 정보
@@ -45,5 +47,14 @@ class AddItemStateModel {
       itemModel: itemModel ?? this.itemModel,
       barterPlace: barterPlace ?? this.barterPlace,
     );
+  }
+
+  /// ### 교환 장소 문자열 반환
+  ///
+  /// #### Returns
+  /// - [String] - 교환 장소 문자열
+  ///
+  String printBarterPlace() {
+    return barterPlace ?? 'addItem.barterPlace.empty';
   }
 }

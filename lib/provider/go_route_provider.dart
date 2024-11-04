@@ -8,7 +8,10 @@ import 'package:woju/model/onboarding/sign_in_model.dart';
 
 import 'package:woju/page/error/router_error_page.dart';
 import 'package:woju/page/error/server_error_page.dart';
-import 'package:woju/page/home/main/add_item_page.dart';
+import 'package:woju/page/home/main/addItem/add_item_page.dart';
+import 'package:woju/page/home/main/addItem/barter_place_select_page.dart';
+import 'package:woju/page/home/main/addItem/category_select_page.dart';
+import 'package:woju/page/home/main/addItem/feeling_of_use_guide_page.dart';
 import 'package:woju/page/home/main/main_page.dart';
 import 'package:woju/page/home/setting/setting_page.dart';
 import 'package:woju/page/home/userProfile/user_id_change_page.dart';
@@ -157,6 +160,23 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             path: 'addItem',
             builder: (context, state) => const AddItemPage(),
             text: "아이템 추가",
+            routes: [
+              _buildNoTransitionRoute(
+                path: "categorySelect",
+                builder: (context, state) => const CategorySelectPage(),
+                text: "카테고리 선택",
+              ),
+              _buildNoTransitionRoute(
+                path: "feelingOfUseGuide",
+                builder: (context, state) => const FeelingOfUseGuidePage(),
+                text: "사용감 설명",
+              ),
+              _buildNoTransitionRoute(
+                path: "barterPlaceSelect",
+                builder: (context, state) => const BarterPlaceSelectPage(),
+                text: "교환 장소 선택",
+              ),
+            ],
           ),
         ],
       ),
@@ -250,6 +270,7 @@ GoRoute _buildCustomTransitionRoute({
   required String path,
   required Widget Function(BuildContext, GoRouterState) builder,
   required String text,
+  List<GoRoute>? routes,
 }) {
   return GoRoute(
     path: path,
@@ -268,6 +289,7 @@ GoRoute _buildCustomTransitionRoute({
         child: builder(context, state),
       );
     },
+    routes: routes ?? [],
   );
 }
 

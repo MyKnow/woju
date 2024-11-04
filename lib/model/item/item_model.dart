@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:woju/model/item/category_model.dart';
+import 'package:woju/service/debug_service.dart';
 
 /// # ItemModel
 ///
@@ -26,17 +27,19 @@ import 'package:woju/model/item/category_model.dart';
 /// - [bool] - [isValidItemName] : 상품 이름 유효성 검사
 /// - [bool] - [isValidItemDescription] : 상품 설명 유효성 검사
 /// - [bool] - [isValidItemPrice] : 상품 가격 유효성 검사
+/// - [bool] - [isValidItemPriceStatic] : 상품 가격 유효성 검사 (static)
 /// - [bool] - [isValidFeelingOfUse] : 사용감 정보 유효성 검사
 /// - [bool] - [isValidItemModel] : ItemModel 유효성 검사
-/// - [String] - [printItemPriceString] : 상품 가격 표기 변경
+/// - [String] - [convertFromIntToFormalString] : 상품 가격 표기 변경
 /// - [int] - [maxCountOfItemImage] : 상품 이미지 리스트 최대 개수 반환
 /// - [double] - [squareHeightOfImage] : 상품 이미지 정사각형 높이 반환
 /// - [int] - [crossAxisCountOfImageList] : 상품 이미지 가로 개수 반환
 /// - [double] - [containerHeightOfImageList] : 상품 이미지 Container 높이 반환
 /// - [String] - [printItemCategoryToString] : 상품 카테고리 리스트 문자열 반환
-/// - [String] - [printItemFeelingOfUseToString] : 사용감 정보 문자열 반환
-/// - [IconData] - [feelingOfUseIcon] : 사용감 아이콘 반환
 /// - [void] - [swapItemImageListIndex] : 상품 이미지 리스트 인덱스 변경
+/// - [String] - [printItemFeelingOfUseToString] : 사용감 정보 문자열 반환
+/// - [Uint8List] - [feelingOfUseExampleImage] : 사용감 정보 예시 이미지 반환
+/// - [IconData] - [feelingOfUseIcon] : 사용감 아이콘 반환
 ///
 class ItemModel {
   /// ### 상품 카테고리 리스트
@@ -93,6 +96,7 @@ class ItemModel {
     String? itemName,
     String? itemDescription,
     int? itemPrice,
+    bool? setToNullItemPrice,
     double? feelingOfUse,
   }) {
     return ItemModel(
@@ -102,7 +106,8 @@ class ItemModel {
       itemImageList: itemImageList ?? this.itemImageList,
       itemName: itemName ?? this.itemName,
       itemDescription: itemDescription ?? this.itemDescription,
-      itemPrice: itemPrice ?? this.itemPrice,
+      itemPrice:
+          (setToNullItemPrice == true) ? null : (itemPrice ?? this.itemPrice),
       feelingOfUse: feelingOfUse ?? this.feelingOfUse,
     );
   }
@@ -180,7 +185,24 @@ class ItemModel {
   /// - [bool] - 유효성 검사 결과
   ///
   bool isValidItemPrice() {
-    return itemPrice != null && itemPrice! > 0 && itemPrice! < 100000000000;
+    if (itemPrice == null) {
+      return false;
+    }
+
+    return isValidItemPriceStatic(itemPrice ?? 0);
+  }
+
+  /// ### 상품 가격 유효성 검사 (static)
+  /// - 상품 가격이 0원 미만, 100,000,000,000원 이상인 경우 false 반환
+  ///
+  /// #### Parameters
+  /// - [int] - [price] : 상품 가격
+  ///
+  /// #### Returns
+  /// - [bool] - 유효성 검사 결과
+  ///
+  static bool isValidItemPriceStatic(int price) {
+    return price >= 0 && price <= 100000000000;
   }
 
   /// ### 사용감 정보 유효성 검사
@@ -217,12 +239,18 @@ class ItemModel {
   /// #### Returns
   /// - [String] - 표기 변경된 가격
   ///
-  String printItemPriceString() {
+  String convertFromIntToFormalString() {
     String itemPriceString = itemPrice.toString();
-    return itemPriceString.replaceAllMapped(
+
+    /// 정규식을 사용하여 3자리마다 콤마(,) 추가
+    itemPriceString = itemPriceString.replaceAllMapped(
       RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-      (Match m) => '${m[1]},',
+      (Match match) => '${match[1]},',
     );
+
+    printd('itemPriceString : $itemPriceString');
+
+    return itemPriceString;
   }
 
   /// ### 상품 이미지 리스트 최대 개수 반환
@@ -280,33 +308,77 @@ class ItemModel {
   ///
   /// - 사용감 정보를 문자열로 반환
   ///
+  /// #### Parameters
+  /// - [double]? - [index] : 별도의 index가 없는 경우, [feelingOfUse] 사용
+  ///
   /// #### Returns
   /// - [String] 사용감 정보 문자열
   ///
-  String printItemFeelingOfUseToString() {
-    return printItemFeelingOfUseToStringFromIndex(feelingOfUse);
+  String printItemFeelingOfUseToString(double? index) {
+    final double switchIndex = index ?? feelingOfUse;
+    switch (switchIndex.toInt()) {
+      case 0:
+        return "addItem.feelingOfUse.label.unopened.title";
+      case 1:
+        return "addItem.feelingOfUse.label.simpleUnpack.title";
+      case 2:
+        return "addItem.feelingOfUse.label.used.title";
+      case 3:
+        return "addItem.feelingOfUse.label.muchUsed.title";
+      case 4:
+        return "addItem.feelingOfUse.label.broken.title";
+      default:
+        return "addItem.feelingOfUse.description";
+    }
   }
 
-  /// ### 사용감 정보 문자열 반환
+  /// TODO: 이미지 삽입
+  /// ### 사용감 정보 예시 이미지 반환
   ///
-  /// #### Parameters
-  /// - [double] - [index] : 사용감 정보
+  /// - 사용감 정보에 따라 예시 이미지 반환
   ///
   /// #### Returns
-  /// - [String] 사용감 정보 문자열
+  /// - [Uint8List] - 사용감 정보 예시 이미지
   ///
-  String printItemFeelingOfUseToStringFromIndex(double index) {
-    switch (index.toInt()) {
+  Uint8List feelingOfUseExampleImage(double? index) {
+    final double switchIndex = index ?? feelingOfUse;
+    switch (switchIndex.toInt()) {
       case 0:
-        return "addItem.feelingOfUse.label.unopened";
+        return Uint8List.fromList([]);
       case 1:
-        return "addItem.feelingOfUse.label.simpleUnpack";
+        return Uint8List.fromList([]);
       case 2:
-        return "addItem.feelingOfUse.label.used";
+        return Uint8List.fromList([]);
       case 3:
-        return "addItem.feelingOfUse.label.muchUsed";
+        return Uint8List.fromList([]);
       case 4:
-        return "addItem.feelingOfUse.label.broken";
+        return Uint8List.fromList([]);
+      default:
+        return Uint8List.fromList([]);
+    }
+  }
+
+  /// ### 사용감 정보 설명 문자열 반환
+  ///
+  /// #### Parameters
+  /// - [double]? - [index] : 별도의 index가 없는 경우, [feelingOfUse] 사용
+  ///
+  /// #### Returns
+  /// - [String] 사용감 정보 설명 문자열
+  ///
+  String printItemFeelingOfUseDescriptionToString(double? index) {
+    final double switchIndex = index ?? feelingOfUse;
+    switch (switchIndex.toInt()) {
+      case 0:
+        return "addItem.feelingOfUse.label.unopened.description";
+      case 1:
+        return "addItem.feelingOfUse.label.simpleUnpack.description";
+      case 2:
+        return "addItem.feelingOfUse.label.used.description";
+      case 3:
+        return "addItem.feelingOfUse.label.muchUsed.description";
+      case 4:
+        return "addItem.feelingOfUse.label.broken.description";
       default:
         return "addItem.feelingOfUse.description";
     }

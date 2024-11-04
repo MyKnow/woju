@@ -4,7 +4,7 @@ class CustomThemeData {
   static final ThemeData light = ThemeData(
     useMaterial3: false,
     cardTheme: const CardTheme(
-      color: Colors.white,
+      color: Color.fromARGB(255, 250, 250, 250),
       shadowColor: Colors.black38,
       surfaceTintColor: Colors.black,
     ),

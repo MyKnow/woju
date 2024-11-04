@@ -79,7 +79,8 @@ class CustomTextfieldContainer extends ConsumerWidget {
       decoration: InputDecoration(
         border: InputBorder.none,
         contentPadding: const EdgeInsets.symmetric(
-          horizontal: 10,
+          vertical: 16,
+          horizontal: 16,
         ),
         prefix: prefix,
         prefixIcon: prefixIcon,

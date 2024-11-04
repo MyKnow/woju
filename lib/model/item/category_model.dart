@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 
 /// # 물품 카테고리
@@ -82,25 +81,32 @@ enum Category {
 ///
 /// ### Methods
 ///
+/// - [String] get [name] : 카테고리 이름을 반환(로컬라이징)
 /// - [String] get [description] : 카테고리 설명을 반환(로컬라이징)
-/// - [Uint8List] get [icon] : 카테고리 아이콘(이미지)을 반환
+/// - [Uint8List] get [image] : 카테고리 아이콘(이미지)을 반환
 ///
 extension CategoryExtension on Category {
+  /// # 카테고리 이름 반환 메서드
+  ///
+  /// ### Returns
+  /// - [String] : 카테고리 이름(로컬라이징)
+  ///
+  String get name => '$this.name';
+
   /// # 카테고리 설명 반환 메서드
   ///
   /// ### Returns
-  ///
   /// - [String] : 카테고리 설명(로컬라이징)
   ///
-  String get description => 'category.description.$name'.tr();
+  String get description => '$this.description';
 
-  /// # 카테고리 아이콘(이미지) 반환 메서드
+  /// # 카테고리 이미지 반환 메서드
   ///
   /// ### Returns
   ///
-  /// - [Uint8List] : 카테고리 아이콘(이미지), 존재하지 않을 경우 빈 바이트 반환
+  /// - [Uint8List] : 카테고리 이미지, 존재하지 않을 경우 빈 바이트 반환
   ///
-  Uint8List get icon {
+  Uint8List get image {
     final file = File('assets/images/category/$name.png');
     return file.existsSync() ? file.readAsBytesSync() : Uint8List(0);
   }
@@ -117,6 +123,12 @@ extension CategoryExtension on Category {
 /// - [Category] category : 카테고리
 /// - [String] description : 카테고리 설명
 /// - [Uint8List] icon : 카테고리 아이콘
+///
+/// ### Methods
+///
+/// - [List]<[CategoryModel]> get [categories] : 카테고리 목록 반환
+/// - [CategoryModel] - [getCategoryModel] : 카테고리 모델 반환
+///
 ///
 class CategoryModel {
   final Category category;
@@ -136,10 +148,24 @@ class CategoryModel {
   /// - [List<CategoryModel>] : 카테고리 목록
   ///
   static List<CategoryModel> categories = Category.values
-      .map((e) => CategoryModel(
-            category: e,
-            description: e.description,
-            icon: e.icon,
-          ))
+      .map(
+        (e) => CategoryModel(
+          category: e,
+          description: e.description,
+          icon: e.image,
+        ),
+      )
       .toList();
+
+  /// # 카테고리 모델 반환 메서드
+  ///
+  /// ### Parameters
+  /// - [Category] category : 카테고리
+  ///
+  /// ### Returns
+  /// - [CategoryModel] : 카테고리 모델
+  ///
+  static CategoryModel getCategoryModel(Category category) {
+    return categories.firstWhere((element) => element.category == category);
+  }
 }

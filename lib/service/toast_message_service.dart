@@ -7,7 +7,7 @@ class ToastMessageService {
     Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.NONE,
+      gravity: ToastGravity.TOP,
     );
   }
 

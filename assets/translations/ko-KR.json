@@ -173,6 +173,7 @@
             }
         },
         "imageItem" : {
+            "description" : "이미지를 짧게 누르면 수정, 길게 누르면 크게 볼 수 있어요",
             "actionSheet" : {
                 "title" : "물품 이미지 수정",
                 "message" : "이미지를 수정할 방법을 선택해주세요",
@@ -185,7 +186,11 @@
         },
         "itemCategory" : {
             "title" : "카테고리 선택",
-            "selectCategory" : "카테고리를 선택해주세요"
+            "selectCategory" : "카테고리를 선택해주세요",
+            "categorySelectPage" : {
+                "title" : "카테고리 선택",
+                "longPressToSeeDescription": "카테고리를 짧게 누르면 선택, 길게 누르면 설명을 볼 수 있어요"
+            }
         },
         "itemName" : {
             "title" : "물품 이름",
@@ -199,21 +204,44 @@
             "title" : "사용감 선택",
             "description" : "물품의 사용감을 선택해주세요",
             "label" : {
-                "unopened" : "미개봉",
-                "simpleUnpack" : "단순 개봉",
-                "used" : "사용감 있음",
-                "muchUsed" : "사용감 많음",
-                "broken" : "파손 흔적 또는 고장 있음"
+                "unopened" : {
+                    "title" : "미개봉",
+                    "description" : "물품이 개봉되지 않은 상태"
+                },
+                "simpleUnpack" : {
+                    "title" : "미사용",
+                    "description" : "물품이 개봉되었지만 사용되지 않은 상태"
+                },
+                "used" : {
+                    "title" : "사용감 있음",
+                    "description" : "물품이 사용되었으나 사용감이 적음"
+                },
+                "muchUsed" : {
+                    "title" : "사용감 많음",
+                    "description" : "물품이 사용되었으며 사용감이 많음"
+                },
+                "broken" : {
+                    "title" : "고장 있음",
+                    "description" : "물품에 고장이 있음"
+                }
             },
-            "infoButton" : "사용감 선택 가이드 보기"
+            "infoButton" : "사용감 선택 가이드 보기",
+            "guidePage" : {
+                "title" : "사용감 선택 가이드",
+                "description" : "짧게 누르면 선택, 길게 누르면 이미지를 크게 볼 수 있어요"
+            }
         }, 
         "itemPrice" : {
             "title" : "물품 가격",
-            "hintText": "물품의 가격을 입력해주세요"
+            "hintText": "물품의 가격을 입력해주세요",
+            "invalidRange" : "0원 이상, 100,000,000,000원 이하의 가격을 입력해주세요"
         },
         "barterPlace" : {
             "title": "교환 장소",
-            "empty" : "교환 장소를 정해주세요"
+            "empty" : "교환 장소를 정해주세요",
+            "placeSelectPage" : {
+                "title" : "교환 장소 선택"
+            }
         }
     },
     "accessibility": {
@@ -372,7 +400,8 @@
     "common" : {
         "cancel" : "취소",
         "done" : "완료",
-        "more" : "더보기"
+        "more" : "더보기",
+        "close" : "닫기"
     },
     "imageEditor" : {
         "paintEditor" : {
@@ -438,5 +467,71 @@
         "back" : "뒤로가기",
         "remove" : "이미지 삭제",
         "doneLoadingMsg" : "이미지 편집이 완료되었습니다"
+    },
+    "Category" : {
+        "all": {
+            "name": "전체",
+            "description": "모든 카테고리를 포함합니다"
+        },
+        "electronics": {
+            "name": "전자제품",
+            "description": "생활가전이나 모바일 기기 등, 모든 전자제품을 포함합니다"
+        },
+        "furniture": {
+            "name": "가구",
+            "description": "가정용 가구나 사무용 가구 등, 모든 가구를 포함합니다"
+        },
+        "lifestyle": {
+            "name": "생활용품",
+            "description": "생활에 필요한 모든 용품을 포함합니다"
+        },
+        "fashion": {
+            "name": "패션",
+            "description": "의류나 액세서리 등, 패션 관련 모든 제품을 포함합니다"
+        },
+        "book": {
+            "name": "도서",
+            "description": "전공서적이나 소설 등, 모든 도서를 포함합니다"
+        },
+        "layette": {
+            "name": "유아용품",
+            "description": "유아용품이나 의류 등, 모든 유아용품을 포함합니다"
+        },
+        "cosmetic": {
+            "name": "뷰티",
+            "description": "화장품이나 향수 등, 모든 뷰티용품을 포함합니다"
+        },
+        "sportsEquipment": {
+            "name": "스포츠용품",
+            "description": "모든 스포츠용품을 포함합니다"
+        },
+        "hobbyGoods": {
+            "name": "취미용품",
+            "description": "게임기 등, 모든 취미용품을 포함합니다"
+        },
+        "album": {
+            "name": "앨범",
+            "description": "모든 앨범을 포함합니다"
+        },
+        "carGoods": {
+            "name": "자동차용품",
+            "description": "자동차 액세서리 등, 모든 자동차용품을 포함합니다"
+        },
+        "ticket": {
+            "name": "티켓",
+            "description": "콘서트 티켓이나 이벤트 티켓 등, 모든 티켓을 포함합니다"
+        },
+        "petGoods": {
+            "name": "반려동물용품",
+            "description": "사료나 옷 등, 모든 반려동물용품을 포함합니다"
+        },
+        "plant": {
+            "name": "식물",
+            "description": "모든 식물을 포함합니다"
+        },
+        "etc": {
+            "name": "기타",
+            "description": "다른 카테고리에 속하지 않는 모든 제품을 포함합니다"
+        }
     }
 }

@@ -26,6 +26,8 @@ class CustomDecorationContainer extends ConsumerWidget {
     final nowTheme = Theme.of(context);
 
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         if (headerText != null)
           Container(
@@ -49,7 +51,7 @@ class CustomDecorationContainer extends ConsumerWidget {
           margin: (headerText == null) ? margin : const EdgeInsets.only(top: 8),
           decoration: BoxDecoration(
             color: nowTheme.cardTheme.color ?? nowTheme.cardColor,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(30),
             boxShadow: [
               BoxShadow(
                 color: nowTheme.cardTheme.shadowColor ?? nowTheme.shadowColor,

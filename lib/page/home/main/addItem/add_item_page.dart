@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:woju/provider/home/add_item_page_state_notifier.dart';
+import 'package:woju/provider/home/addItem/add_item_page_state_notifier.dart';
 
 import 'package:woju/service/adaptive_action_sheet.dart';
 import 'package:woju/service/image_zoom_dialog.dart';

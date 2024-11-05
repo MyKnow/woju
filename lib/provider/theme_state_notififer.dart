@@ -20,16 +20,18 @@ final themeStateNotifierProvider =
 ///
 /// #### Methods
 ///
-/// - [void] [updateTheme] ([int] index): 테마 업데이트 메서드
-/// - [int] [getIndex] (): 테마 인덱스 반환 메서드
-/// - [void] [readFromDB] (): DB에서 테마 읽어오는 메서드
+/// - [void] - [updateTheme] ([int] index): 테마 업데이트 메서드
+/// - [int] - [getIndex] (): 테마 인덱스 반환 메서드
+/// - [void] - [readFromDB] (): DB에서 테마 읽어오는 메서드
 ///
 class ThemeStateNotififer extends StateNotifier<ThemeMode> {
   late Ref ref;
+
   ThemeStateNotififer(this.ref) : super(ThemeMode.system) {
     readFromDB();
   }
 
+  /// ### 테마 업데이트 메서드
   void updateTheme(int index) async {
     if (index == 0) {
       state = ThemeMode.system;
@@ -43,6 +45,7 @@ class ThemeStateNotififer extends StateNotifier<ThemeMode> {
         );
   }
 
+  /// ### 테마 인덱스 반환 메서드
   int getIndex() {
     if (state == ThemeMode.system) {
       return 0;
@@ -53,6 +56,7 @@ class ThemeStateNotififer extends StateNotifier<ThemeMode> {
     }
   }
 
+  /// ### DB에서 테마 읽어오는 메서드
   void readFromDB() {
     final setting = ref.read(settingStateProvider);
     printd("Setting: ${setting.themeIndex}");

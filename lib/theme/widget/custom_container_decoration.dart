@@ -25,43 +25,45 @@ class CustomDecorationContainer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final nowTheme = Theme.of(context);
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        if (headerText != null)
-          Container(
-            width: double.infinity,
-            padding: hearderTextPadding,
-            margin: margin,
-            child: CustomText(
-              headerText as String,
-              isBold: true,
-              isColorful: true,
-            ),
-          ),
-        SizedBox(
-          width: width,
-          height: 1,
-        ),
-        Container(
-          width: width,
-          height: height,
-          padding: padding,
-          margin: (headerText == null) ? margin : const EdgeInsets.only(top: 8),
-          decoration: BoxDecoration(
-            color: nowTheme.cardTheme.color ?? nowTheme.cardColor,
-            borderRadius: BorderRadius.circular(30),
-            boxShadow: [
-              BoxShadow(
-                color: nowTheme.cardTheme.shadowColor ?? nowTheme.shadowColor,
-                blurRadius: 2,
+    return Container(
+      margin: margin,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          if (headerText != null)
+            Container(
+              width: double.infinity,
+              padding: hearderTextPadding,
+              child: CustomText(
+                headerText as String,
+                isBold: true,
+                isColorful: true,
               ),
-            ],
+            ),
+          SizedBox(
+            width: width,
+            height: 1,
           ),
-          child: child,
-        ),
-      ],
+          Container(
+            width: width,
+            height: height,
+            padding: padding,
+            margin: (headerText == null) ? null : const EdgeInsets.only(top: 8),
+            decoration: BoxDecoration(
+              color: nowTheme.cardTheme.color ?? nowTheme.cardColor,
+              borderRadius: BorderRadius.circular(30),
+              boxShadow: [
+                BoxShadow(
+                  color: nowTheme.cardTheme.shadowColor ?? nowTheme.shadowColor,
+                  blurRadius: 2,
+                ),
+              ],
+            ),
+            child: child,
+          ),
+        ],
+      ),
     );
   }
 }

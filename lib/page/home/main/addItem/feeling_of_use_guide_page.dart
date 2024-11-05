@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:woju/model/item/item_model.dart';
-import 'package:woju/provider/home/add_item_page_state_notifier.dart';
+import 'package:woju/provider/home/addItem/add_item_page_state_notifier.dart';
 
 import 'package:woju/theme/widget/custom_scaffold.dart';
 import 'package:woju/theme/widget/custom_text.dart';

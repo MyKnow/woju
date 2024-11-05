@@ -434,3 +434,30 @@ extension FeelingOfUseGuidePageAction on AddItemPageStateNotifier {
     };
   }
 }
+
+/// ### BarterPlaceSelectPageAction
+/// - 교환 장소 선택 페이지에서의 Action을 관리하는 Extension
+///
+/// ### Methods
+///
+extension BarterPlaceSelectPageAction on AddItemPageStateNotifier {
+  /// ### [onPressedSelectButton]
+  /// - 교환장소 선택 완료 버튼 클릭 시 호출되는 메서드
+  ///
+  /// #### Parameters
+  /// - [BuildContext] - [context] : 현재 컨텍스트
+  /// - [String]? - [barterPlace] : 선택한 교환 장소
+  ///
+  VoidCallback? onPressedSelectButton(
+      BuildContext context, String? barterPlace) {
+    if (barterPlace == null) {
+      return null;
+    }
+
+    return () {
+      printd('교환 장소 선택 완료 : ${getState.barterPlace}');
+      updateBarterPlace(barterPlace);
+      context.pop();
+    };
+  }
+}

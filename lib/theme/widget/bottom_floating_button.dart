@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:woju/theme/custom_theme_data.dart';
+
 import 'package:woju/theme/widget/custom_text.dart';
 
 class BottomFloatingButton {
@@ -54,8 +54,9 @@ class BottomFloatingButton {
                       padding: const EdgeInsets.only(right: 20),
                       child: ElevatedButton(
                         onPressed: onPressed,
-                        style: CustomThemeData
-                            .currentTheme.elevatedButtonTheme.style
+                        style: Theme.of(context)
+                            .elevatedButtonTheme
+                            .style
                             ?.copyWith(
                                 minimumSize:
                                     WidgetStateProperty.all(const Size(80, 40)),

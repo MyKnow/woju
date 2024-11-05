@@ -181,5 +181,7 @@ class CustomThemeData {
     return CustomThemeData.light;
   }
 
-  static bool get isDark => currentTheme == dark;
+  static bool isDark(BuildContext context) {
+    return Theme.of(context).primaryColor == CustomThemeData.dark.primaryColor;
+  }
 }

@@ -322,7 +322,7 @@ class AddItemPage extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           CustomText(
-                            addItemPageState.printBarterPlace(),
+                            addItemPageState.getBarterPlaceSimpleName(),
                             style: theme.primaryTextTheme.bodyMedium?.copyWith(
                               color: (addItemPageState.isValidBarterPlace())
                                   ? theme.cardTheme.surfaceTintColor

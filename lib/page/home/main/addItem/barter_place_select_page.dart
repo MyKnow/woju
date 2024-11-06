@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,88 +24,100 @@ class BarterPlaceSelectPage extends ConsumerWidget {
 
     return CustomScaffold(
       title: 'addItem.barterPlace.placeSelectPage.title',
-      body: SafeArea(
-        child: Column(
-          children: [
-            // 힌트
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 16,
+      body: Column(
+        children: [
+          // 힌트
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
+            child: CustomText(
+              'addItem.barterPlace.placeSelectPage.hint',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.disabledColor,
               ),
-              child: CustomText(
-                'addItem.barterPlace.placeSelectPage.hint',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.disabledColor,
+            ),
+          ),
+
+          // 네이버 맵
+          _buildNaverMap(context, ref, isDark),
+
+          // 위치 선택 버튼
+          Consumer(
+            builder: (context, ref, child) {
+              final theme = Theme.of(context);
+              final state = ref.watch(barterPlaceStateProvider);
+              final stateNotifier =
+                  ref.watch(barterPlaceStateProvider.notifier);
+              return CustomDecorationContainer(
+                headerText:
+                    'addItem.barterPlace.placeSelectPage.selectLocation',
+                margin: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 16,
                 ),
-              ),
-            ),
+                child: Row(
+                  children: [
+                    // 여백
+                    const SizedBox(width: 16),
 
-            // 네이버 맵
-            _buildNaverMap(context, ref, isDark),
-
-            // 위치 선택 버튼
-            Consumer(
-              builder: (context, ref, child) {
-                final theme = Theme.of(context);
-                final state = ref.watch(barterPlaceStateProvider);
-                return CustomDecorationContainer(
-                  headerText:
-                      'addItem.barterPlace.placeSelectPage.selectLocation',
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 16,
-                  ),
-                  child: Row(
-                    children: [
-                      // 여백
-                      const SizedBox(width: 16),
-
-                      // 선택된 위치 출력
-                      Expanded(
-                        child: (state.isLoading)
-                            ? Center(
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    theme.primaryColor,
-                                  ),
+                    // 선택된 위치 출력
+                    Expanded(
+                      child: (state.isLoading)
+                          ? Center(
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  theme.primaryColor,
                                 ),
-                              )
-                            : CustomText(
-                                state.barterPlace ??
-                                    'addItem.barterPlace.placeSelectPage.emptyLocation',
-                                isLocalize: (state.barterPlace == null),
                               ),
-                      ),
+                            )
+                          : CustomText(
+                              state.barterPlace?.simpleName ??
+                                  'addItem.barterPlace.placeSelectPage.emptyLocation',
+                              isLocalize: (state.barterPlace == null),
+                            ),
+                    ),
 
-                      // 여백
-                      const SizedBox(
-                        width: 8,
-                      ),
-
-                      // 위치 선택 버튼
-                      ElevatedButton(
-                        onPressed: addItemPageStateNotifier
-                            .onPressedSelectButton(context, state.barterPlace),
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          minimumSize: const Size(90, 50),
-                          maximumSize: const Size(140, 50),
-                        ),
-                        child: const CustomText(
-                          'addItem.barterPlace.placeSelectPage.selectButton',
-                          isWhite: true,
+                    // 위치 선택 취소 버튼
+                    if (state.barterPlace != null)
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 8),
+                        child: InkWell(
+                          onTap: () {
+                            stateNotifier.onPressedSetToNullBarterPlaceButton();
+                            addItemPageStateNotifier
+                                .onPressedSetToNullBarterPlaceButton();
+                          },
+                          child: const Icon(CupertinoIcons.xmark),
                         ),
                       ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
+
+                    // 위치 선택 버튼
+                    ElevatedButton(
+                      onPressed: addItemPageStateNotifier.onPressedSelectButton(
+                          context, state.barterPlace),
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        minimumSize: const Size(90, 50),
+                        maximumSize: const Size(140, 50),
+                      ),
+                      child: const CustomText(
+                        'addItem.barterPlace.placeSelectPage.selectButton',
+                        isWhite: true,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+
+          // 여백
+          const SizedBox(height: 16),
+        ],
       ),
     );
   }
@@ -115,6 +128,7 @@ class BarterPlaceSelectPage extends ConsumerWidget {
     WidgetRef ref,
     bool isDark,
   ) {
+    final addItemBarterPlace = ref.watch(addItemPageStateProvider).barterPlace;
     final stateNotifier = ref.watch(barterPlaceStateProvider.notifier);
     return Expanded(
       child: Padding(
@@ -124,9 +138,11 @@ class BarterPlaceSelectPage extends ConsumerWidget {
           child: NaverMap(
             options: NaverMapViewOptions(
               // 초기 카메라 위치
-              initialCameraPosition: const NCameraPosition(
-                target: NLatLng(37.5666102, 126.9783881),
-                zoom: 10,
+              // TODO : 위치 정보가 없을 경우 현재 위치로 설정하도록 변경, 현재 위치 정보도 없을 경우 보정동 카페거리로 설정
+              initialCameraPosition: NCameraPosition(
+                target: NLatLng(addItemBarterPlace?.latitude ?? 37.5666103,
+                    addItemBarterPlace?.longitude ?? 126.9783882),
+                zoom: addItemBarterPlace != null ? 16 : 14,
               ),
               // 지도의 제한 영역
               // extent: const NLatLngBounds(
@@ -143,7 +159,7 @@ class BarterPlaceSelectPage extends ConsumerWidget {
               // 저사양 모드 사용 여부
               // 장점 : 메모리 소모가 적고 빠른 지도 로딩을 위한 Mode
               // 단점: 지도 화질 저하, 실내지도 사용 불가, 레이어 그룹 사용불가, 디스플레이 옵션 변경 불가, 심벌 터치 이벤트 처리 불가, 마커/심벌 겹침 처리 불가, 줌/회전/틸트 시 지도 심벌도 함께 적용됨.
-              liteModeEnable: true,
+              liteModeEnable: false,
               // 나이트 모드 사용 여부
               nightModeEnable: isDark,
               // 실내 지도 사용 여부
@@ -172,15 +188,15 @@ class BarterPlaceSelectPage extends ConsumerWidget {
               // pickable의 터치 반경
               pickTolerance: 10,
               // 회전 제스처 활성화 여부
-              rotationGesturesEnable: false,
+              rotationGesturesEnable: true,
               // 스크롤 제스처 활성화 여부
               scrollGesturesEnable: true,
               // 틸트 제스처 활성화 여부
-              tiltGesturesEnable: false,
+              tiltGesturesEnable: true,
               // 줌 제스처 활성화 여부
               zoomGesturesEnable: true,
               // 스톱 제스처 활성화 여부
-              stopGesturesEnable: false,
+              stopGesturesEnable: true,
               // 스크롤 제스처 마찰 계수 (0~1)
               scrollGesturesFriction: 0.5,
               // 줌 제스처 마찰 계수 (0~1)

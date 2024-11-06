@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:woju/model/item/add_item_state_model.dart';
 import 'package:woju/model/item/category_model.dart';
 import 'package:woju/model/item/item_model.dart';
+import 'package:woju/model/item/location_model.dart';
 
 import 'package:woju/service/debug_service.dart';
 import 'package:woju/service/image_editor_service.dart';
@@ -91,7 +92,13 @@ class AddItemPageStateNotifier extends StateNotifier<AddItemStateModel> {
   }
 
   /// ### 교환 장소 업데이트 메서드
-  void updateBarterPlace(String barterPlace) {
+  void updateBarterPlace(Location? barterPlace) {
+    if (barterPlace == null) {
+      state = state.copyWith(
+        setToBullBarterPlace: true,
+      );
+      return;
+    }
     state = state.copyWith(barterPlace: barterPlace);
   }
 
@@ -449,15 +456,23 @@ extension BarterPlaceSelectPageAction on AddItemPageStateNotifier {
   /// - [String]? - [barterPlace] : 선택한 교환 장소
   ///
   VoidCallback? onPressedSelectButton(
-      BuildContext context, String? barterPlace) {
+      BuildContext context, Location? barterPlace) {
     if (barterPlace == null) {
       return null;
     }
 
     return () {
-      printd('교환 장소 선택 완료 : ${getState.barterPlace}');
+      printd('교환 장소 선택 완료 : ${getState.barterPlace?.simpleName}');
       updateBarterPlace(barterPlace);
       context.pop();
     };
+  }
+
+  /// ### [onPressedSetToNullBarterPlaceButton]
+  /// - 교환장소 선택 취소 버튼 클릭 시 호출되는 메서드
+  ///
+  void onPressedSetToNullBarterPlaceButton() {
+    printd('교환 장소 선택 취소');
+    updateBarterPlace(null);
   }
 }

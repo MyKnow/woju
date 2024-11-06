@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:woju/model/item/item_model.dart';
+import 'package:woju/model/item/location_model.dart';
 
 /// # AddItemStateModel
 ///
@@ -8,14 +9,14 @@ import 'package:woju/model/item/item_model.dart';
 /// ### Fields
 ///
 /// - [ItemModel] - [itemModel] : 상품 정보
-/// - [String] - [barterPlace] : 교환 장소
+/// - [Location]? - [barterPlace] : 교환 장소
 /// - [TextEditingController] - [priceController] : 상품 가격 입력 컨트롤러
 ///
 /// ### Methods
 ///
 /// - [AddItemStateModel] - [initial] : 초기 상태 반환
 /// - [bool] - [isValidBarterPlace] : 교환 장소 유효성 검사
-/// - [String] - [printBarterPlace] : 교환 장소 문자열 반환
+/// - [String] - [getBarterPlaceSimpleName] : 교환 장소 문자열 반환
 ///
 ///
 class AddItemStateModel {
@@ -23,14 +24,14 @@ class AddItemStateModel {
   final ItemModel itemModel;
 
   /// ### 교환 장소
-  final String? barterPlace;
+  final Location? barterPlace;
 
   /// ### 상품 가격 입력 컨트롤러
   final TextEditingController priceController;
 
   /// ### 교환 장소 유효성 검사
   bool isValidBarterPlace() {
-    return barterPlace != null && barterPlace!.isNotEmpty;
+    return barterPlace != null && (barterPlace as Location).isValid();
   }
 
   AddItemStateModel({
@@ -50,22 +51,26 @@ class AddItemStateModel {
   /// ### 모델 업데이트 메서드
   AddItemStateModel copyWith({
     ItemModel? itemModel,
-    String? barterPlace,
+    Location? barterPlace,
+    bool? setToBullBarterPlace,
     TextEditingController? priceController,
   }) {
     return AddItemStateModel(
       itemModel: itemModel ?? this.itemModel,
-      barterPlace: barterPlace ?? this.barterPlace,
+      barterPlace: (setToBullBarterPlace == true)
+          ? null
+          : barterPlace ?? this.barterPlace,
       priceController: priceController ?? this.priceController,
     );
   }
 
-  /// ### 교환 장소 문자열 반환
+  /// ### [String] - [getBarterPlaceSimpleName]
+  /// - 교환 장소의 간단한 이름을 반환합니다.
   ///
   /// #### Returns
   /// - [String] - 교환 장소 문자열
   ///
-  String printBarterPlace() {
-    return barterPlace ?? 'addItem.barterPlace.empty';
+  String getBarterPlaceSimpleName() {
+    return barterPlace?.simpleName ?? 'addItem.barterPlace.empty';
   }
 }

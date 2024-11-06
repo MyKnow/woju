@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:woju/model/item/location_model.dart';
 import 'package:woju/service/debug_service.dart';
 
 class VworldApiService {
@@ -9,7 +10,7 @@ class VworldApiService {
       "https://api.vworld.kr/req/address?service=address&request=getAddress&key=";
   static String apiKey = dotenv.env['VWORLD_API_KEY'] ?? '';
 
-  static Future<Map<String, String>?> geoCording(
+  static Future<Location?> geoCording(
     double latitude,
     double longitude,
   ) async {
@@ -60,10 +61,17 @@ class VworldApiService {
 
     // printd("Vworld API SimpleAddress: $simpleAddress");
 
-    return {
-      'zipCode': zipCode,
-      'fullAddress': fullAddress,
-      'simpleAddress': simpleAddress ?? fullAddress,
-    };
+    final zipCodeForInt = int.tryParse(zipCode);
+    if (simpleAddress == null || zipCodeForInt == null) {
+      return null;
+    } else {
+      return Location(
+        simpleName: simpleAddress,
+        fullAddress: fullAddress,
+        latitude: latitude,
+        longitude: longitude,
+        zipCode: zipCodeForInt,
+      );
+    }
   }
 }

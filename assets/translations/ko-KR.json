@@ -241,7 +241,7 @@
             "empty" : "교환 장소를 정해주세요",
             "placeSelectPage" : {
                 "title" : "교환 장소 선택",
-                "hint" : "지도를 드래그해서 물건을 교환할 장소에 마커를 올려주세요",
+                "hint" : "지도를 드래그해서 장소를 선택해주세요",
                 "selectButton" : "선택 완료",
                 "selectLocation" : "장소 선택",
                 "emptyLocation" : "건물이나 랜드마크에 마커를 올려보세요"

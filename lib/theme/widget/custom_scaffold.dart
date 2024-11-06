@@ -39,7 +39,10 @@ class CustomScaffold extends ConsumerWidget {
         centerTitle: appBarActions?.isEmpty,
         actions: appBarActions,
       ),
-      body: body ?? Container(),
+      body: SafeArea(
+        bottom: false,
+        child: body ?? Container(),
+      ),
       drawer: drawer,
       floatingActionButtonLocation: (floatingActionButtonText != null ||
               floatingActionButtonCallback != null ||

@@ -244,7 +244,7 @@
                 "empty" : "Please select an exchange location",
                 "placeSelectPage" : {
                   "title" : "Select Exchange Location",
-                  "hint" : "Drag the map to place a marker at the exchange location",
+                  "hint" : "Drag the map to select a location",
                   "selectButton" : "Select",
                   "selectLocation" : "Select Location",
                   "emptyLocation" : "Place a marker on a building or landmark"

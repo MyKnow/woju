@@ -1,6 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:woju/service/debug_service.dart';
 
 /// # 물품 카테고리
 ///
@@ -104,11 +104,26 @@ extension CategoryExtension on Category {
   ///
   /// ### Returns
   ///
-  /// - [Uint8List] : 카테고리 이미지, 존재하지 않을 경우 빈 바이트 반환
+  /// - [Image] : 카테고리 이미지, 존재하지 않을 경우 빈 바이트 반환
   ///
-  Uint8List get image {
-    final file = File('assets/images/category/$name.png');
-    return file.existsSync() ? file.readAsBytesSync() : Uint8List(0);
+  Image get image {
+    // 이름만 추출
+    final simpleName = toString().split('.').last;
+    // 이미지 경로
+    final path = 'assets/images/category/$simpleName.png';
+    // 이미지 파일
+    final image = Image.asset(
+      path,
+      errorBuilder: (context, error, stackTrace) {
+        printd('error: $error');
+        return const Icon(
+          Icons.error_outlined,
+          color: Colors.red,
+        );
+      },
+    );
+
+    return image;
   }
 }
 
@@ -128,12 +143,13 @@ extension CategoryExtension on Category {
 ///
 /// - [List]<[CategoryModel]> get [categories] : 카테고리 목록 반환
 /// - [CategoryModel] - [getCategoryModel] : 카테고리 모델 반환
+/// - [Map]<[String], [dynamic]> toJson() : JSON 변환 메서드
 ///
 ///
 class CategoryModel {
   final Category category;
   final String description;
-  final Uint8List icon;
+  final Image icon;
 
   const CategoryModel({
     required this.category,
@@ -167,5 +183,14 @@ class CategoryModel {
   ///
   static CategoryModel getCategoryModel(Category category) {
     return categories.firstWhere((element) => element.category == category);
+  }
+
+  /// # [String] - [getItemNameLast]
+  ///
+  /// ### Returns
+  /// - [String] : 카테고리 이름(마지막 부분)
+  ///
+  String getItemNameLast() {
+    return category.toString().split('.').last;
   }
 }

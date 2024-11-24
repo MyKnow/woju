@@ -483,7 +483,7 @@ extension SignUpAction on SignUpStateNotifier {
     // 백엔드로 전화번호 및 uid 전송
     try {
       final response =
-          await HttpService.post("/user/check-phonenumber-available", json);
+          await HttpService.userPost("/user/check-phonenumber-available", json);
 
       printd("checkSignUp: ${response.statusCode}");
 
@@ -714,8 +714,8 @@ extension SignUpAction on SignUpStateNotifier {
       locale = "US";
     }
 
-    final result =
-        await HttpService.get("/policy/terms?type=$policyType&country=$locale");
+    final result = await HttpService.userGet(
+        "/policy/terms?type=$policyType&country=$locale");
 
     if (result.statusCode == 200) {
       final data = jsonDecode(result.body);
@@ -878,7 +878,7 @@ extension SignUpUserInfoAction on SignUpStateNotifier {
 
     // 백엔드로 회원가입 정보 전송
     try {
-      final response = await HttpService.post("/user/signup", json);
+      final response = await HttpService.userPost("/user/signup", json);
 
       printd("signUp: ${response.statusCode}");
 

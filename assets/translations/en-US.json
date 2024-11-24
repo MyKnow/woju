@@ -250,7 +250,9 @@
                   "emptyLocation" : "Place a marker on a building or landmark"
                 }
             }
-        }
+        },
+        "addItemSuccess" : "Item registered successfully",
+        "addItemFail" : "Failed to register item. Please try again"
     },
     "accessibility": {
         "hideKeyboardButton": "Hide Keyboard Button",

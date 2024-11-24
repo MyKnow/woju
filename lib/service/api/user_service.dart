@@ -60,13 +60,12 @@ class UserService {
     printd("json : $json");
 
     // 서버로 사용자 정보 전송
-    final response = await HttpService.post('/user/login', json);
+    final response = await HttpService.userPost('/user/login', json);
 
     // 로그인 성공 여부 반환
     if (response.statusCode == 200) {
       final decodedJson = jsonDecode(response.body);
-      final userDetailInfo =
-          UserDetailInfoModel.fromJson(decodedJson['userInfo']);
+      final userDetailInfo = UserDetailInfoModel.fromJson(decodedJson);
 
       // UserDetailInfoModel 업데이트
       ref.read(userDetailInfoStateProvider.notifier).update(userDetailInfo);
@@ -141,7 +140,7 @@ class UserService {
       return "error.failureReason.PASSWORD_NOT_MATCH";
     }
 
-    final response = await HttpService.post('/user/update-user-password', {
+    final response = await HttpService.userPost('/user/update-user-password', {
       "userID": userID,
       "oldPassword": oldPassword,
       "newPassword": newPassword,
@@ -194,7 +193,7 @@ class UserService {
       return false;
     }
 
-    final response = await HttpService.post('/user/reset-user-password', {
+    final response = await HttpService.userPost('/user/reset-user-password', {
       "userUID": userUID,
       "userPhoneNumber": userPhoneNumber,
       "dialCode": dialCode,
@@ -224,7 +223,7 @@ class UserService {
   /// - `Future<bool>` : 사용자 가입 여부
   ///
   static Future<UserExistStatus> isUserExist(String userUID) async {
-    final response = await HttpService.post('/user/check-user-exists', {
+    final response = await HttpService.userPost('/user/check-user-exists', {
       "userUID": userUID,
     });
 
@@ -254,7 +253,7 @@ class UserService {
   ///
   static Future<bool> updateUser(
       UserDetailInfoModel userDetailInfo, String userPassword) async {
-    final response = await HttpService.post('/user/update-user-info', {
+    final response = await HttpService.userPost('/user/update-user-info', {
       "userUUID": userDetailInfo.userUUID,
       "userProfileImage": userDetailInfo.profileImage,
       "userID": userDetailInfo.userID,
@@ -265,6 +264,8 @@ class UserService {
       "userGender": userDetailInfo.userGender.value,
       "userBirthDate": userDetailInfo.userBirthDate.toString(),
       "userPassword": userPassword,
+      "termsVersion": userDetailInfo.termsVersion,
+      "privacyVersion": userDetailInfo.privacyVersion,
     });
 
     if (response.statusCode == 200) {
@@ -295,7 +296,7 @@ class UserService {
     String newUserID,
     String userPassword,
   ) async {
-    final response = await HttpService.post('/user/update-user-id', {
+    final response = await HttpService.userPost('/user/update-user-id', {
       "oldUserID": oldUserID,
       "newUserID": newUserID,
       "userPassword": userPassword,
@@ -337,7 +338,8 @@ class UserService {
     String userPassword,
     WidgetRef ref,
   ) async {
-    final response = await HttpService.post('/user/update-user-phonenumber', {
+    final response =
+        await HttpService.userPost('/user/update-user-phonenumber', {
       "userUUID": userUUID,
       "userUID": userUID,
       "userPhoneNumber": userPhoneNumber,
@@ -384,7 +386,7 @@ class UserService {
   ///
   static Future<String?> withdrawal(
       String userID, String userPassword, WidgetRef ref) async {
-    final response = await HttpService.post('/user/withdraw', {
+    final response = await HttpService.userPost('/user/withdraw', {
       "userID": userID,
       "userPassword": userPassword,
     });

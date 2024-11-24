@@ -177,7 +177,7 @@ extension AppStateAction on AppStateNotifier {
   ///
   Future<bool> checkServerConnection() async {
     final result =
-        await HttpService.get('/api/service/check-connection-status');
+        await HttpService.userGet('/api/service/check-connection-status');
 
     if (result.statusCode == 200) {
       updateAppError(AppError.none);

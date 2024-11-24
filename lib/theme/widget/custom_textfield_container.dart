@@ -63,8 +63,7 @@ class CustomTextfieldContainer extends ConsumerWidget {
     this.onFieldSubmitted,
     this.controller,
     this.margin = const EdgeInsets.symmetric(horizontal: 20),
-    this.hearderTextPadding =
-        const EdgeInsets.only(left: 32, bottom: 15, top: 16),
+    this.hearderTextPadding = const EdgeInsets.only(bottom: 16, top: 16),
     this.labelTextEnable = true,
     this.maxLines = 1,
   });

@@ -360,7 +360,7 @@ extension SignInAction on SignInStateNotifier {
     printd("withdrawal: $json");
 
     // 서버로 사용자 정보 전송
-    final response = await HttpService.post('/user/withdraw', json);
+    final response = await HttpService.userPost('/user/withdraw', json);
 
     // 탈퇴 성공 여부 반환
     if (response.statusCode == 200) {

@@ -44,6 +44,9 @@ class UserDetailInfoModel {
   @HiveField(11)
   final String? privacyVersion;
 
+  @HiveField(12)
+  final String? userToken;
+
   UserDetailInfoModel({
     required this.userUUID,
     this.profileImage,
@@ -55,32 +58,40 @@ class UserDetailInfoModel {
     required this.userNickName,
     required this.userGender,
     required this.userBirthDate,
+    this.userToken,
     this.termsVersion,
     this.privacyVersion,
   });
 
   factory UserDetailInfoModel.fromJson(Map<String, dynamic> json) {
-    final profileImage = json['userProfileImage'];
+    final userInfo = json['userInfo'];
+    final userToken = json['token'];
+
+    printd("userInfo: $userInfo");
+    printd("userToken: $userToken");
+
+    final profileImage = userInfo['userProfileImage'];
     Uint8List? decodedData;
     if (profileImage != null) {
-      decodedData =
-          Uint8List.fromList(List<int>.from(json['userProfileImage']['data']));
+      decodedData = Uint8List.fromList(
+          List<int>.from(userInfo['userProfileImage']['data']));
       printd("decodedData: $decodedData");
     }
 
     return UserDetailInfoModel(
-      userUUID: json['userUUID'],
+      userUUID: userInfo['userUUID'],
       profileImage: decodedData,
-      userID: json['userID'],
-      userPhoneNumber: json['userPhoneNumber'],
-      dialCode: json['dialCode'],
-      isoCode: json['isoCode'],
-      userUID: json['userUID'],
-      userNickName: json['userNickName'],
-      userGender: GenderExtension.getGenderFromString(json['userGender']),
-      userBirthDate: DateTime.parse(json['userBirthDate']),
-      termsVersion: json['termsVersion'],
-      privacyVersion: json['privacyVersion'],
+      userID: userInfo['userID'],
+      userPhoneNumber: userInfo['userPhoneNumber'],
+      dialCode: userInfo['dialCode'],
+      isoCode: userInfo['isoCode'],
+      userUID: userInfo['userUID'],
+      userNickName: userInfo['userNickName'],
+      userGender: GenderExtension.getGenderFromString(userInfo['userGender']),
+      userBirthDate: DateTime.parse(userInfo['userBirthDate']),
+      termsVersion: userInfo['termsVersion'],
+      privacyVersion: userInfo['privacyVersion'],
+      userToken: userToken,
     );
   }
 

@@ -35,12 +35,16 @@ class SignUpPage extends ConsumerWidget {
         ),
       ],
       body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           children: <Widget>[
-            const SizedBox(height: 20),
             // 전화번호 입력
             CustomTextfieldContainer(
               fieldKey: 'phoneNumberForSignUp',
+              margin: const EdgeInsets.only(
+                top: 16,
+                bottom: 8,
+              ),
               prefix: CustomCountryPickerWidget(
                 onChanged:
                     ref.read(signUpStateProvider.notifier).onChangedCountryCode,
@@ -127,13 +131,13 @@ class SignUpPage extends ConsumerWidget {
             if (!signUp.userAuthModel.authCodeSent)
               Column(
                 children: [
-                  const SizedBox(height: 8),
                   // 약관 동의
                   CheckboxListTile(
                     controlAffinity: ListTileControlAffinity.leading,
                     value: signUp.termsAgree,
                     onChanged: signUpNotifier.onClickTermsAgreeButton,
                     enabled: !signUp.userAuthModel.authCodeSent,
+                    contentPadding: EdgeInsets.zero,
                     title: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -173,6 +177,7 @@ class SignUpPage extends ConsumerWidget {
                     value: signUp.privacyAgree,
                     onChanged: signUpNotifier.onClickPrivacyAgreeButton,
                     enabled: !signUp.userAuthModel.authCodeSent,
+                    contentPadding: EdgeInsets.zero,
                     title: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -209,14 +214,13 @@ class SignUpPage extends ConsumerWidget {
                 ],
               ),
 
-            const SizedBox(height: 20),
-
             // 인증코드 요청 시 입력한 전화번호로 전송된 인증코드 입력창 표시
             if (signUp.userAuthModel.authCodeSent &&
                 !signUp.userAuthModel.authCompleted)
               CustomTextfieldContainer(
                 fieldKey: 'authCodeForSignUp',
                 labelText: signUp.userAuthModel.labelText,
+                margin: const EdgeInsets.symmetric(vertical: 16),
                 actions: [
                   CustomTextButton(
                     "status.authcode.resend",
@@ -256,6 +260,7 @@ class SignUpPage extends ConsumerWidget {
                 fieldKey: 'userIDForSignUp',
                 prefixIcon: const Icon(Icons.person),
                 labelText: signUp.userIDModel.labelTextWithParameter(true),
+                margin: const EdgeInsets.symmetric(vertical: 16),
                 keyboardType: TextInputType.streetAddress,
                 autofillHints: const <String>[AutofillHints.newUsername],
                 onChanged: (value) {
@@ -297,8 +302,6 @@ class SignUpPage extends ConsumerWidget {
             else
               Container(),
 
-            const SizedBox(height: 20),
-
             // 아이디 입력 완료 시 비밀번호 입력창 표시
             if (signUp.userIDModel.isIDAvailable)
               CustomTextfieldContainer(
@@ -307,6 +310,7 @@ class SignUpPage extends ConsumerWidget {
                   CupertinoIcons.lock_fill,
                   size: 24,
                 ),
+                margin: const EdgeInsets.symmetric(vertical: 16),
                 labelText: signUp.userPasswordModel.labelText,
                 keyboardType: TextInputType.visiblePassword,
                 autofillHints: const <String>[AutofillHints.newPassword],

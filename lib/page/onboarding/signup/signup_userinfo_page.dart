@@ -27,6 +27,7 @@ class SignupUserinfoPage extends ConsumerWidget {
     return CustomScaffold(
       title: "onboarding.signUp.detail.title",
       body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           children: <Widget>[
             const SizedBox(
@@ -155,7 +156,7 @@ class SignupUserinfoPage extends ConsumerWidget {
               ),
             ),
             const SizedBox(
-              height: 40,
+              height: 24,
               width: double.infinity,
             ),
             // 닉네임 입력
@@ -165,6 +166,9 @@ class SignupUserinfoPage extends ConsumerWidget {
               prefixIcon: const Icon(
                 CupertinoIcons.person_fill,
                 size: 24,
+              ),
+              margin: const EdgeInsets.symmetric(
+                vertical: 16,
               ),
               labelText: signUp.userNickNameModel.labelText,
               keyboardType: TextInputType.name,
@@ -181,16 +185,10 @@ class SignupUserinfoPage extends ConsumerWidget {
             ),
 
             // 성별 선택 (비공개, 남성, 여성, 기타 중 선택)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.only(left: 32, bottom: 16, top: 48),
-              child: const CustomText(
-                "status.gender.title",
-                isBold: true,
-                isColorful: true,
-              ),
-            ),
             CustomDecorationContainer(
+              headerText: "status.gender.title",
+              hearderTextPadding: EdgeInsets.zero,
+              margin: const EdgeInsets.symmetric(vertical: 16),
               height: 70,
               child: ToggleSwitch(
                 minWidth: 400,
@@ -216,23 +214,11 @@ class SignupUserinfoPage extends ConsumerWidget {
               ),
             ),
 
-            const SizedBox(
-              height: 20,
-              width: double.infinity,
-            ),
-
             // 생년월일 선택
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.only(left: 32, bottom: 16, top: 32),
-              child: const CustomText(
-                "onboarding.signUp.detail.birth",
-                isBold: true,
-                isColorful: true,
-              ),
-            ),
-
             CustomDecorationContainer(
+              headerText: "onboarding.signUp.detail.birth",
+              hearderTextPadding: EdgeInsets.zero,
+              margin: const EdgeInsets.symmetric(vertical: 16),
               height: 150,
               child: ScrollDatePicker(
                 // 만 14세 이상만 선택 가능

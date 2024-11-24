@@ -117,7 +117,7 @@ class UserIDModel with TextFieldModel<String> {
     // 백엔드로 ID 전송
     try {
       final response =
-          await HttpService.post("/user/check-userid-available", json);
+          await HttpService.userPost("/user/check-userid-available", json);
 
       printd("checkDuplicateID: ${response.statusCode}");
 

@@ -71,13 +71,14 @@ class UserProfilePage extends ConsumerWidget {
           ),
       ],
       body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             // 유저 프로필 이미지 변경
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.only(left: 32, bottom: 16, top: 40),
+              padding: const EdgeInsets.only(bottom: 8, top: 32),
               child: const CustomText(
                 "home.userProfile.userProfileImage",
                 isBold: true,
@@ -135,20 +136,14 @@ class UserProfilePage extends ConsumerWidget {
             // ),
 
             // 유저 닉네임 변경
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.only(left: 32, bottom: 8, top: 56),
-              child: const CustomText(
-                "home.userProfile.userNickName",
-                isBold: true,
-                isColorful: true,
-              ),
-            ),
             CustomTextfieldContainer(
               fieldKey: "user_profile_user_nick_name",
               prefixIcon: const Icon(Icons.person),
               labelText:
                   userProfileEditState.userNicknameModel.labelTextForEditing,
+              headerText: "home.userProfile.userNickName",
+              margin: const EdgeInsets.only(top: 32),
+              hearderTextPadding: EdgeInsets.zero,
               validator: userProfileEditState.userNicknameModel.validator,
               onChanged: userProfileStateNotifier.onChangeUserNickname,
               enabled: userProfileEditState.isEditing,
@@ -164,7 +159,7 @@ class UserProfilePage extends ConsumerWidget {
             // 유저 성별 변경
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.only(left: 32, bottom: 8, top: 16),
+              padding: const EdgeInsets.only(bottom: 8, top: 32),
               child: const CustomText(
                 "home.userProfile.userGender",
                 isBold: true,
@@ -172,43 +167,33 @@ class UserProfilePage extends ConsumerWidget {
               ),
             ),
             CustomToggleSwitch(
-              initialIndex: userProfileEditState.userGender.index,
-              labels: GenderExtension.getGenderList(),
+              currentValue: userProfileEditState.userGender.index,
+              values: GenderExtension.getGenderIndex(),
+              labelOfValue: GenderExtension.getGenderList(),
               onToggle: (index) {
                 if (userProfileEditState.isEditing) {
                   userProfileStateNotifier.onChangeUserGender(index);
                 }
               },
-              changeOnTap: userProfileEditState.isEditing,
+              isEnable: userProfileEditState.isEditing,
             ),
 
             // 유저 생년월일 변경
-            Container(
+            CustomDecorationContainer(
               width: double.infinity,
-              padding: const EdgeInsets.only(left: 32, bottom: 8, top: 36),
-              child: const CustomText(
-                "home.userProfile.userBirthDate",
-                isBold: true,
-                isColorful: true,
+              margin: const EdgeInsets.only(top: 32),
+              headerText: "home.userProfile.userBirthDate",
+              child: CustomDatePicker(
+                selectedDate: userProfileEditState.userBirthDate,
+                isEditing: userProfileEditState.isEditing,
+                onDateChanged: userProfileStateNotifier.onChangeUserBirthDate,
               ),
-            ),
-            CustomDatePicker(
-              selectedDate: userProfileEditState.userBirthDate,
-              isEditing: userProfileEditState.isEditing,
-              onDateChanged: userProfileStateNotifier.onChangeUserBirthDate,
             ),
 
             // 유저 계정 관리 영역
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.only(left: 32, bottom: 8, top: 36),
-              child: const CustomText(
-                "home.userProfile.userAccountAction",
-                isBold: true,
-                isColorful: true,
-              ),
-            ),
             CustomDecorationContainer(
+              headerText: "home.userProfile.userAccountAction",
+              margin: const EdgeInsets.only(top: 32),
               child: Column(
                 children: [
                   ListTile(
@@ -301,6 +286,7 @@ class UserProfilePage extends ConsumerWidget {
                       isLocalize: true,
                     ),
                     onTap: () {
+                      // TODO : 확인 다이얼로그 추가
                       userProfileStateNotifier.onClickLogoutButton();
                     },
                   ),

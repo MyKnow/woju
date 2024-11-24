@@ -37,20 +37,16 @@ class UserPhoneNumberChangePage extends ConsumerWidget {
     return CustomScaffold(
       title: 'home.userProfile.userPhoneNumberChange.title',
       body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           children: [
             // 전화번호 입력
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.only(left: 32, bottom: 8, top: 32),
-              child: const CustomText(
-                "home.userProfile.userPhoneNumberChange.newPhoneNumber",
-                isBold: true,
-                isColorful: true,
-              ),
-            ),
             CustomTextfieldContainer(
               fieldKey: 'change_phone_number',
+              headerText:
+                  "home.userProfile.userPhoneNumberChange.newPhoneNumber",
+              hearderTextPadding: EdgeInsets.zero,
+              margin: const EdgeInsets.symmetric(vertical: 16),
               prefix: CustomCountryPickerWidget(
                 onChanged: phoneNumberNotifier.updateCountryCode,
                 searchDecoration: InputDecoration(
@@ -133,56 +129,45 @@ class UserPhoneNumberChangePage extends ConsumerWidget {
 
             // 인증코드 요청 시 입력한 전화번호로 전송된 인증코드 입력창 표시
             if (auth.authCodeSent && !auth.authCompleted)
-              Column(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    padding:
-                        const EdgeInsets.only(left: 32, bottom: 8, top: 32),
-                    child: const CustomText(
-                      "home.userProfile.userPhoneNumberChange.authCode",
-                      isBold: true,
-                      isColorful: true,
+              CustomTextfieldContainer(
+                fieldKey: 'authCodeForSignUp',
+                headerText: "home.userProfile.userPhoneNumberChange.authCode",
+                hearderTextPadding: EdgeInsets.zero,
+                margin: const EdgeInsets.symmetric(vertical: 16),
+                labelText: auth.labelText,
+                actions: [
+                  CustomTextButton(
+                    "status.authcode.resend",
+                    onPressed: authNotifier.onClickAuthResendButton(
+                      phoneNumber.phoneNumber ?? "",
+                      phoneNumber.dialCode,
+                      () {},
                     ),
+                    minimumSize: const Size(80, 80),
                   ),
-                  CustomTextfieldContainer(
-                    fieldKey: 'authCodeForSignUp',
-                    labelText: auth.labelText,
-                    actions: [
-                      CustomTextButton(
-                        "status.authcode.resend",
-                        onPressed: authNotifier.onClickAuthResendButton(
-                          phoneNumber.phoneNumber ?? "",
-                          phoneNumber.dialCode,
-                          () {},
-                        ),
-                        minimumSize: const Size(80, 80),
-                      ),
-                      CustomTextButton(
-                        (!auth.authCompleted)
-                            ? "status.authcode.verify"
-                            : "status.authcode.verified",
-                        onPressed: authNotifier.onClickAuthConfirmButton(
-                          context,
-                          () {},
-                        ),
-                        minimumSize: const Size(80, 80),
-                      ),
-                    ],
-                    keyboardType: TextInputType.number,
-                    autofillHints: const <String>[AutofillHints.oneTimeCode],
-                    onChanged: authNotifier.updateAuthCode,
-                    inputFormatters: auth.inputFormatters,
-                    enabled: !auth.authCompleted,
-                    textStyle: (auth.authCompleted)
-                        ? theme.textTheme.bodyMedium!.copyWith(
-                            color: Colors.grey,
-                          )
-                        : theme.primaryTextTheme.bodyMedium,
-                    focusNode: focus[1],
-                    validator: auth.validator,
-                  )
+                  CustomTextButton(
+                    (!auth.authCompleted)
+                        ? "status.authcode.verify"
+                        : "status.authcode.verified",
+                    onPressed: authNotifier.onClickAuthConfirmButton(
+                      context,
+                      () {},
+                    ),
+                    minimumSize: const Size(80, 80),
+                  ),
                 ],
+                keyboardType: TextInputType.number,
+                autofillHints: const <String>[AutofillHints.oneTimeCode],
+                onChanged: authNotifier.updateAuthCode,
+                inputFormatters: auth.inputFormatters,
+                enabled: !auth.authCompleted,
+                textStyle: (auth.authCompleted)
+                    ? theme.textTheme.bodyMedium!.copyWith(
+                        color: Colors.grey,
+                      )
+                    : theme.primaryTextTheme.bodyMedium,
+                focusNode: focus[1],
+                validator: auth.validator,
               )
             else
               Container(),

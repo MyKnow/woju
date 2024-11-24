@@ -4,20 +4,132 @@ import 'package:http/http.dart' as http;
 import 'package:woju/service/debug_service.dart';
 
 class HttpService {
-  static String baseUrl = dotenv.env['API_URL'] ?? '';
+  static String userAPIUrl = dotenv.env['USER_API_URL'] ?? '';
+  static String itemAPIUrl = dotenv.env['ITEM_API_URL'] ?? '';
 
-  static Uri getApiUrl(String path) {
-    return Uri.parse(baseUrl + path);
+  static Uri getUserAPIUrl(String path) {
+    return Uri.parse(userAPIUrl + path);
   }
 
-  static Future<http.Response> post(
-      String url, Map<String, dynamic> body) async {
+  static Uri getItemAPIUrl(String path) {
+    return Uri.parse(itemAPIUrl + path);
+  }
+
+  /// # [userPost]
+  ///
+  /// ### Parameters
+  /// - [String] - [url] : API URI
+  /// - [Map]<[String], [dynamic]> - [body] : API Header
+  ///
+  /// ### Parameters (Optional)
+  /// - [Map]<[String], [String]>? - [header] : API Header
+  ///
+  /// ### Returns
+  /// - [Future]<[http.Response]> : API Response
+  ///
+  static Future<http.Response> userPost(String url, Map<String, dynamic> body,
+      {Map<String, String>? header}) async {
+    final userUri = getUserAPIUrl(url);
+
+    return await _post(userUri, body, header);
+  }
+
+  /// # [userGet]
+  ///
+  /// ### Parameters
+  /// - [String] - [url] : API URI
+  ///
+  /// ### Parameters (Optional)
+  /// - [Map]<[String], [String]>? - [header] : API Header
+  ///
+  /// ### Returns
+  /// - [Future]<[http.Response]> : API Response
+  ///
+  static Future<http.Response> userGet(String url,
+      {Map<String, String>? header}) async {
+    final userUri = getUserAPIUrl(url);
+
+    return await _get(userUri, header);
+  }
+
+  /// # [itemPost]
+  ///
+  /// ### Parameters
+  /// - [String] - [url] : API URI
+  /// - [Map]<[String], [dynamic]> - [body] : API Body
+  ///
+  /// ### Parameters (Optional)
+  /// - [Map]<[String], [String]>? - [header] : API Header
+  ///
+  /// ### Returns
+  /// - [Future]<[http].[Response]> : API Response
+  ///
+  static Future<http.Response> itemPost(String url, Map<String, dynamic> body,
+      {Map<String, String>? header}) async {
+    final itemUri = getItemAPIUrl(url);
+
+    return await _post(itemUri, body, header);
+  }
+
+  /// # [itemGet]
+  ///
+  /// ### Parameters
+  /// - [String] - [url] : API URI
+  ///
+  /// ### Parameters (Optional)
+  /// - [Map]<[String], [String]>? - [header] : API Header
+  ///
+  /// ### Returns
+  /// - [Future]<[http.Response]> : API Response
+  ///
+  static Future<http.Response> itemGet(String url,
+      {Map<String, String>? header}) async {
+    final itemUri = getItemAPIUrl(url);
+
+    return await _get(itemUri, header);
+  }
+
+  /// # [_get]
+  ///
+  /// ### Parameters
+  /// - [Uri] - [uri] : API URI
+  /// - [Map]<[String], [dynamic]>] - [body] : API Header
+  ///
+  /// ### Returns
+  /// - [Future]<[http].[Response]>] : API Response
+  ///
+  static Future<http.Response> _get(
+      Uri url, Map<String, String>? header) async {
+    final response = await http.get(
+      url,
+      headers: header ??
+          <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+    );
+
+    return response;
+  }
+
+  /// # [_post]
+  ///
+  /// ### Parameters
+  /// - [String] - [uri] : API URI
+  /// - [Map]<[String], [dynamic]> - [body] : API Body
+  /// - [Map]<[String], [String]>? - [header] : API Header
+  ///
+  /// ### Returns
+  /// - [Future]<[http].[Response]> : API Response
+  ///
+  static Future<http.Response> _post(
+      Uri uri, Map<String, dynamic> body, Map<String, String>? header) async {
     try {
       final response = await http.post(
-        getApiUrl(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
+        uri,
+        headers: header ??
+            <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
         body: jsonEncode(body),
       );
 
@@ -26,17 +138,6 @@ class HttpService {
       printd("HttpService.post error: $e");
       return http.Response('{"error": "$e"}', 500);
     }
-  }
-
-  static Future<http.Response> get(String url) async {
-    final response = await http.get(
-      getApiUrl(url),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
-
-    return response;
   }
 
   static String failureReason(String code) {

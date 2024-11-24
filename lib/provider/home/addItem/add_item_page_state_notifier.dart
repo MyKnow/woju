@@ -9,6 +9,7 @@ import 'package:woju/model/item/category_model.dart';
 import 'package:woju/model/item/item_model.dart';
 import 'package:woju/model/item/location_model.dart';
 
+import 'package:woju/service/api/http_service.dart';
 import 'package:woju/service/debug_service.dart';
 import 'package:woju/service/image_editor_service.dart';
 import 'package:woju/service/image_picker_service.dart';
@@ -112,8 +113,19 @@ class AddItemPageStateNotifier extends StateNotifier<AddItemStateModel> {
     state = state.copyWith(priceController: priceController);
   }
 
+  /// ### 로딩 상태 업데이트 메서드
+  /// - 로딩 상태를 업데이트함.
+  ///
+  /// #### Parameters
+  /// - [bool] - [isLoading] : 로딩 상태
+  ///
+  void updateIsLoading(bool isLoading) {
+    state = state.copyWith(isLoading: isLoading);
+  }
+
   /// ### 상태 반환 getter
   AddItemStateModel get getState => state;
+  Location? get getBarterPlace => state.barterPlace;
 }
 
 /// ### AddItemPageAction
@@ -122,14 +134,19 @@ class AddItemPageStateNotifier extends StateNotifier<AddItemStateModel> {
 ///
 /// ### Methods
 ///
-/// - [void] [onClickImageAddButton] : 이미지 추가 버튼 클릭 메서드
-/// - [void] [onClickImageDeleteButton] : 이미지 삭제 버튼 클릭 메서드
-/// - [void] [onClickImageEditButton] : 이미지 수정 버튼 클릭 메서드
-/// - [void] [onClickSetMainImageButton] : 대표 이미지로 변경 버튼 클릭 메서드
-/// - [void] [onClickAdaptiveActionSheetButton] : AdaptiveActionSheet의 버튼 클릭 메서드
-/// - [void] [onClickCategorySelectButton] : 카테고리 선택 버튼 클릭 메서드
-/// - [void] [onClickFeelingOfUseGuideButton] : 사용감 정보 가이드 버튼 클릭 메서드
-/// - [void] [onClickBarterPlaceSelectButton] : 교환 장소 선택 버튼 클릭 메서드
+/// - [VoidCallback] - [onClickImageAddButton] : 이미지 추가 버튼 클릭 메서드
+/// - [VoidCallback] -  [onClickImageDeleteButton] : 이미지 삭제 버튼 클릭 메서드
+/// - [VoidCallback] -  [onClickImageEditButton] : 이미지 수정 버튼 클릭 메서드
+/// - [VoidCallback] -  [onClickSetMainImageButton] : 대표 이미지로 변경 버튼 클릭 메서드
+/// - [VoidCallback] -  [onClickAdaptiveActionSheetButton] : AdaptiveActionSheet의 버튼 클릭 메서드
+/// - [VoidCallback] - [onClickCategorySelectButton] : 카테고리 선택 버튼 클릭 메서드
+/// - [VoidCallback] - [onClickFeelingOfUseGuideButton] : 사용감 정보 가이드 버튼 클릭 메서드
+/// - [void] - [onChangedItemNameTextField] : 물품 이름 입력 메서드
+/// - [void] - [onChangedItemDescriptionTextField] : 물품 설명 입력 메서드
+/// - [void] - [onClickBarterPlaceSelectButton] : 교환 장소 선택 버튼 클릭 메서드
+/// - [VoidCallback] - [onChangedFeelingOfUseSlider] : 사용감 정보 선택 메서드
+/// - [void] - [onChangedItemPriceTextField] : 가격 입력 메서드
+/// - [VoidCallback]? - [onClickAddItemButton] : 상품 등록 버튼 클릭 메서드
 ///
 extension AddItemPageAction on AddItemPageStateNotifier {
   /// ### AdaptiveActionSheet의 버튼 클릭 메서드
@@ -268,7 +285,7 @@ extension AddItemPageAction on AddItemPageStateNotifier {
   /// - [String] - [itemName] : 입력한 물품 이름
   ///
   /// #### Returns
-  /// - [VoidCallback] : 물품 이름을 업데이트함.
+  /// - [void] : 물품 이름을 업데이트함.
   ///
   void onChangedItemNameTextField(String itemName) {
     updateItemName(itemName);
@@ -282,7 +299,7 @@ extension AddItemPageAction on AddItemPageStateNotifier {
   /// - [String] - [itemDescription] : 입력한 물품 설명
   ///
   /// #### Returns
-  /// - [VoidCallback] : 물품 설명을 업데이트함.
+  /// - [void] : 물품 설명을 업데이트함.
   ///
   void onChangedItemDescriptionTextField(String itemDescription) {
     updateItemDescription(itemDescription);
@@ -311,7 +328,7 @@ extension AddItemPageAction on AddItemPageStateNotifier {
   /// - [double] - [feelingOfUse] : 사용감 정보
   ///
   /// #### Returns
-  /// - [VoidCallback] : 사용감 정보를 업데이트함.
+  /// - [void] : 사용감 정보를 업데이트함.
   ///
   void onChangedFeelingOfUseSlider(double feelingOfUse) {
     updateFeelingOfUse(feelingOfUse);
@@ -328,7 +345,7 @@ extension AddItemPageAction on AddItemPageStateNotifier {
   /// - [String] - [itemPrice] : 입력한 물품 가격
   ///
   /// #### Returns
-  /// - [VoidCallback] : 물품 가격을 업데이트함.
+  /// - [void] : 물품 가격을 업데이트함.
   ///
   void onChangedItemPriceTextField(String itemPrice) {
     if (itemPrice.isEmpty) {
@@ -366,6 +383,47 @@ extension AddItemPageAction on AddItemPageStateNotifier {
     return () {
       printd('교환 장소 선택 버튼 클릭');
       context.push('/addItem/barterPlaceSelect');
+    };
+  }
+
+  /// ### 상품 등록 버튼 클릭 메서드
+  ///
+  /// #### Parameters
+  /// - [BuildContext] - [context] : 현재 컨텍스트
+  /// - [String]? - [userToken] : 사용자 토큰
+  ///
+  /// #### Returns
+  /// - [VoidCallback]? : 상품 등록 버튼 클릭 시 상태 업데이트
+  ///
+  VoidCallback? onClickAddItemButton(BuildContext context, String? userToken) {
+    if (!getState.isValidAddItem() || userToken == null) {
+      return null;
+    }
+
+    return () async {
+      final itemJson = getState.toJson();
+
+      updateIsLoading(true);
+
+      final response =
+          await HttpService.itemPost('/item/add-item', itemJson, header: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $userToken',
+      });
+
+      updateIsLoading(false);
+
+      if (response.statusCode == 200) {
+        printd('상품 등록 성공');
+        ToastMessageService.show("addItem.addItemSuccess".tr());
+
+        if (context.mounted) {
+          context.pop();
+        }
+      } else {
+        printd('상품 등록 실패: ${response.body}');
+        ToastMessageService.show("addItem.addItemFail".tr());
+      }
     };
   }
 }

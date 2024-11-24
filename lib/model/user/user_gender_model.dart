@@ -53,4 +53,13 @@ extension GenderExtension on Gender {
   static List<String> getGenderList() {
     return Gender.values.map((e) => e.toMessage).toList();
   }
+
+  /// ### [getGenderIndex]
+  /// - Gender의 Index를 리스트로 반환
+  ///
+  /// #### Returns
+  /// - [List]<[int]> : Index List 반환
+  static List<int> getGenderIndex() {
+    return List<int>.generate(Gender.values.length, (index) => index);
+  }
 }

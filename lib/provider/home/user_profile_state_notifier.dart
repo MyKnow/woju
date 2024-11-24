@@ -262,7 +262,7 @@ extension UserProfileEditAction on UserProfileStateNotifier {
           clearBackupUserProfile();
         }
       } else {
-        printd("UserProfile update failed");
+        printd("UserProfile update failed : $result");
         // 변경 실패 시 다시 isEditing 상태를 true로 변경하고 loading 상태를 false로 변경
         updateIsEditing(true);
         if (context.mounted) {

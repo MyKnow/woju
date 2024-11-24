@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:scroll_date_picker/scroll_date_picker.dart';
-import 'package:woju/theme/widget/custom_container_decoration.dart';
+
 import 'package:woju/theme/widget/custom_text.dart';
 
 class CustomDatePicker extends ConsumerWidget {
@@ -22,8 +22,8 @@ class CustomDatePicker extends ConsumerWidget {
     final theme = Theme.of(context);
     // isEditing이 false일 경우 수정 불가능
     if (!isEditing) {
-      return CustomDecorationContainer(
-        // height: 50,
+      return SizedBox(
+        height: 48,
         child: Center(
           child: CustomText(
             DateFormat.yMMMMd(context.locale.toString()).format(selectedDate),
@@ -34,8 +34,8 @@ class CustomDatePicker extends ConsumerWidget {
         ),
       );
     }
-    return CustomDecorationContainer(
-      height: 180,
+    return SizedBox(
+      height: 160,
       child: ScrollDatePicker(
         // 만 14세 이상만 선택 가능
         maximumDate: DateTime.now().subtract(const Duration(days: 365 * 14)),

@@ -57,6 +57,10 @@ class HomePage extends ConsumerWidget {
             "User PrivacyPolicyAgreeVersion: ${userDetail?.privacyVersion}",
             isLocalize: false,
           ),
+          CustomText(
+            "User Token: ${userDetail?.userToken}",
+            isLocalize: false,
+          ),
         ],
       ),
     );

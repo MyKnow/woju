@@ -7,7 +7,6 @@ import 'package:woju/provider/home/user_password_change_state_notifier.dart';
 import 'package:woju/provider/textfield_focus_state_notifier.dart';
 
 import 'package:woju/theme/widget/custom_scaffold.dart';
-import 'package:woju/theme/widget/custom_text.dart';
 import 'package:woju/theme/widget/custom_textfield_container.dart';
 
 class UserPasswordChangePage extends ConsumerWidget {
@@ -23,20 +22,19 @@ class UserPasswordChangePage extends ConsumerWidget {
     return CustomScaffold(
       title: "home.userProfile.userPasswordChange.title",
       body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
+        ),
         child: Column(
           children: [
             // 현재 비밀번호 입력
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.only(left: 32, bottom: 8, top: 32),
-              child: const CustomText(
-                "home.userProfile.userPasswordChange.currentPassword",
-                isBold: true,
-                isColorful: true,
-              ),
-            ),
             CustomTextfieldContainer(
               fieldKey: password.currentPasswordFieldKey,
+              headerText: "home.userProfile.userPasswordChange.currentPassword",
+              hearderTextPadding: EdgeInsets.zero,
+              margin: const EdgeInsets.symmetric(
+                vertical: 16,
+              ),
               prefixIcon: const Icon(CupertinoIcons.lock_fill),
               labelText: password.currentPassword.labelTextWithParameter(false),
               validator: password.currentPassword.validator,
@@ -87,17 +85,13 @@ class UserPasswordChangePage extends ConsumerWidget {
             ),
 
             // 새 비밀번호 입력
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.only(left: 32, bottom: 8, top: 16),
-              child: const CustomText(
-                "home.userProfile.userPasswordChange.newPassword",
-                isBold: true,
-                isColorful: true,
-              ),
-            ),
             CustomTextfieldContainer(
               fieldKey: password.newPasswordFieldKey,
+              headerText: "home.userProfile.userPasswordChange.newPassword",
+              hearderTextPadding: EdgeInsets.zero,
+              margin: const EdgeInsets.symmetric(
+                vertical: 16,
+              ),
               focusNode: focus.last,
               prefixIcon: const Icon(CupertinoIcons.lock_shield_fill),
               labelText: password.newPassword.labelTextWithParameter(false),

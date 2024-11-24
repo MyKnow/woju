@@ -18,11 +18,14 @@ class UserIdChangePage extends ConsumerWidget {
     return CustomScaffold(
       title: 'home.userProfile.userIDChange.title',
       body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           children: [
             CustomTextfieldContainer(
               fieldKey: 'change_user_id',
               headerText: 'home.userProfile.userIDChange.newUserID',
+              margin: const EdgeInsets.symmetric(vertical: 16),
+              hearderTextPadding: EdgeInsets.zero,
               prefixIcon: const Icon(Icons.person),
               initialValue: userID.userID,
               labelText: userID.labelTextForEditing,

@@ -53,3 +53,4 @@ flutter:
     - .env
     - assets/translations/
     - assets/images/
+    - assets/images/category/

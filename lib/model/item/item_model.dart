@@ -40,6 +40,7 @@ import 'package:woju/service/debug_service.dart';
 /// - [String] - [printItemFeelingOfUseToString] : 사용감 정보 문자열 반환
 /// - [Uint8List] - [feelingOfUseExampleImage] : 사용감 정보 예시 이미지 반환
 /// - [IconData] - [feelingOfUseIcon] : 사용감 아이콘 반환
+/// - [Map]<[String], [dynamic]>] - [toJson] : 모델을 JSON 형태로 변환
 ///
 class ItemModel {
   /// ### 상품 카테고리 리스트
@@ -163,7 +164,10 @@ class ItemModel {
   /// - [bool] - 유효성 검사 결과
   ///
   bool isValidItemName() {
-    return itemName != null && itemName!.length >= 5;
+    final String? itemName = this.itemName;
+    if (itemName == null) return false;
+
+    return itemName.length >= 5 && itemName.length <= 30;
   }
 
   /// ### 상품 설명 유효성 검사
@@ -174,7 +178,11 @@ class ItemModel {
   /// - [bool] - 유효성 검사 결과
   ///
   bool isValidItemDescription() {
-    return itemDescription != null && itemDescription!.length >= 10;
+    final String? itemDescription = this.itemDescription;
+
+    if (itemDescription == null) return false;
+
+    return itemDescription.length >= 10 && itemDescription.length <= 300;
   }
 
   /// ### 상품 가격 유효성 검사
@@ -430,5 +438,22 @@ class ItemModel {
     // 상품 이미지 리스트에서 이미지를 꺼내고, 새로운 인덱스에 추가
     final Uint8List image = itemImageList.removeAt(oldIndex);
     itemImageList.insert(newIndex, image);
+  }
+
+  /// ### [Map]<[String], [dynamic]> - [toJson]
+  /// - 모델을 JSON 형태로 변환
+  ///
+  /// #### Returns
+  /// - [Map]<[String], [dynamic]> - JSON 형태로 변환된 모델
+  ///
+  Map<String, dynamic> toJson() {
+    return {
+      'itemCategory': itemCategory?.getItemNameLast(),
+      'itemImages': itemImageList.map((e) => e.toList()).toList(),
+      'itemName': itemName,
+      'itemDescription': itemDescription,
+      'itemPrice': itemPrice,
+      'itemFeelingOfUse': feelingOfUse,
+    };
   }
 }

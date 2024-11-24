@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:woju/model/item/item_model.dart';
 import 'package:woju/model/item/location_model.dart';
 
@@ -11,12 +12,15 @@ import 'package:woju/model/item/location_model.dart';
 /// - [ItemModel] - [itemModel] : 상품 정보
 /// - [Location]? - [barterPlace] : 교환 장소
 /// - [TextEditingController] - [priceController] : 상품 가격 입력 컨트롤러
+/// - [bool] - [isLoading] : 로딩 상태
 ///
 /// ### Methods
 ///
 /// - [AddItemStateModel] - [initial] : 초기 상태 반환
 /// - [bool] - [isValidBarterPlace] : 교환 장소 유효성 검사
 /// - [String] - [getBarterPlaceSimpleName] : 교환 장소 문자열 반환
+/// - [bool] - [isValidAddItem] : 상품 등록 유효성 검사
+/// - [Map]<[String], [dynamic]>] - [toJson] : 모델을 JSON 형태로 변환
 ///
 ///
 class AddItemStateModel {
@@ -29,6 +33,9 @@ class AddItemStateModel {
   /// ### 상품 가격 입력 컨트롤러
   final TextEditingController priceController;
 
+  /// ### 로딩 상태
+  final bool isLoading;
+
   /// ### 교환 장소 유효성 검사
   bool isValidBarterPlace() {
     return barterPlace != null && (barterPlace as Location).isValid();
@@ -38,6 +45,7 @@ class AddItemStateModel {
     required this.itemModel,
     this.barterPlace,
     required this.priceController,
+    this.isLoading = false,
   });
 
   /// ### 초기 상태 반환
@@ -54,6 +62,7 @@ class AddItemStateModel {
     Location? barterPlace,
     bool? setToBullBarterPlace,
     TextEditingController? priceController,
+    bool? isLoading,
   }) {
     return AddItemStateModel(
       itemModel: itemModel ?? this.itemModel,
@@ -61,6 +70,7 @@ class AddItemStateModel {
           ? null
           : barterPlace ?? this.barterPlace,
       priceController: priceController ?? this.priceController,
+      isLoading: isLoading ?? this.isLoading,
     );
   }
 
@@ -72,5 +82,29 @@ class AddItemStateModel {
   ///
   String getBarterPlaceSimpleName() {
     return barterPlace?.simpleName ?? 'addItem.barterPlace.empty';
+  }
+
+  /// ### [bool] - [isValidAddItem]
+  /// - 상품 등록 유효성 검사
+  ///
+  /// #### Returns
+  /// - [bool] - 유효성 검사 결과
+  ///
+  bool isValidAddItem() {
+    return itemModel.isValidItemModel() && isValidBarterPlace();
+  }
+
+  /// ### [Map]<[String], [dynamic]>] - [toJson]
+  /// - 모델을 JSON 형태로 변환
+  ///
+  /// #### Returns
+  /// - [Map]<[String], [dynamic]>] - JSON 형태의 모델
+  ///
+  Map<String, dynamic> toJson() {
+    // itemModel의 Map에 barterPlace의 Map을 추가
+    final Map<String, dynamic> itemModelJson = itemModel.toJson();
+    itemModelJson['itemBarterPlace'] = barterPlace?.toJson();
+
+    return itemModelJson;
   }
 }

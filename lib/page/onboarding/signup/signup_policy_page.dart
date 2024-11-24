@@ -17,6 +17,7 @@ class SignupPolicyPage extends ConsumerWidget {
     return CustomScaffold(
       title: "onboarding.signUp.${type}Agreement.page.appBarTitle",
       body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           children: [
             const SizedBox(
@@ -54,7 +55,7 @@ class SignupPolicyPage extends ConsumerWidget {
                                     ?.color,
                               )),
                       Padding(
-                        padding: const EdgeInsets.all(24.0),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
                         child: MarkdownBody(
                           data: content,
                           // selectable: true,

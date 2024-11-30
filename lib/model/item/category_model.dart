@@ -144,6 +144,7 @@ extension CategoryExtension on Category {
 /// - [List]<[CategoryModel]> get [categories] : 카테고리 목록 반환
 /// - [CategoryModel] - [getCategoryModel] : 카테고리 모델 반환
 /// - [Map]<[String], [dynamic]> toJson() : JSON 변환 메서드
+/// - [CategoryModel] - [fromString] : 문자열로부터 카테고리 모델 반환
 ///
 ///
 class CategoryModel {
@@ -192,5 +193,25 @@ class CategoryModel {
   ///
   String getItemNameLast() {
     return category.toString().split('.').last;
+  }
+
+  /// # [CategoryModel] - [fromString]
+  /// - 문자열로부터 카테고리 모델 반환
+  ///
+  /// ### Parameters
+  /// - [String] [categoryName] : 카테고리 이름
+  ///
+  /// ### Returns
+  /// - [CategoryModel] : 카테고리 모델
+  static CategoryModel fromString(String categoryName) {
+    try {
+      final category = Category.values.firstWhere(
+        (element) => element.toString() == 'Category.$categoryName',
+      );
+      return getCategoryModel(category);
+    } catch (e) {
+      printd("fromString error: $e");
+      return getCategoryModel(Category.etc);
+    }
   }
 }

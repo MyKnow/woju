@@ -7,9 +7,11 @@ import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 
 import 'package:woju/page/home/main/chat_page.dart';
 import 'package:woju/page/home/main/home_page.dart';
-import 'package:woju/page/home/main/matching_page.dart';
+import 'package:woju/page/home/main/matching/matching_page.dart';
+import 'package:woju/page/home/main/myItem/my_item_page.dart';
 
 import 'package:woju/provider/home/bottom_bar_state_notifier.dart';
+import 'package:woju/provider/home/myItem/my_item_state_notifier.dart';
 
 import 'package:woju/theme/widget/custom_drawer_widget.dart';
 import 'package:woju/theme/widget/custom_text.dart';
@@ -29,6 +31,7 @@ class MainPage extends ConsumerWidget {
           _buildAppBar(bottomBarState),
           isTitle: true,
         ),
+        actions: _buildAppBarAction(bottomBarState, ref),
       ),
       drawer: const CustomDrawerWidget(),
       body: _buildPage(bottomBarState),
@@ -100,6 +103,24 @@ class MainPage extends ConsumerWidget {
             ),
             backgroundColor: theme.colorScheme.primary,
           ),
+          // 내 물건 화면
+          BottomBarItem(
+            icon: const SizedBox(
+              width: 48,
+              height: 48,
+              child: Icon(
+                CupertinoIcons.square_list,
+                size: 24,
+              ),
+            ),
+            title: CustomText(
+              "myItem.title",
+              style: theme.textTheme.titleLarge?.copyWith(
+                color: theme.colorScheme.primary,
+              ),
+            ),
+            backgroundColor: theme.colorScheme.primary,
+          ),
         ],
         fabLocation: StylishBarFabLocation.end,
         onTap: (index) {
@@ -130,6 +151,8 @@ class MainPage extends ConsumerWidget {
         return const MatchingPage();
       case 2:
         return const ChatingPage();
+      case 3:
+        return const MyItemPage();
       default:
         return const SizedBox();
     }
@@ -144,8 +167,52 @@ class MainPage extends ConsumerWidget {
         return "matching.title";
       case 2:
         return "chat.title";
+      case 3:
+        return "myItem.title";
       default:
         return "home.title";
+    }
+  }
+
+  // 선택된 탭에 따라 appBar Action 변경
+  List<Widget>? _buildAppBarAction(int index, WidgetRef ref) {
+    switch (index) {
+      case 0:
+        return null;
+      case 1:
+        return null;
+      case 2:
+        return null;
+      case 3:
+        return [
+          // 아이템 필터 버튼
+          InkWell(
+            borderRadius: BorderRadius.circular(30),
+            onTap: () {
+              ref.read(myItemStateProvider.notifier).onPressedFilterButton();
+            },
+            child: Row(
+              children: [
+                const Icon(Icons.filter_alt),
+                SizedBox(
+                  width: 4,
+                ),
+                Center(
+                  child: CustomText(
+                    ref.watch(myItemStateProvider).filterStatusToString().tr(),
+                    isBold: true,
+                    isColorful: true,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            width: 8,
+          ),
+        ];
+      default:
+        return null;
     }
   }
 }

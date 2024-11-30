@@ -88,4 +88,18 @@ class Location {
         longitude != 0 &&
         zipCode != 0;
   }
+
+  /// ### [Location.defaultLocation] : (Location) Getter
+  /// - 기본 Location 객체를 반환합니다.
+  ///
+  /// #### Returns
+  /// - [Location] : 기본 Location 객체
+  ///
+  static Location get defaultLocation => Location(
+        simpleName: '보정동 카페거리',
+        fullAddress: '경기도 용인시 기흥구 죽전로15번길 일원',
+        latitude: 37.3218,
+        longitude: 127.1101,
+        zipCode: 16897,
+      );
 }

@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:woju/model/item/category_model.dart';
+import 'package:woju/model/item/location_model.dart';
 import 'package:woju/service/debug_service.dart';
 
 /// # ItemModel
@@ -41,6 +42,7 @@ import 'package:woju/service/debug_service.dart';
 /// - [Uint8List] - [feelingOfUseExampleImage] : 사용감 정보 예시 이미지 반환
 /// - [IconData] - [feelingOfUseIcon] : 사용감 아이콘 반환
 /// - [Map]<[String], [dynamic]>] - [toJson] : 모델을 JSON 형태로 변환
+/// - [ItemModel] - [fromJson] : JSON 형태를 모델로 변환
 ///
 class ItemModel {
   /// ### 상품 카테고리 리스트
@@ -455,5 +457,230 @@ class ItemModel {
       'itemPrice': itemPrice,
       'itemFeelingOfUse': feelingOfUse,
     };
+  }
+
+  /// ### [ItemModel] - [fromJson]
+  /// - JSON 형태를 모델로 변환
+  ///
+  /// #### Parameters
+  /// - [Map]<[String], [dynamic]> - [json] : JSON 형태
+  ///
+  /// #### Returns
+  /// - [ItemModel] - 모델로 변환된 JSON
+  ///
+  static ItemModel fromJson(Map<String, dynamic> json) {
+    try {
+      // buffer 이미지 리스트를 Uint8List로 변환
+      final List<Uint8List> imageList =
+          (json['itemImages'] as List).map((item) {
+        final List<int> data = List<int>.from(item['data']);
+        return Uint8List.fromList(data);
+      }).toList();
+      printd("imageList.length: ${imageList.length}");
+
+      // TODO: double로 변환
+      final feelingOfUse = json['itemFeelingOfUse'].toDouble();
+
+      return ItemModel(
+        itemCategory: CategoryModel.fromString(json['itemCategory']),
+        itemImageList: imageList,
+        itemName: json['itemName'],
+        itemDescription: json['itemDescription'],
+        itemPrice: json['itemPrice'],
+        feelingOfUse: feelingOfUse,
+      );
+    } catch (e) {
+      printd("fromJson error: $e");
+      return ItemModel.initial();
+    }
+  }
+}
+
+/// # [ItemDetailModel]
+/// - 서버로부터 받아온 상품 상세 정보를 담는 모델
+/// - [ItemModel]을 extends하여 사용
+///
+/// ### Fields
+/// - [String] - [itemUUID] : 상품 UUID
+/// - [CategoryModel] - [itemCategory] : 상품 카테고리
+/// - [String] - [itemName] : 상품 이름
+/// - [List]<[Uint8List]> - [itemImageList] : 상품 이미지 리스트
+/// - [String] - [itemDescription] : 상품 설명
+/// - [int] - [itemPrice] : 상품 가격
+/// - [double] - [feelingOfUse] : 사용감 정보
+/// - [Location] - [itemBarterPlace] : 교환 장소
+/// - [String] - [itemOwnerUUID] : 상품 소유자 UUID
+/// - [DateTime] - [createdAt] : 상품 생성 시간
+/// - [DateTime] - [updatedAt] : 상품 업데이트 시간
+/// - [int] - [itemStatus] : 상품 등록 상태
+/// - [int] - [itemViews] : 상품 조회 수
+/// - [List<String>] - [itemLikedUsers] : 상품에 좋아요를 누른 사용자 UUID 리스트
+///
+/// ### Methods
+/// - [ItemDetailModel] - [initial] : 초기 상태 반환
+/// - [Map]<[String], [dynamic]> - [toJson] : 모델을 JSON 형태로 변환
+/// - [ItemDetailModel] - [fromJson] : JSON 형태를 모델로 변환
+///
+class ItemDetailModel extends ItemModel {
+  /// ### 상품 UUID
+  final String itemUUID;
+
+  /// ### 교환 장소
+  final Location itemBarterPlace;
+
+  /// ### 상품 소유자 UUID
+  final String itemOwnerUUID;
+
+  /// ### 상품 생성 시간
+  final DateTime createdAt;
+
+  /// ### 상품 업데이트 시간
+  final DateTime updatedAt;
+
+  /// ### 상품 등록 상태
+  final int itemStatus;
+
+  /// ### 상품 조회 수
+  final int itemViews;
+
+  /// ### 상품에 좋아요를 누른 사용자 UUID 리스트
+  final List<String> itemLikedUsers;
+
+  ItemDetailModel({
+    required this.itemUUID,
+    required this.itemBarterPlace,
+    required this.itemOwnerUUID,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.itemStatus,
+    required this.itemViews,
+    required this.itemLikedUsers,
+    required CategoryModel itemCategory,
+    required List<Uint8List> itemImageList,
+    required String itemName,
+    required String itemDescription,
+    required int itemPrice,
+    required double feelingOfUse,
+  }) : super(
+          itemCategory: itemCategory,
+          itemImageList: itemImageList,
+          itemName: itemName,
+          itemDescription: itemDescription,
+          itemPrice: itemPrice,
+          feelingOfUse: feelingOfUse,
+        );
+
+  /// ### 초기 상태 반환
+  static ItemDetailModel initial() {
+    return ItemDetailModel(
+      itemUUID: '',
+      itemCategory: CategoryModel.categories.first,
+      itemBarterPlace: Location.defaultLocation,
+      itemOwnerUUID: '',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+      itemStatus: 0,
+      itemViews: 0,
+      itemLikedUsers: [],
+      itemImageList: [],
+      itemName: '',
+      itemDescription: '',
+      itemPrice: 0,
+      feelingOfUse: 0,
+    );
+  }
+
+  /// ### [Map]<[String], [dynamic]> - [toJson]
+  /// - 모델을 JSON 형태로 변환
+  ///
+  /// #### Returns
+  /// - [Map]<[String], [dynamic]> - JSON 형태로 변환된 모델
+  ///
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'itemUUID': itemUUID,
+      'itemCategory': itemCategory?.getItemNameLast(),
+      'itemImages': itemImageList.map((e) => e.toList()).toList(),
+      'itemName': itemName,
+      'itemDescription': itemDescription,
+      'itemPrice': itemPrice,
+      'itemFeelingOfUse': feelingOfUse,
+      'itemBarterPlace': itemBarterPlace.toJson(),
+      'itemOwnerUUID': itemOwnerUUID,
+      'itemCreatedAt': createdAt.toIso8601String(),
+      'itemUpdatedAt': updatedAt.toIso8601String(),
+      'itemStatus': itemStatus,
+      'itemViews': itemViews,
+      'itemLikedUsers': itemLikedUsers,
+    };
+  }
+
+  /// ### [ItemDetailModel] - [fromJson]
+  /// - JSON 형태를 모델로 변환
+  ///
+  /// #### Parameters
+  /// - [Map]<[String], [dynamic]> - [json] : JSON 형태
+  ///
+  /// #### Returns
+  /// - [ItemDetailModel] - 모델로 변환된 JSON
+  ///
+  static ItemDetailModel fromJson(Map<String, dynamic> json) {
+    try {
+      // buffer 이미지 리스트를 Uint8List로 변환
+      final List<Uint8List> imageList =
+          (json['itemImages'] as List).map((item) {
+        final List<int> data = List<int>.from(item['data']);
+        return Uint8List.fromList(data);
+      }).toList();
+      printd("imageList.length: ${imageList.length}");
+
+      final itemUUID = json['itemUUID'];
+      printd("itemUUID: $itemUUID");
+      final itemName = json['itemName'];
+      printd("itemName: $itemName");
+      final itemDescription = json['itemDescription'];
+      printd("itemDescription: $itemDescription");
+      final itemPrice = json['itemPrice'];
+      printd("itemPrice: $itemPrice");
+      final itemOwnerUUID = json['itemOwnerUUID'];
+      printd("itemOwnerUUID: $itemOwnerUUID");
+      final itemStatus = json['itemStatus'];
+      printd("itemStatus: $itemStatus");
+      final itemViews = json['itemViews'];
+      printd("itemViews: $itemViews");
+      final createdAt = DateTime.parse(json['createdAt']);
+      printd("createdAt: $createdAt");
+      final updatedAt = DateTime.parse(json['updatedAt']);
+      printd("updatedAt: $updatedAt");
+      final feelingOfUse = (json['itemFeelingOfUse'] as int).toDouble();
+      printd("feelingOfUse: $feelingOfUse");
+      final itemCategory = CategoryModel.fromString(json['itemCategory']);
+      printd("itemCategory: $itemCategory");
+      final itemBarterPlace = Location.fromJson(json['itemBarterPlace']);
+      printd("itemBarterPlace: $itemBarterPlace");
+      final itemLikedUsers = List<String>.from(json['itemLikedUsers']);
+      printd("itemLikedUsers: $itemLikedUsers");
+
+      return ItemDetailModel(
+        itemUUID: itemUUID,
+        itemCategory: itemCategory,
+        itemImageList: imageList,
+        itemName: itemName,
+        itemDescription: itemDescription,
+        itemPrice: itemPrice,
+        feelingOfUse: feelingOfUse,
+        itemBarterPlace: itemBarterPlace,
+        itemOwnerUUID: itemOwnerUUID,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+        itemStatus: itemStatus,
+        itemViews: itemViews,
+        itemLikedUsers: itemLikedUsers,
+      );
+    } catch (e) {
+      printd("fromJson error: $e");
+      return ItemDetailModel.initial();
+    }
   }
 }

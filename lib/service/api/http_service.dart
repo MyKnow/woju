@@ -89,6 +89,25 @@ class HttpService {
     return await _get(itemUri, header);
   }
 
+  /// # [itemDelete]
+  ///
+  /// ### Parameters
+  /// - [String] - [url] : API URI
+  ///
+  /// ### Parameters
+  /// - [Map]<[String], [String]> - [header] : API Header
+  ///
+  /// ### Returns
+  /// - [Future]<[http].[Response]> : API Response
+  ///
+  static Future<http.Response> itemDelete(
+      String url, Map<String, String> header,
+      {Map<String, dynamic>? body}) async {
+    final itemUri = getItemAPIUrl(url);
+
+    return await _delete(itemUri, header, body: body);
+  }
+
   /// # [_get]
   ///
   /// ### Parameters
@@ -136,6 +155,37 @@ class HttpService {
       return response;
     } catch (e) {
       printd("HttpService.post error: $e");
+      return http.Response('{"error": "$e"}', 500);
+    }
+  }
+
+  /// # [_delete]
+  ///
+  /// ### Parameters
+  /// - [Uri] - [uri] : API URI
+  /// - [Map]<[String], [String]>? - [header] : API Header
+  ///
+  /// ### Parameters (Optional)
+  /// - [Map]<[String], [dynamic]>? - [body] : API Body
+  ///
+  /// ### Returns
+  /// - [Future]<[http.Response]> : API Response
+  ///
+  static Future<http.Response> _delete(Uri uri, Map<String, String>? header,
+      {Map<String, dynamic>? body}) async {
+    try {
+      final response = await http.delete(
+        uri,
+        headers: header ??
+            <String, String>{
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+        body: jsonEncode(body),
+      );
+
+      return response;
+    } catch (e) {
+      printd("HttpService.delete error: $e");
       return http.Response('{"error": "$e"}', 500);
     }
   }

@@ -3,8 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // ignore: prefer_const_constructors
+/// # [CustomText]
+/// - CustomText widget
+///
+/// ### Fields
+/// - [String] - [text] : 내용
+/// - [TextStyle] - [style] : 스타일
+///
 class CustomText extends ConsumerWidget {
+  /// [String] - [text] : 내용
   final String text;
+
+  /// [TextStyle] - [style] : 스타일
   final TextStyle? style;
   final TextAlign? textAlign;
   final Map<String, String>? namedArgs;

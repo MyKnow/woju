@@ -13,6 +13,7 @@ class CustomScaffold extends ConsumerWidget {
   final String? floatingActionButtonText;
   final Widget? floatingActionButtonChild;
   final Widget? bottomNavigationBar;
+  final bool? disableSafeArea;
 
   const CustomScaffold({
     super.key,
@@ -25,6 +26,7 @@ class CustomScaffold extends ConsumerWidget {
     this.floatingActionButtonChild,
     this.floatingActionButtonText,
     this.bottomNavigationBar,
+    this.disableSafeArea,
   });
 
   @override
@@ -39,10 +41,12 @@ class CustomScaffold extends ConsumerWidget {
         centerTitle: appBarActions?.isEmpty,
         actions: appBarActions,
       ),
-      body: SafeArea(
-        bottom: false,
-        child: body ?? Container(),
-      ),
+      body: disableSafeArea == true
+          ? body ?? Container()
+          : SafeArea(
+              bottom: false,
+              child: body ?? Container(),
+            ),
       drawer: drawer,
       floatingActionButtonLocation: (floatingActionButtonText != null ||
               floatingActionButtonCallback != null ||

@@ -13,6 +13,7 @@ import 'package:woju/model/item/location_model.dart';
 /// - [Location]? - [barterPlace] : 교환 장소
 /// - [TextEditingController] - [priceController] : 상품 가격 입력 컨트롤러
 /// - [bool] - [isLoading] : 로딩 상태
+/// - [String]? - [itemUUID] : 상품 UUID가 존재하면 수정 모드로 간주
 ///
 /// ### Methods
 ///
@@ -21,6 +22,7 @@ import 'package:woju/model/item/location_model.dart';
 /// - [String] - [getBarterPlaceSimpleName] : 교환 장소 문자열 반환
 /// - [bool] - [isValidAddItem] : 상품 등록 유효성 검사
 /// - [Map]<[String], [dynamic]>] - [toJson] : 모델을 JSON 형태로 변환
+/// - [bool] - [isEditing] : 수정 모드인지 확인
 ///
 ///
 class AddItemStateModel {
@@ -30,8 +32,20 @@ class AddItemStateModel {
   /// ### 교환 장소
   final Location? barterPlace;
 
+  /// ### 상품 이름 입력 컨트롤러
+  final TextEditingController nameController;
+
+  /// ### 상품 설명 입력 컨트롤러
+  final TextEditingController descriptionController;
+
   /// ### 상품 가격 입력 컨트롤러
   final TextEditingController priceController;
+
+  /// ### 상품 UUID
+  final String? itemUUID;
+
+  /// ### 상품 Status
+  final int? itemStatus;
 
   /// ### 로딩 상태
   final bool isLoading;
@@ -44,7 +58,11 @@ class AddItemStateModel {
   AddItemStateModel({
     required this.itemModel,
     this.barterPlace,
+    required this.nameController,
+    required this.descriptionController,
     required this.priceController,
+    this.itemUUID,
+    this.itemStatus,
     this.isLoading = false,
   });
 
@@ -52,6 +70,8 @@ class AddItemStateModel {
   static AddItemStateModel initial() {
     return AddItemStateModel(
       itemModel: ItemModel.initial(),
+      nameController: TextEditingController(),
+      descriptionController: TextEditingController(),
       priceController: TextEditingController(),
     );
   }
@@ -60,17 +80,26 @@ class AddItemStateModel {
   AddItemStateModel copyWith({
     ItemModel? itemModel,
     Location? barterPlace,
-    bool? setToBullBarterPlace,
+    bool? setToNullBarterPlace,
+    TextEditingController? nameController,
+    TextEditingController? descriptionController,
     TextEditingController? priceController,
     bool? isLoading,
+    String? itemUUID,
+    int? itemStatus,
   }) {
     return AddItemStateModel(
       itemModel: itemModel ?? this.itemModel,
-      barterPlace: (setToBullBarterPlace == true)
+      barterPlace: (setToNullBarterPlace == true)
           ? null
           : barterPlace ?? this.barterPlace,
+      nameController: nameController ?? this.nameController,
+      descriptionController:
+          descriptionController ?? this.descriptionController,
       priceController: priceController ?? this.priceController,
       isLoading: isLoading ?? this.isLoading,
+      itemUUID: itemUUID ?? this.itemUUID,
+      itemStatus: itemStatus ?? this.itemStatus,
     );
   }
 
@@ -106,5 +135,15 @@ class AddItemStateModel {
     itemModelJson['itemBarterPlace'] = barterPlace?.toJson();
 
     return itemModelJson;
+  }
+
+  /// ### [bool] - [isEditing]
+  /// - 수정 모드인지 확인
+  ///
+  /// #### Returns
+  /// - [bool] - 수정 모드 여부
+  ///
+  bool isEditing() {
+    return itemUUID != null && itemUUID!.isNotEmpty;
   }
 }

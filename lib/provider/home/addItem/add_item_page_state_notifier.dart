@@ -8,12 +8,13 @@ import 'package:woju/model/item/add_item_state_model.dart';
 import 'package:woju/model/item/category_model.dart';
 import 'package:woju/model/item/item_model.dart';
 import 'package:woju/model/item/location_model.dart';
+import 'package:woju/provider/shared/item_detail_state_notifier.dart';
 
 import 'package:woju/service/api/http_service.dart';
 import 'package:woju/service/debug_service.dart';
 import 'package:woju/service/image_editor_service.dart';
 import 'package:woju/service/image_picker_service.dart';
-import 'package:woju/service/image_zoom_dialog.dart';
+import 'package:woju/theme/widget/image_zoom_dialog.dart';
 import 'package:woju/service/toast_message_service.dart';
 
 final addItemPageStateProvider = StateNotifierProvider.autoDispose<
@@ -33,19 +34,30 @@ final addItemPageStateProvider = StateNotifierProvider.autoDispose<
 class AddItemPageStateNotifier extends StateNotifier<AddItemStateModel> {
   AddItemPageStateNotifier() : super(AddItemStateModel.initial());
 
-  /// ### 상품 등록 페이지 상태 초기화
+  /// ### [initial]
+  /// - 초기 상태로 상태를 업데이트함.
   void initial() {
     state = AddItemStateModel.initial();
   }
 
-  /// ### 상품 이미지 업데이트 메서드
+  /// ### [updateItemImageList]
+  /// - 상품 이미지 리스트를 업데이트함.
+  ///
+  /// #### Parameters
+  /// - [List]<[Uint8List]> - [itemImageList] : 상품 이미지 리스트
+  ///
   void updateItemImageList(List<Uint8List> itemImageList) {
     state = state.copyWith(
       itemModel: state.itemModel.copyWith(itemImageList: itemImageList),
     );
   }
 
-  /// ### 상품 카테고리 업데이트 메서드
+  /// ### [updateItemCategory]
+  /// - 상품 카테고리를 업데이트함.
+  ///
+  /// #### Parameters
+  /// - [CategoryModel] - [itemCategory] : 상품 카테고리
+  ///
   void updateItemCategory(CategoryModel? itemCategory) {
     if (itemCategory == null) {
       return;
@@ -56,64 +68,98 @@ class AddItemPageStateNotifier extends StateNotifier<AddItemStateModel> {
     );
   }
 
-  /// ### 상품 이름 업데이트 메서드
+  /// ### [updateItemName]
+  /// - 상품 이름을 업데이트함.
+  ///
+  /// #### Parameters
+  /// - [String] - [itemName] : 상품 이름
+  ///
   void updateItemName(String itemName) {
     state = state.copyWith(
       itemModel: state.itemModel.copyWith(itemName: itemName),
     );
   }
 
-  /// ### 상품 설명 업데이트 메서드
+  /// ### [updateItemDescription]
+  /// - 상품 설명을 업데이트함.
+  ///
+  /// #### Parameters
+  /// - [String] - [itemDescription] : 상품 설명
+  ///
   void updateItemDescription(String itemDescription) {
     state = state.copyWith(
       itemModel: state.itemModel.copyWith(itemDescription: itemDescription),
     );
   }
 
-  /// ### 상품 가격 업데이트 메서드
+  /// ### [updateItemPrice]
+  /// - 상품 가격을 업데이트함.
+  ///
+  /// #### Parameters
+  /// - [int]? - [itemPrice] : 상품 가격 (null일 경우 가격을 null로 설정)
+  ///
   void updateItemPrice(int? itemPrice) {
-    if (itemPrice == null) {
-      state = state.copyWith(
-        itemModel: state.itemModel.copyWith(setToNullItemPrice: true),
-      );
-    } else {
-      state = state.copyWith(
-        itemModel: state.itemModel.copyWith(
-          itemPrice: itemPrice,
-        ),
-      );
-    }
+    state = state.copyWith(
+      itemModel: state.itemModel.copyWith(
+          setToNullItemPrice: itemPrice == null, itemPrice: itemPrice),
+    );
   }
 
-  /// ### 사용감 정보 업데이트 메서드
+  /// ### [updateFeelingOfUse]
+  /// - 사용감 정보를 업데이트함.
+  ///
+  /// #### Parameters
+  /// - [double] - [feelingOfUse] : 사용감 정보
+  ///
   void updateFeelingOfUse(double feelingOfUse) {
     state = state.copyWith(
       itemModel: state.itemModel.copyWith(feelingOfUse: feelingOfUse),
     );
   }
 
-  /// ### 교환 장소 업데이트 메서드
+  /// ### [updateBarterPlace]
+  /// - 교환 장소를 업데이트함.
+  ///
+  /// #### Parameters
+  /// - [Location]? - [barterPlace] : 교환 장소 (null일 경우 교환 장소를 null로 설정)
+  ///
   void updateBarterPlace(Location? barterPlace) {
-    if (barterPlace == null) {
-      state = state.copyWith(
-        setToBullBarterPlace: true,
-      );
-      return;
-    }
-    state = state.copyWith(barterPlace: barterPlace);
+    state = state.copyWith(
+        barterPlace: barterPlace, setToNullBarterPlace: barterPlace == null);
   }
 
-  /// ### 가격 입력 컨트롤러 업데이트 메서드
+  /// ### [updateNameController]
+  /// - 이름 입력 컨트롤러를 업데이트함.
   ///
+  /// #### Parameters
+  /// - [TextEditingController] - [nameController] : 이름 입력 컨트롤러
+  ///
+  void updateNameController(TextEditingController nameController) {
+    state = state.copyWith(nameController: nameController);
+  }
+
+  /// ### [updateDescriptionController]
+  /// - 설명 입력 컨트롤러를 업데이트함.
+  ///
+  /// #### Parameters
+  /// - [TextEditingController] - [descriptionController] : 설명 입력 컨트롤러
+  ///
+  void updateDescriptionController(
+      TextEditingController descriptionController) {
+    state = state.copyWith(descriptionController: descriptionController);
+  }
+
+  /// ### [updatePriceController]
   /// - 가격 입력 컨트롤러를 업데이트함.
   ///
   /// #### Parameters
   /// - [TextEditingController] - [priceController] : 가격 입력 컨트롤러
+  ///
   void updatePriceController(TextEditingController priceController) {
     state = state.copyWith(priceController: priceController);
   }
 
-  /// ### 로딩 상태 업데이트 메서드
+  /// ### [updateIsLoading]
   /// - 로딩 상태를 업데이트함.
   ///
   /// #### Parameters
@@ -123,13 +169,33 @@ class AddItemPageStateNotifier extends StateNotifier<AddItemStateModel> {
     state = state.copyWith(isLoading: isLoading);
   }
 
+  /// ### [updateItemUUID]
+  /// - 상품 UUID를 업데이트함.
+  ///
+  /// #### Parameters
+  /// - [String] - [itemUUID] : 상품 UUID
+  ///
+  void updateItemUUID(String itemUUID) {
+    state = state.copyWith(itemUUID: itemUUID);
+  }
+
+  /// ### [updateItemStatus]
+  /// - 상품 Status를 업데이트함.
+  ///
+  /// #### Parameters
+  /// - [int] - [itemStatus] : 상품 Status
+  ///
+  void updateItemStatus(int itemStatus) {
+    state = state.copyWith(itemStatus: itemStatus);
+  }
+
   /// ### 상태 반환 getter
   AddItemStateModel get getState => state;
   Location? get getBarterPlace => state.barterPlace;
+  String? get getItemUUID => state.itemUUID;
 }
 
-/// ### AddItemPageAction
-///
+/// ### [AddItemPageAction]
 /// - 상품 등록 페이지에서의 Action을 관리하는 Extension
 ///
 /// ### Methods
@@ -147,6 +213,8 @@ class AddItemPageStateNotifier extends StateNotifier<AddItemStateModel> {
 /// - [VoidCallback] - [onChangedFeelingOfUseSlider] : 사용감 정보 선택 메서드
 /// - [void] - [onChangedItemPriceTextField] : 가격 입력 메서드
 /// - [VoidCallback]? - [onClickAddItemButton] : 상품 등록 버튼 클릭 메서드
+/// - [void] - [updateStateFromItemDetailModel] : 상품 상세 정보로 상태 업데이트
+/// - [VoidCallback] - [onClickItemEditButton] : 상품 수정 버튼 클릭 메서드
 ///
 extension AddItemPageAction on AddItemPageStateNotifier {
   /// ### AdaptiveActionSheet의 버튼 클릭 메서드
@@ -289,6 +357,7 @@ extension AddItemPageAction on AddItemPageStateNotifier {
   ///
   void onChangedItemNameTextField(String itemName) {
     updateItemName(itemName);
+    getState.nameController.text = itemName;
     printd('물품 이름 입력 : ${getState.itemModel.itemName}');
   }
 
@@ -303,6 +372,7 @@ extension AddItemPageAction on AddItemPageStateNotifier {
   ///
   void onChangedItemDescriptionTextField(String itemDescription) {
     updateItemDescription(itemDescription);
+    getState.descriptionController.text = itemDescription;
     printd('물품 설명 입력 : ${getState.itemModel.itemDescription}');
   }
 
@@ -332,7 +402,7 @@ extension AddItemPageAction on AddItemPageStateNotifier {
   ///
   void onChangedFeelingOfUseSlider(double feelingOfUse) {
     updateFeelingOfUse(feelingOfUse);
-    printd('사용감 정보 선택 : ${getState.itemModel.feelingOfUse}');
+    printd('사용감 정보 선택 : ${getState.itemModel.itemFeelingOfUse}');
   }
 
   /// ### 가격 입력 메서드
@@ -426,9 +496,88 @@ extension AddItemPageAction on AddItemPageStateNotifier {
       }
     };
   }
+
+  /// # [updateStateFromItemDetailModel]
+  /// - 상품 상세 정보로 상태 업데이트
+  ///
+  /// ### Parameters
+  /// - [ItemDetailModel] - [itemModel] : 상품 상세 정보
+  ///
+  /// ### Returns
+  /// - [void] : 상태 업데이트
+  ///
+  void updateStateFromItemDetailModel(ItemDetailModel itemModel) {
+    updateBarterPlace(itemModel.itemBarterPlace);
+    updateFeelingOfUse(itemModel.itemFeelingOfUse);
+    updateItemCategory(itemModel.itemCategory);
+    updateItemImageList(itemModel.itemImageList);
+    onChangedItemNameTextField(itemModel.itemName ?? '');
+    onChangedItemDescriptionTextField(itemModel.itemDescription ?? '');
+    onChangedItemPriceTextField(itemModel.itemPrice.toString());
+    updateItemPrice(itemModel.itemPrice);
+    updateItemUUID(itemModel.itemUUID);
+    updateItemStatus(itemModel.itemStatus);
+  }
+
+  /// ### 상품 수정 버튼 클릭 메서드
+  /// - 상품 수정 버튼 클릭 시 상태 업데이트
+  ///
+  /// #### Parameters
+  /// - [BuildContext] - [context] : 현재 컨텍스트
+  /// - [String]? - [userToken] : 사용자 토큰
+  ///
+  /// #### Returns
+  /// - [VoidCallback]? : 상품 수정 버튼 클릭 시 상태 업데이트
+  ///
+  VoidCallback? onClickItemEditButton(
+      BuildContext context, String? userToken, WidgetRef ref) {
+    if (!getState.isValidAddItem() || userToken == null) {
+      return null;
+    }
+
+    return () async {
+      final itemJson = getState.toJson();
+
+      // itemJson에 itemUUID와 itemStatus 추가
+      itemJson['itemUUID'] = getState.itemUUID;
+      itemJson['itemStatus'] = getState.itemStatus;
+
+      updateIsLoading(true);
+
+      final response = await HttpService.itemPost(
+        '/item/update-item',
+        itemJson,
+        header: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $userToken',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        printd('상품 수정 성공');
+        ToastMessageService.show("addItem.editItemSuccess".tr());
+
+        await ref.read(itemDetailStateProvider.notifier).fetchItemDetail(
+              getState.itemUUID,
+              userToken,
+              true,
+            );
+
+        updateIsLoading(false);
+
+        if (context.mounted) {
+          context.pop();
+        }
+      } else {
+        printd('상품 수정 실패: ${response.body}');
+        updateIsLoading(false);
+        ToastMessageService.show("addItem.editItemFail".tr());
+      }
+    };
+  }
 }
 
-/// ### CategorySelectPageAction
+/// ### [CategorySelectPageAction]
 ///
 /// - 카테고리 선택 페이지에서의 Action을 관리하는 Extension
 ///
@@ -447,14 +596,14 @@ extension CategorySelectPageAction on AddItemPageStateNotifier {
 
   VoidCallback onTapCategory(CategoryModel category, BuildContext context) {
     return () {
-      printd('카테고리 선택 : ${category.category.name}');
+      printd('카테고리 선택 : ${category.category.localizedName}');
       updateItemCategory(category);
       context.pop();
     };
   }
 }
 
-/// ### FeelingOfUseGuidePageAction
+/// ### [FeelingOfUseGuidePageAction]
 /// - 사용감 정보 가이드 페이지에서의 Action을 관리하는 Extension
 ///
 /// ### Methods
@@ -500,7 +649,7 @@ extension FeelingOfUseGuidePageAction on AddItemPageStateNotifier {
   }
 }
 
-/// ### BarterPlaceSelectPageAction
+/// ### [BarterPlaceSelectPageAction]
 /// - 교환 장소 선택 페이지에서의 Action을 관리하는 Extension
 ///
 /// ### Methods

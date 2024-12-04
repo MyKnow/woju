@@ -163,6 +163,8 @@
     },
     "addItem" : {
         "title" : "물품 추가",
+        "editTitle" : "물품 수정",
+        "editButton" : "수정하기",
         "doneButton" : "등록하기",
         "imageAddButton" : {
             "actionSheet" : {
@@ -406,8 +408,18 @@
     "common" : {
         "cancel" : "취소",
         "done" : "완료",
+        "ok" : "확인",
         "more" : "더보기",
-        "close" : "닫기"
+        "close" : "닫기",
+        "noItem" : "아이템이 없습니다.",
+        "elapsedTime" : {
+            "now" : "방금 전",
+            "minute" : "{minute}분 전",
+            "hour" : "{hour}시간 전",
+            "day" : "{day}일 전",
+            "month" : "{month}개월 전",
+            "year" : "{year}년 전"
+        }
     },
     "imageEditor" : {
         "paintEditor" : {
@@ -538,6 +550,41 @@
         "etc": {
             "name": "기타",
             "description": "다른 카테고리에 속하지 않는 모든 제품을 포함합니다"
+        }
+    },
+    "myItem" : {
+        "title" : "내 아이템 목록",
+        "myItemList" : {
+            "filterStatus" : {
+                "all" : "전체",
+                "no_reservation" : "예약 없음",
+                "reserved" : "예약됨",
+                "completed" : "교환 완료"
+            }
+        },
+        "itemStatusChange" : {
+            "actionSheet" : {
+                "title" : "아이템 상태 변경",
+                "message" : "아이템의 교환 가능 여부를 변경할 수 있어요"
+            }
+        }
+    },
+    "itemDetail" : {
+        "title" : "아이템 상세 정보",
+        "barterPlace" : "교환 장소",
+        "requestBarter" : "교환 요청",
+        "menu": {
+            "open" : "메뉴 열기",
+            "actionSheet" : {
+                "title" : "아이템 메뉴",
+                "report" : "신고하기",
+                "edit" : "아이템 수정",
+                "delete" : {
+                    "title" : "아이템 삭제",
+                    "content" : "정말 삭제하시겠습니까?\n삭제된 아이템은 복구할 수 없습니다",
+                    "confirm" : "삭제"
+                }
+            }
         }
     }
 }

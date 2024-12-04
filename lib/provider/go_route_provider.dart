@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:woju/model/app_state_model.dart';
+import 'package:woju/model/item/item_model.dart';
 import 'package:woju/model/onboarding/sign_in_model.dart';
 
 import 'package:woju/page/error/router_error_page.dart';
@@ -13,6 +14,7 @@ import 'package:woju/page/home/main/addItem/barter_place_select_page.dart';
 import 'package:woju/page/home/main/addItem/category_select_page.dart';
 import 'package:woju/page/home/main/addItem/feeling_of_use_guide_page.dart';
 import 'package:woju/page/home/main/main_page.dart';
+import 'package:woju/page/home/shared/item_detail_page.dart';
 import 'package:woju/page/home/setting/setting_page.dart';
 import 'package:woju/page/home/userProfile/user_id_change_page.dart';
 import 'package:woju/page/home/userProfile/user_phone_number_change_page.dart';
@@ -158,7 +160,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           ),
           _buildCustomTransitionRoute(
             path: 'addItem',
-            builder: (context, state) => const AddItemPage(),
+            builder: (context, state) {
+              final item = state.extra as ItemDetailModel?;
+              return AddItemPage(editItemModel: item);
+            },
             text: "아이템 추가",
             routes: [
               _buildNoTransitionRoute(
@@ -177,6 +182,16 @@ final goRouterProvider = Provider<GoRouter>((ref) {
                 text: "교환 장소 선택",
               ),
             ],
+          ),
+          _buildCustomTransitionRoute(
+            path: 'item/:itemUUID',
+            builder: (context, state) {
+              final itemUUID = state.pathParameters['itemUUID'].toString();
+              printd("itemUUID: $itemUUID");
+              return ItemDetailPage(itemUUID: itemUUID);
+            },
+            text: "아이템",
+            routes: null,
           ),
         ],
       ),

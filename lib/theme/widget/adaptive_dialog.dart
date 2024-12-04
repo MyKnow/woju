@@ -2,34 +2,68 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AdaptiveDialog {
-  static void showAdaptiveDialog(BuildContext context, Widget dialog) {
+  static void showAdaptiveDialog(
+    BuildContext context, {
+    String? title,
+    Widget? content,
+    Map<Text, VoidCallback>? actions,
+  }) {
     if (Theme.of(context).platform == TargetPlatform.iOS) {
-      showIOSDialog(context, dialog);
+      showIOSDialog(context, title: title, content: content, actions: actions);
     } else {
-      showAndroidDialog(context, dialog);
+      showAndroidDialog(context,
+          title: title, content: content, actions: actions);
     }
   }
 
-  static void showAndroidDialog(BuildContext context, Widget dialog) {
+  static void showAndroidDialog(
+    BuildContext context, {
+    String? title,
+    Widget? content,
+    Map<Text, VoidCallback>? actions,
+  }) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          content: dialog,
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
+          title: title != null ? Text(title) : null,
+          content: content,
+          actions: actions?.entries
+                  .map(
+                    (entry) => TextButton(
+                      onPressed: entry.value,
+                      child: entry.key,
+                    ),
+                  )
+                  .toList() ??
+              [],
         );
       },
       useSafeArea: false,
     );
   }
 
-  static void showIOSDialog(BuildContext context, Widget dialog) {
+  static void showIOSDialog(
+    BuildContext context, {
+    String? title,
+    Widget? content,
+    Map<Text, VoidCallback>? actions,
+  }) {
     showDialog(
       context: context,
       builder: (context) {
         return CupertinoAlertDialog(
-          content: dialog,
+          title: title != null ? Text(title) : null,
+          content: content,
+          actions: actions?.entries
+                  .map(
+                    (entry) => CupertinoDialogAction(
+                      onPressed: entry.value,
+                      child: entry.key,
+                    ),
+                  )
+                  .toList() ??
+              [],
         );
       },
     );

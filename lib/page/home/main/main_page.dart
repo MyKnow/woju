@@ -31,7 +31,7 @@ class MainPage extends ConsumerWidget {
           _buildAppBar(bottomBarState),
           isTitle: true,
         ),
-        actions: _buildAppBarAction(bottomBarState, ref),
+        actions: _buildAppBarAction(bottomBarState, ref, theme),
       ),
       drawer: const CustomDrawerWidget(),
       body: _buildPage(bottomBarState),
@@ -175,7 +175,7 @@ class MainPage extends ConsumerWidget {
   }
 
   // 선택된 탭에 따라 appBar Action 변경
-  List<Widget>? _buildAppBarAction(int index, WidgetRef ref) {
+  List<Widget>? _buildAppBarAction(int index, WidgetRef ref, ThemeData theme) {
     switch (index) {
       case 0:
         return null;
@@ -191,20 +191,26 @@ class MainPage extends ConsumerWidget {
             onTap: () {
               ref.read(myItemStateProvider.notifier).onPressedFilterButton();
             },
-            child: Row(
-              children: [
-                const Icon(Icons.filter_alt),
-                SizedBox(
-                  width: 4,
-                ),
-                Center(
-                  child: CustomText(
-                    ref.watch(myItemStateProvider).filterStatusToString().tr(),
-                    isBold: true,
-                    isColorful: true,
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.filter_alt,
+                    color: theme.primaryColor,
                   ),
-                ),
-              ],
+                  const SizedBox(
+                    width: 4,
+                  ),
+                  Center(
+                    child: CustomText(
+                      ref.watch(myItemStateProvider).filterStatusToString(),
+                      isBold: true,
+                      isColorful: true,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           const SizedBox(

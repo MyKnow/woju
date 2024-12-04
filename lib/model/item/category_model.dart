@@ -81,7 +81,7 @@ enum Category {
 ///
 /// ### Methods
 ///
-/// - [String] get [name] : 카테고리 이름을 반환(로컬라이징)
+/// - [String] get [localizedName] : 카테고리 이름을 반환(로컬라이징)
 /// - [String] get [description] : 카테고리 설명을 반환(로컬라이징)
 /// - [Uint8List] get [image] : 카테고리 아이콘(이미지)을 반환
 ///
@@ -91,7 +91,7 @@ extension CategoryExtension on Category {
   /// ### Returns
   /// - [String] : 카테고리 이름(로컬라이징)
   ///
-  String get name => '$this.name';
+  String get localizedName => '$this.name';
 
   /// # 카테고리 설명 반환 메서드
   ///

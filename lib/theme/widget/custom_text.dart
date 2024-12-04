@@ -24,6 +24,7 @@ class CustomText extends ConsumerWidget {
   final bool isTitle;
   final bool isWhite;
   final bool isDisabled;
+  final int? maxLines;
 
   const CustomText(
     this.text, {
@@ -37,6 +38,7 @@ class CustomText extends ConsumerWidget {
     this.isTitle = false,
     this.isWhite = false,
     this.isDisabled = false,
+    this.maxLines = 2,
   });
 
   @override
@@ -72,8 +74,8 @@ class CustomText extends ConsumerWidget {
             fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
           ),
       textAlign: textAlign,
-      overflow: TextOverflow.ellipsis,
-      maxLines: 2,
+      overflow: (maxLines == null) ? null : TextOverflow.ellipsis,
+      maxLines: maxLines,
     );
   }
 }

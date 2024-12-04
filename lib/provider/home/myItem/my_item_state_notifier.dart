@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:woju/model/item/item_model.dart';
 
@@ -18,8 +20,8 @@ final myItemStateProvider =
 /// ### Fields
 /// - [List]<[ItemDetailModel]> - [itemList] : 아이템 전체 목록
 /// - [int]? - [filter] : 필터
-/// - [bool] - [isFetching] : 아이템 목록을 받아오는 중인지 여부
-/// - [bool] - [isDeleting] : 아이템을 삭제하는 중인지 여부
+/// - [bool]? - [isFetching] : 아이템 목록을 받아오는 중인지 여부
+/// - [bool]? - [isDeleting] : 아이템을 삭제하는 중인지 여부
 ///
 /// ### Methods
 /// - [MyItemState] - [copyWith] : 상태를 복사하여 새로운 상태를 반환한다.
@@ -29,14 +31,14 @@ final myItemStateProvider =
 class MyItemState {
   final List<ItemDetailModel> itemList;
   final int? filter;
-  final bool isFetching;
-  final bool isDeleting;
+  final bool? isFetching;
+  final bool? isDeleting;
 
   const MyItemState({
     this.itemList = const [],
     this.filter,
-    this.isFetching = false,
-    this.isDeleting = false,
+    this.isFetching,
+    this.isDeleting,
   });
 
   /// # [copyWith]
@@ -47,7 +49,9 @@ class MyItemState {
   /// - [int]? - [filter] : 필터
   /// - [bool]? - [setToNullFilter] : 필터를 null로 설정할지 여부
   /// - [bool]? - [isFetching] : 아이템 목록을 받아오는 중인지 여부
+  /// - [bool]? - [setToNullIsFetching] : 아이템 목록을 받아오는 중인지 여부를 null로 설정할지 여부
   /// - [bool]? - [isDeleting] : 아이템을 삭제하는 중인지 여부
+  /// - [bool]? - [setToNullIsDeleting] : 아이템을 삭제하는 중인지 여부를 null로 설정할지 여부
   ///
   /// ### Returns
   /// - [MyItemState] : 새로운 상태
@@ -57,13 +61,17 @@ class MyItemState {
     int? filter,
     bool? setToNullFilter,
     bool? isFetching,
+    bool? setToNullIsFetching,
     bool? isDeleting,
+    bool? setToNullIsDeleting,
   }) {
     return MyItemState(
       itemList: itemList ?? this.itemList,
       filter: setToNullFilter == true ? null : filter ?? this.filter,
-      isFetching: isFetching ?? this.isFetching,
-      isDeleting: isDeleting ?? this.isDeleting,
+      isFetching:
+          setToNullIsFetching == true ? null : isFetching ?? this.isFetching,
+      isDeleting:
+          setToNullIsDeleting == true ? null : isDeleting ?? this.isDeleting,
     );
   }
 
@@ -114,15 +122,17 @@ class MyItemStateNotifier extends StateNotifier<MyItemState> {
     );
   }
 
-  void setIsFetching(bool isFetching) {
+  void setIsFetching(bool? isFetching) {
     state = state.copyWith(
       isFetching: isFetching,
+      setToNullIsFetching: isFetching == null,
     );
   }
 
-  void setIsDeleting(bool isDeleting) {
+  void setIsDeleting(bool? isDeleting) {
     state = state.copyWith(
       isDeleting: isDeleting,
+      setToNullIsDeleting: isDeleting == null,
     );
   }
 
@@ -148,6 +158,8 @@ class MyItemStateNotifier extends StateNotifier<MyItemState> {
 /// ### Methods
 /// - [Future]<[List]<[ItemDetailModel]>> - [fetchItemList] : 아이템 목록을 받아온다.
 /// - [Future]<[bool]> - [deleteItem] : 아이템을 삭제한다.
+/// - [void] - [onPressedFilterButton] : 필터 버튼을 클릭했을 때의 동작
+/// - [Future]<[ItemDetailModel]>? - [fetchItemDetail] : 아이템 상세 정보를 받아온다.
 ///
 extension MyItemPageAction on MyItemStateNotifier {
   /// # [fetchItemList]
@@ -191,6 +203,7 @@ extension MyItemPageAction on MyItemStateNotifier {
 
     setItemList(itemList);
     setIsFetching(false);
+
     return itemList;
   }
 
@@ -254,5 +267,19 @@ extension MyItemPageAction on MyItemStateNotifier {
     } else {
       setFilter(null);
     }
+  }
+
+  /// # [onTapItemDetailPage]
+  /// - 아이템 상세 페이지로 이동한다.
+  ///
+  /// ### Parameters
+  /// - [String] - [itemUUID] : 아이템 UUID
+  /// - [BuildContext] - [context] : BuildContext
+  ///
+  /// ### Returns
+  /// - [void] : 없음
+  ///
+  void onTapItemDetailPage(String itemUUID, BuildContext context) {
+    context.push('/item/$itemUUID');
   }
 }

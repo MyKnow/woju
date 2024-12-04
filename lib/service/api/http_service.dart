@@ -41,15 +41,23 @@ class HttpService {
   ///
   /// ### Parameters (Optional)
   /// - [Map]<[String], [String]>? - [header] : API Header
+  /// - [Map]<[String], [dynamic]>? - [body] : API Body
   ///
   /// ### Returns
   /// - [Future]<[http.Response]> : API Response
   ///
-  static Future<http.Response> userGet(String url,
-      {Map<String, String>? header}) async {
+  static Future<http.Response> userGet(
+    String url, {
+    Map<String, String>? header,
+    Map<String, dynamic>? body,
+  }) async {
     final userUri = getUserAPIUrl(url);
 
-    return await _get(userUri, header);
+    return await _get(
+      userUri,
+      header,
+      body,
+    );
   }
 
   /// # [itemPost]
@@ -78,15 +86,16 @@ class HttpService {
   ///
   /// ### Parameters (Optional)
   /// - [Map]<[String], [String]>? - [header] : API Header
+  /// - [Map]<[String], [dynamic]>? - [query] : API Query
   ///
   /// ### Returns
   /// - [Future]<[http.Response]> : API Response
   ///
   static Future<http.Response> itemGet(String url,
-      {Map<String, String>? header}) async {
+      {Map<String, String>? header, Map<String, dynamic>? query}) async {
     final itemUri = getItemAPIUrl(url);
 
-    return await _get(itemUri, header);
+    return await _get(itemUri, header, query);
   }
 
   /// # [itemDelete]
@@ -96,6 +105,9 @@ class HttpService {
   ///
   /// ### Parameters
   /// - [Map]<[String], [String]> - [header] : API Header
+  ///
+  /// ### Parameters (Optional)
+  /// - [Map]<[String], [dynamic]>? - [body] : API Body
   ///
   /// ### Returns
   /// - [Future]<[http].[Response]> : API Response
@@ -112,15 +124,18 @@ class HttpService {
   ///
   /// ### Parameters
   /// - [Uri] - [uri] : API URI
-  /// - [Map]<[String], [dynamic]>] - [body] : API Header
+  /// - [Map]<[String], [dynamic]>] - [header] : API Header
+  ///
+  /// ### Parameters (Optional)
+  /// - [Map]<[String], [String]>? - [query] : API Body
   ///
   /// ### Returns
-  /// - [Future]<[http].[Response]>] : API Response
+  /// - [Future]<[http.Response]>] : API Response
   ///
   static Future<http.Response> _get(
-      Uri url, Map<String, String>? header) async {
+      Uri url, Map<String, String>? header, Map<String, dynamic>? query) async {
     final response = await http.get(
-      url,
+      url.replace(queryParameters: query),
       headers: header ??
           <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',

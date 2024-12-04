@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:woju/model/item/category_model.dart';
@@ -17,7 +18,7 @@ import 'package:woju/service/debug_service.dart';
 /// - [String]? - [itemName] : 상품 이름
 /// - [String]? - [itemDescription] : 상품 설명
 /// - [int]? - [itemPrice] : 상품 가격
-/// - [double]? - [feelingOfUse] : 사용감 정보
+/// - [double]? - [itemFeelingOfUse] : 사용감 정보
 ///
 /// ### Methods
 ///
@@ -71,7 +72,7 @@ class ItemModel {
   /// - 3 : 사용감 많음
   /// - 4 : 파손 흔적 또는 고장 있음
   ///
-  final double feelingOfUse;
+  final double itemFeelingOfUse;
 
   ItemModel({
     required this.itemCategory,
@@ -79,7 +80,7 @@ class ItemModel {
     this.itemName,
     this.itemDescription,
     this.itemPrice,
-    required this.feelingOfUse,
+    required this.itemFeelingOfUse,
   });
 
   /// ### 초기 상태 반환
@@ -87,7 +88,7 @@ class ItemModel {
     return ItemModel(
       itemCategory: null,
       itemImageList: [],
-      feelingOfUse: 0,
+      itemFeelingOfUse: 0,
     );
   }
 
@@ -111,7 +112,7 @@ class ItemModel {
       itemDescription: itemDescription ?? this.itemDescription,
       itemPrice:
           (setToNullItemPrice == true) ? null : (itemPrice ?? this.itemPrice),
-      feelingOfUse: feelingOfUse ?? this.feelingOfUse,
+      itemFeelingOfUse: feelingOfUse ?? this.itemFeelingOfUse,
     );
   }
 
@@ -223,7 +224,7 @@ class ItemModel {
   /// - [bool] - 유효성 검사 결과
   ///
   bool isValidFeelingOfUse() {
-    return feelingOfUse >= 0 && feelingOfUse <= 4;
+    return itemFeelingOfUse >= 0 && itemFeelingOfUse <= 4;
   }
 
   /// ### ItemModel 유효성 검사
@@ -249,7 +250,7 @@ class ItemModel {
   /// #### Returns
   /// - [String] - 표기 변경된 가격
   ///
-  String convertFromIntToFormalString() {
+  String convertFromIntToFormalString({bool? displayKRW}) {
     String itemPriceString = itemPrice.toString();
 
     /// 정규식을 사용하여 3자리마다 콤마(,) 추가
@@ -260,7 +261,7 @@ class ItemModel {
 
     printd('itemPriceString : $itemPriceString');
 
-    return itemPriceString;
+    return itemPriceString + (displayKRW == true ? '원' : '');
   }
 
   /// ### 상품 이미지 리스트 최대 개수 반환
@@ -311,7 +312,7 @@ class ItemModel {
       return "addItem.itemCategory.selectCategory";
     }
 
-    return (itemCategory as CategoryModel).category.name;
+    return (itemCategory as CategoryModel).category.localizedName;
   }
 
   /// ### 사용감 정보 문자열 반환
@@ -319,13 +320,13 @@ class ItemModel {
   /// - 사용감 정보를 문자열로 반환
   ///
   /// #### Parameters
-  /// - [double]? - [index] : 별도의 index가 없는 경우, [feelingOfUse] 사용
+  /// - [double]? - [index] : 별도의 index가 없는 경우, [itemFeelingOfUse] 사용
   ///
   /// #### Returns
   /// - [String] 사용감 정보 문자열
   ///
   String printItemFeelingOfUseToString(double? index) {
-    final double switchIndex = index ?? feelingOfUse;
+    final double switchIndex = index ?? itemFeelingOfUse;
     switch (switchIndex.toInt()) {
       case 0:
         return "addItem.feelingOfUse.label.unopened.title";
@@ -351,7 +352,7 @@ class ItemModel {
   /// - [Uint8List] - 사용감 정보 예시 이미지
   ///
   Uint8List feelingOfUseExampleImage(double? index) {
-    final double switchIndex = index ?? feelingOfUse;
+    final double switchIndex = index ?? itemFeelingOfUse;
     switch (switchIndex.toInt()) {
       case 0:
         return Uint8List.fromList([]);
@@ -371,13 +372,13 @@ class ItemModel {
   /// ### 사용감 정보 설명 문자열 반환
   ///
   /// #### Parameters
-  /// - [double]? - [index] : 별도의 index가 없는 경우, [feelingOfUse] 사용
+  /// - [double]? - [index] : 별도의 index가 없는 경우, [itemFeelingOfUse] 사용
   ///
   /// #### Returns
   /// - [String] 사용감 정보 설명 문자열
   ///
   String printItemFeelingOfUseDescriptionToString(double? index) {
-    final double switchIndex = index ?? feelingOfUse;
+    final double switchIndex = index ?? itemFeelingOfUse;
     switch (switchIndex.toInt()) {
       case 0:
         return "addItem.feelingOfUse.label.unopened.description";
@@ -400,13 +401,15 @@ class ItemModel {
   /// - 사용감 정보에 따라 아이콘 반환
   ///
   /// #### Parameters
-  /// - [double] - [index] : 사용감 정보
+  /// - [double?] - [index] : 사용감 정보
   ///
   /// #### Returns
   /// - [IconData] - 사용감 아이콘
   ///
-  IconData feelingOfUseIcon(double index) {
-    switch (index) {
+  IconData feelingOfUseIcon(double? index) {
+    final double switchIndex = index ?? itemFeelingOfUse;
+
+    switch (switchIndex) {
       case 0:
         return CupertinoIcons.sparkles;
       case 1:
@@ -455,7 +458,7 @@ class ItemModel {
       'itemName': itemName,
       'itemDescription': itemDescription,
       'itemPrice': itemPrice,
-      'itemFeelingOfUse': feelingOfUse,
+      'itemFeelingOfUse': itemFeelingOfUse,
     };
   }
 
@@ -487,7 +490,7 @@ class ItemModel {
         itemName: json['itemName'],
         itemDescription: json['itemDescription'],
         itemPrice: json['itemPrice'],
-        feelingOfUse: feelingOfUse,
+        itemFeelingOfUse: feelingOfUse,
       );
     } catch (e) {
       printd("fromJson error: $e");
@@ -507,7 +510,7 @@ class ItemModel {
 /// - [List]<[Uint8List]> - [itemImageList] : 상품 이미지 리스트
 /// - [String] - [itemDescription] : 상품 설명
 /// - [int] - [itemPrice] : 상품 가격
-/// - [double] - [feelingOfUse] : 사용감 정보
+/// - [double] - [itemFeelingOfUse] : 사용감 정보
 /// - [Location] - [itemBarterPlace] : 교환 장소
 /// - [String] - [itemOwnerUUID] : 상품 소유자 UUID
 /// - [DateTime] - [createdAt] : 상품 생성 시간
@@ -520,6 +523,9 @@ class ItemModel {
 /// - [ItemDetailModel] - [initial] : 초기 상태 반환
 /// - [Map]<[String], [dynamic]> - [toJson] : 모델을 JSON 형태로 변환
 /// - [ItemDetailModel] - [fromJson] : JSON 형태를 모델로 변환
+/// - [ItemDetailModel] - [copyWith] : 상태를 복사하여 새로운 상태를 반환한다.
+/// - [String] - [createItemDateToString] : 상품 생성 시간 문자열 반환
+/// - [String] - [getItemStatusToString] : 상품 등록 상태 문자열 반환
 ///
 class ItemDetailModel extends ItemModel {
   /// ### 상품 UUID
@@ -538,6 +544,10 @@ class ItemDetailModel extends ItemModel {
   final DateTime updatedAt;
 
   /// ### 상품 등록 상태
+  /// - 0 : 예약 없음
+  /// - 1 : 거래 중
+  /// - 2 : 거래 완료
+  ///
   final int itemStatus;
 
   /// ### 상품 조회 수
@@ -555,20 +565,13 @@ class ItemDetailModel extends ItemModel {
     required this.itemStatus,
     required this.itemViews,
     required this.itemLikedUsers,
-    required CategoryModel itemCategory,
-    required List<Uint8List> itemImageList,
-    required String itemName,
-    required String itemDescription,
-    required int itemPrice,
-    required double feelingOfUse,
-  }) : super(
-          itemCategory: itemCategory,
-          itemImageList: itemImageList,
-          itemName: itemName,
-          itemDescription: itemDescription,
-          itemPrice: itemPrice,
-          feelingOfUse: feelingOfUse,
-        );
+    required CategoryModel super.itemCategory,
+    required super.itemImageList,
+    required String super.itemName,
+    required String super.itemDescription,
+    required int super.itemPrice,
+    required super.itemFeelingOfUse,
+  });
 
   /// ### 초기 상태 반환
   static ItemDetailModel initial() {
@@ -586,7 +589,7 @@ class ItemDetailModel extends ItemModel {
       itemName: '',
       itemDescription: '',
       itemPrice: 0,
-      feelingOfUse: 0,
+      itemFeelingOfUse: 0,
     );
   }
 
@@ -605,7 +608,7 @@ class ItemDetailModel extends ItemModel {
       'itemName': itemName,
       'itemDescription': itemDescription,
       'itemPrice': itemPrice,
-      'itemFeelingOfUse': feelingOfUse,
+      'itemFeelingOfUse': itemFeelingOfUse,
       'itemBarterPlace': itemBarterPlace.toJson(),
       'itemOwnerUUID': itemOwnerUUID,
       'itemCreatedAt': createdAt.toIso8601String(),
@@ -627,13 +630,22 @@ class ItemDetailModel extends ItemModel {
   ///
   static ItemDetailModel fromJson(Map<String, dynamic> json) {
     try {
+      printd("fromJson: $json");
       // buffer 이미지 리스트를 Uint8List로 변환
-      final List<Uint8List> imageList =
-          (json['itemImages'] as List).map((item) {
-        final List<int> data = List<int>.from(item['data']);
-        return Uint8List.fromList(data);
-      }).toList();
-      printd("imageList.length: ${imageList.length}");
+      List<Uint8List> imageList = [];
+      try {
+        if (json['itemImages'] != null) {
+          imageList = (json['itemImages'] as List).map((item) {
+            final List<int> data = List<int>.from(item['data']);
+            return Uint8List.fromList(data);
+          }).toList();
+          printd("imageList.length: ${imageList.length}");
+        } else {
+          printd("itemImages is null");
+        }
+      } catch (e) {
+        printd("imageList error: $e");
+      }
 
       final itemUUID = json['itemUUID'];
       printd("itemUUID: $itemUUID");
@@ -653,8 +665,8 @@ class ItemDetailModel extends ItemModel {
       printd("createdAt: $createdAt");
       final updatedAt = DateTime.parse(json['updatedAt']);
       printd("updatedAt: $updatedAt");
-      final feelingOfUse = (json['itemFeelingOfUse'] as int).toDouble();
-      printd("feelingOfUse: $feelingOfUse");
+      final itemFeelingOfUse = (json['itemFeelingOfUse'] as int).toDouble();
+      printd("feelingOfUse: $itemFeelingOfUse");
       final itemCategory = CategoryModel.fromString(json['itemCategory']);
       printd("itemCategory: $itemCategory");
       final itemBarterPlace = Location.fromJson(json['itemBarterPlace']);
@@ -669,7 +681,7 @@ class ItemDetailModel extends ItemModel {
         itemName: itemName,
         itemDescription: itemDescription,
         itemPrice: itemPrice,
-        feelingOfUse: feelingOfUse,
+        itemFeelingOfUse: itemFeelingOfUse,
         itemBarterPlace: itemBarterPlace,
         itemOwnerUUID: itemOwnerUUID,
         createdAt: createdAt,
@@ -681,6 +693,62 @@ class ItemDetailModel extends ItemModel {
     } catch (e) {
       printd("fromJson error: $e");
       return ItemDetailModel.initial();
+    }
+  }
+
+  // TODO : Localizing 해야 함
+  /// # [createItemDateToString]
+  /// - 아이템 등록 날짜와 현 시간을 비교하여, 차이를 문자열로 반환한다.
+  ///
+  /// ### Returns
+  /// - [String] : 아이템 등록 날짜와 현 시간의 차이 (ex. 1시간 전, Localized String)
+  ///
+  String createItemDateToString() {
+    final now = DateTime.now();
+    final uploadDate = createdAt.toLocal();
+
+    final diff = now.difference(uploadDate);
+
+    if (diff.inDays > 365) {
+      return 'common.elapsedTime.year'
+          .tr(namedArgs: {'year': (diff.inDays ~/ 365).toString()});
+    } else if (diff.inDays > 30) {
+      return 'common.elapsedTime.month'
+          .tr(namedArgs: {'month': (diff.inDays ~/ 30).toString()});
+    } else if (diff.inDays > 0) {
+      return 'common.elapsedTime.day'
+          .tr(namedArgs: {'day': diff.inDays.toString()});
+    } else if (diff.inHours > 0) {
+      return 'common.elapsedTime.hour'
+          .tr(namedArgs: {'hour': diff.inHours.toString()});
+    } else if (diff.inMinutes > 0) {
+      return 'common.elapsedTime.minute'
+          .tr(namedArgs: {'minute': diff.inMinutes.toString()});
+    } else {
+      return 'common.elapsedTime.now'.tr();
+    }
+  }
+
+  /// # [getItemStatusToString]
+  /// - 아이템 상태를 문자열로 반환한다.
+  ///
+  /// ### Parameters (Optional)
+  /// - [int]? - [itemStatus] : 아이템 상태 (default: [itemStatus])
+  ///
+  /// ### Returns
+  /// - [String] : 아이템 상태 문자열 (Localized String)
+  ///
+  String getItemStatusToString({int? itemStatus}) {
+    itemStatus ??= this.itemStatus;
+    switch (itemStatus) {
+      case 0:
+        return 'myItem.myItemList.filterStatus.no_reservation'.tr();
+      case 1:
+        return 'myItem.myItemList.filterStatus.reserved'.tr();
+      case 2:
+        return 'myItem.myItemList.filterStatus.completed'.tr();
+      default:
+        return 'common.itemStatus.all'.tr();
     }
   }
 }

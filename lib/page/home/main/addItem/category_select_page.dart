@@ -68,7 +68,7 @@ class CategorySelectPage extends ConsumerWidget {
                     // 설명 텍스트 보기
                     AdaptiveDialog.showAndroidDialog(
                       context,
-                      Container(
+                      content: Container(
                         padding: const EdgeInsets.all(32),
                         decoration: BoxDecoration(
                           color: theme.cardTheme.color,
@@ -78,7 +78,7 @@ class CategorySelectPage extends ConsumerWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             CustomText(
-                              category.name,
+                              category.localizedName,
                               style: theme.primaryTextTheme.titleMedium,
                               textAlign: TextAlign.center,
                             ),
@@ -130,7 +130,7 @@ class CategorySelectPage extends ConsumerWidget {
                         height: squareWidth / 4,
                         alignment: Alignment.center,
                         child: CustomText(
-                          category.name,
+                          category.localizedName,
                           textAlign: TextAlign.center,
                         ),
                       ),

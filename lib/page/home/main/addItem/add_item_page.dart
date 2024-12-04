@@ -4,12 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:woju/model/item/item_model.dart';
 
 import 'package:woju/provider/home/addItem/add_item_page_state_notifier.dart';
 import 'package:woju/provider/onboarding/user_detail_info_state_notifier.dart';
 
 import 'package:woju/service/adaptive_action_sheet.dart';
-import 'package:woju/service/image_zoom_dialog.dart';
+import 'package:woju/theme/widget/image_zoom_dialog.dart';
 import 'package:woju/service/toast_message_service.dart';
 import 'package:woju/theme/widget/custom_container_decoration.dart';
 
@@ -17,29 +18,51 @@ import 'package:woju/theme/widget/custom_scaffold.dart';
 import 'package:woju/theme/widget/custom_text.dart';
 import 'package:woju/theme/widget/custom_textfield_container.dart';
 
-class AddItemPage extends ConsumerWidget {
-  const AddItemPage({super.key});
+class AddItemPage extends ConsumerStatefulWidget {
+  final ItemDetailModel? editItemModel;
+
+  const AddItemPage({super.key, this.editItemModel});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AddItemPage> createState() => _AddItemPageState();
+}
+
+class _AddItemPageState extends ConsumerState<AddItemPage> {
+  @override
+  void initState() {
+    if (widget.editItemModel != null) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) {
+          ref
+              .read(addItemPageStateProvider.notifier)
+              .updateStateFromItemDetailModel(
+                widget.editItemModel as ItemDetailModel,
+              );
+        },
+      );
+    }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     /// ### 테마
     final theme = Theme.of(context);
 
     /// ### addItemPageState
     final addItemPageState = ref.watch(addItemPageStateProvider);
+    final addItemPageStateNotifier =
+        ref.watch(addItemPageStateProvider.notifier);
 
     /// ### userDetailInfoModel
     final userDetailInfoModel = ref.watch(userDetailInfoStateProvider);
-
-    /// ### addItemPageStateNotifier
-    final addItemPageStateNotifier =
-        ref.watch(addItemPageStateProvider.notifier);
 
     /// ### 화면 너비
     double screenWidth = MediaQuery.of(context).size.width;
 
     return CustomScaffold(
-      title: "addItem.title",
+      title:
+          addItemPageState.isEditing() ? "addItem.editTitle" : "addItem.title",
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
@@ -156,7 +179,7 @@ class AddItemPage extends ConsumerWidget {
               margin: const EdgeInsets.only(top: 16.0),
               headerText: "addItem.itemName.title",
               hearderTextPadding: EdgeInsets.zero,
-              onChanged: addItemPageStateNotifier.onChangedItemNameTextField,
+              controller: addItemPageState.nameController,
             ),
 
             // 상품 설명 컨테이너
@@ -170,9 +193,8 @@ class AddItemPage extends ConsumerWidget {
               keyboardType: TextInputType.multiline,
               textInputAction: TextInputAction.newline,
               // inputFormatters: [],
-              maxLines: 5,
-              onChanged:
-                  addItemPageStateNotifier.onChangedItemDescriptionTextField,
+              maxLines: null,
+              controller: addItemPageState.descriptionController,
             ),
 
             // 여백
@@ -221,7 +243,7 @@ class AddItemPage extends ConsumerWidget {
                     ],
                   ),
                   child: AnimatedToggleSwitch<double>.size(
-                    current: addItemPageState.itemModel.feelingOfUse,
+                    current: addItemPageState.itemModel.itemFeelingOfUse,
                     borderWidth: 1,
                     style: ToggleStyle(
                       backgroundColor: theme.cardTheme.color,
@@ -240,7 +262,7 @@ class AddItemPage extends ConsumerWidget {
                             .feelingOfUseIcon(local.index.toDouble()),
                         // 현재 index가 선택된 항목이라면 흰색으로 출력
                         color: local.index ==
-                                addItemPageState.itemModel.feelingOfUse
+                                addItemPageState.itemModel.itemFeelingOfUse
                             ? Colors.white
                             : theme.disabledColor,
                       );
@@ -287,6 +309,7 @@ class AddItemPage extends ConsumerWidget {
                   ? const CustomText(
                       isBold: true,
                       "₩ ",
+                      isLocalize: false,
                     )
                   : null,
               onChanged: addItemPageStateNotifier.onChangedItemPriceTextField,
@@ -328,6 +351,7 @@ class AddItemPage extends ConsumerWidget {
                                 ? theme.cardTheme.surfaceTintColor
                                 : theme.disabledColor.withOpacity(0.7),
                           ),
+                          isLocalize: false,
                         ),
                         Icon(
                           CupertinoIcons.forward,
@@ -345,12 +369,31 @@ class AddItemPage extends ConsumerWidget {
           ],
         ),
       ),
-      floatingActionButtonText: "addItem.doneButton",
-      floatingActionButtonCallback:
-          addItemPageStateNotifier.onClickAddItemButton(
-        context,
-        userDetailInfoModel?.userToken,
-      ),
+      floatingActionButtonChild: addItemPageState.isLoading
+          ? ElevatedButton(
+              onPressed: () {},
+              child: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: CupertinoActivityIndicator(
+                  radius: 8 * 3,
+                  color: Colors.white,
+                ),
+              ),
+            )
+          : null,
+      floatingActionButtonText: addItemPageState.isEditing()
+          ? "addItem.editButton"
+          : "addItem.doneButton",
+      floatingActionButtonCallback: addItemPageState.isEditing()
+          ? addItemPageStateNotifier.onClickItemEditButton(
+              context,
+              userDetailInfoModel?.userToken,
+              ref,
+            )
+          : addItemPageStateNotifier.onClickAddItemButton(
+              context,
+              userDetailInfoModel?.userToken,
+            ),
     );
   }
 

@@ -180,6 +180,7 @@ class _AddItemPageState extends ConsumerState<AddItemPage> {
               headerText: "addItem.itemName.title",
               hearderTextPadding: EdgeInsets.zero,
               controller: addItemPageState.nameController,
+              onChanged: addItemPageStateNotifier.onChangedItemNameTextField,
             ),
 
             // 상품 설명 컨테이너
@@ -195,6 +196,8 @@ class _AddItemPageState extends ConsumerState<AddItemPage> {
               // inputFormatters: [],
               maxLines: null,
               controller: addItemPageState.descriptionController,
+              onChanged:
+                  addItemPageStateNotifier.onChangedItemDescriptionTextField,
             ),
 
             // 여백

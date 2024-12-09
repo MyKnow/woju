@@ -1,13 +1,15 @@
-import 'dart:convert';
-
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:woju/model/item/add_item_state_model.dart';
 
 import 'package:woju/model/item/item_model.dart';
 
 import 'package:woju/service/api/http_service.dart';
+import 'package:woju/service/api/item_service.dart';
 import 'package:woju/service/debug_service.dart';
+import 'package:woju/service/toast_message_service.dart';
 
 final myItemStateProvider =
     StateNotifierProvider.autoDispose<MyItemStateNotifier, MyItemState>(
@@ -159,7 +161,7 @@ class MyItemStateNotifier extends StateNotifier<MyItemState> {
 /// - [Future]<[List]<[ItemDetailModel]>> - [fetchItemList] : 아이템 목록을 받아온다.
 /// - [Future]<[bool]> - [deleteItem] : 아이템을 삭제한다.
 /// - [void] - [onPressedFilterButton] : 필터 버튼을 클릭했을 때의 동작
-/// - [Future]<[ItemDetailModel]>? - [fetchItemDetail] : 아이템 상세 정보를 받아온다.
+/// - [Future]<void> - [updateItemDetail] : 아이템 상태를 변경하고, 아이템 목록을 다시 받아온다.
 ///
 extension MyItemPageAction on MyItemStateNotifier {
   /// # [fetchItemList]
@@ -180,29 +182,13 @@ extension MyItemPageAction on MyItemStateNotifier {
     setIsFetching(true);
 
     // 서버로부터 아이템 목록을 받아온다.
-    final response = await HttpService.itemGet('/item/get-item-list', header: {
-      'Authorization': 'Bearer $userToken',
-    });
-
-    if (response.statusCode != 200) {
-      return [];
-    }
-
-    // 받아온 데이터를 itemList에 저장한다.
-    final jsonDecodeResponse = jsonDecode(response.body);
-
-    final itemListJson = jsonDecodeResponse['itemList'];
-
-    if (itemListJson == null) {
-      setIsFetching(false);
-      return [];
-    }
-
-    final itemList =
-        (itemListJson as List).map((e) => ItemDetailModel.fromJson(e)).toList();
+    final itemList = await ItemService.fetchItemList(userToken);
 
     setItemList(itemList);
+
     setIsFetching(false);
+
+    printd("itemUUID in itemList: ${itemList.map((e) => e.itemUUID)}");
 
     return itemList;
   }
@@ -281,5 +267,34 @@ extension MyItemPageAction on MyItemStateNotifier {
   ///
   void onTapItemDetailPage(String itemUUID, BuildContext context) {
     context.push('/item/$itemUUID');
+  }
+
+  /// # [updateItemDetail]
+  /// - 아이템 상태를 변경하고, 아이템 목록을 다시 받아온다.
+  ///
+  /// ### Parameters
+  /// - [ItemDetailModel] - [item] : 아이템 상태
+  ///
+  Future<void> updateItemDetail(
+      ItemDetailModel item, int itemStatus, String userToken) async {
+    setIsFetching(true);
+    // 업데이트 시도
+    final response = await ItemService.updateItem(
+      null,
+      userToken,
+      addItemModel: AddItemStateModel.convertFromItemDetailModel(item).copyWith(
+        itemStatus: itemStatus,
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      ToastMessageService.show("addItem.editItemSuccess".tr());
+
+      // 아이템 목록을 다시 받아온다.
+      await fetchItemList(userToken, true);
+    } else {
+      setIsFetching(false);
+      ToastMessageService.show("addItem.editItemFail".tr());
+    }
   }
 }

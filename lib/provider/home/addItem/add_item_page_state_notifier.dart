@@ -8,14 +8,14 @@ import 'package:woju/model/item/add_item_state_model.dart';
 import 'package:woju/model/item/category_model.dart';
 import 'package:woju/model/item/item_model.dart';
 import 'package:woju/model/item/location_model.dart';
-import 'package:woju/provider/shared/item_detail_state_notifier.dart';
 
-import 'package:woju/service/api/http_service.dart';
+import 'package:woju/service/api/item_service.dart';
 import 'package:woju/service/debug_service.dart';
 import 'package:woju/service/image_editor_service.dart';
 import 'package:woju/service/image_picker_service.dart';
-import 'package:woju/theme/widget/image_zoom_dialog.dart';
 import 'package:woju/service/toast_message_service.dart';
+
+import 'package:woju/theme/widget/image_zoom_dialog.dart';
 
 final addItemPageStateProvider = StateNotifierProvider.autoDispose<
     AddItemPageStateNotifier, AddItemStateModel>(
@@ -357,7 +357,9 @@ extension AddItemPageAction on AddItemPageStateNotifier {
   ///
   void onChangedItemNameTextField(String itemName) {
     updateItemName(itemName);
-    getState.nameController.text = itemName;
+    if (getState.nameController.text.isEmpty) {
+      getState.nameController.text = itemName;
+    }
     printd('물품 이름 입력 : ${getState.itemModel.itemName}');
   }
 
@@ -372,7 +374,9 @@ extension AddItemPageAction on AddItemPageStateNotifier {
   ///
   void onChangedItemDescriptionTextField(String itemDescription) {
     updateItemDescription(itemDescription);
-    getState.descriptionController.text = itemDescription;
+    if (getState.descriptionController.text.isEmpty) {
+      getState.descriptionController.text = itemDescription;
+    }
     printd('물품 설명 입력 : ${getState.itemModel.itemDescription}');
   }
 
@@ -466,20 +470,17 @@ extension AddItemPageAction on AddItemPageStateNotifier {
   /// - [VoidCallback]? : 상품 등록 버튼 클릭 시 상태 업데이트
   ///
   VoidCallback? onClickAddItemButton(BuildContext context, String? userToken) {
+    printd("onClickAddItemButton: ${getState.isValidAddItem()}");
+    printd("onClickAddItemButton: $userToken");
+
     if (!getState.isValidAddItem() || userToken == null) {
       return null;
     }
 
     return () async {
-      final itemJson = getState.toJson();
-
       updateIsLoading(true);
 
-      final response =
-          await HttpService.itemPost('/item/add-item', itemJson, header: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $userToken',
-      });
+      final response = await ItemService.addItem(getState, userToken);
 
       updateIsLoading(false);
 
@@ -531,37 +532,23 @@ extension AddItemPageAction on AddItemPageStateNotifier {
   ///
   VoidCallback? onClickItemEditButton(
       BuildContext context, String? userToken, WidgetRef ref) {
+    printd("onClickItemEditButton: ${getState.isValidAddItem()}");
+    printd("onClickItemEditButton: $userToken");
+    printd("onClickItemEditButton: ${getState.itemUUID}");
+
     if (!getState.isValidAddItem() || userToken == null) {
       return null;
     }
 
     return () async {
-      final itemJson = getState.toJson();
-
-      // itemJson에 itemUUID와 itemStatus 추가
-      itemJson['itemUUID'] = getState.itemUUID;
-      itemJson['itemStatus'] = getState.itemStatus;
-
       updateIsLoading(true);
 
-      final response = await HttpService.itemPost(
-        '/item/update-item',
-        itemJson,
-        header: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $userToken',
-        },
-      );
+      final response =
+          await ItemService.updateItem(null, userToken, addItemModel: getState);
 
       if (response.statusCode == 200) {
         printd('상품 수정 성공');
         ToastMessageService.show("addItem.editItemSuccess".tr());
-
-        await ref.read(itemDetailStateProvider.notifier).fetchItemDetail(
-              getState.itemUUID,
-              userToken,
-              true,
-            );
 
         updateIsLoading(false);
 

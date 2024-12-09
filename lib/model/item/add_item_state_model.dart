@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'package:woju/model/item/item_model.dart';
@@ -23,7 +24,7 @@ import 'package:woju/model/item/location_model.dart';
 /// - [bool] - [isValidAddItem] : 상품 등록 유효성 검사
 /// - [Map]<[String], [dynamic]>] - [toJson] : 모델을 JSON 형태로 변환
 /// - [bool] - [isEditing] : 수정 모드인지 확인
-///
+/// - [AddItemStateModel] - [convertFromItemDetailModel] : ItemDetailModel를 AddItemStateModel로 변환
 ///
 class AddItemStateModel {
   /// ### 상품 정보
@@ -110,7 +111,7 @@ class AddItemStateModel {
   /// - [String] - 교환 장소 문자열
   ///
   String getBarterPlaceSimpleName() {
-    return barterPlace?.simpleName ?? 'addItem.barterPlace.empty';
+    return barterPlace?.simpleName ?? 'addItem.barterPlace.empty'.tr();
   }
 
   /// ### [bool] - [isValidAddItem]
@@ -134,6 +135,12 @@ class AddItemStateModel {
     final Map<String, dynamic> itemModelJson = itemModel.toJson();
     itemModelJson['itemBarterPlace'] = barterPlace?.toJson();
 
+    // itemUUID가 존재하는 경우 itemStatus를 추가
+    if (itemUUID != null && itemUUID!.isNotEmpty) {
+      itemModelJson['itemStatus'] = itemStatus;
+      itemModelJson['itemUUID'] = itemUUID;
+    }
+
     return itemModelJson;
   }
 
@@ -145,5 +152,29 @@ class AddItemStateModel {
   ///
   bool isEditing() {
     return itemUUID != null && itemUUID!.isNotEmpty;
+  }
+
+  /// ### [AddItemStateModel] - [convertFromItemDetailModel]
+  /// - ItemDetailModel를 AddItemStateModel로 변환
+  ///
+  /// #### Parameters
+  /// - [ItemDetailModel] - [itemDetailModel] : ItemDetailModel
+  ///
+  /// #### Returns
+  /// - [AddItemStateModel] - AddItemStateModel
+  ///
+  static AddItemStateModel convertFromItemDetailModel(
+      ItemDetailModel itemDetailModel) {
+    return AddItemStateModel(
+      itemModel: itemDetailModel,
+      barterPlace: itemDetailModel.itemBarterPlace,
+      nameController: TextEditingController(text: itemDetailModel.itemName),
+      descriptionController:
+          TextEditingController(text: itemDetailModel.itemDescription),
+      priceController:
+          TextEditingController(text: itemDetailModel.itemPrice.toString()),
+      itemUUID: itemDetailModel.itemUUID,
+      itemStatus: itemDetailModel.itemStatus,
+    );
   }
 }

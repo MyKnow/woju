@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:woju/model/item/item_model.dart';
-import 'package:woju/provider/home/addItem/add_item_page_state_notifier.dart';
 
 import 'package:woju/provider/home/myItem/my_item_state_notifier.dart';
 import 'package:woju/provider/onboarding/user_detail_info_state_notifier.dart';
 import 'package:woju/provider/shared/item_detail_state_notifier.dart';
+
 import 'package:woju/service/adaptive_action_sheet.dart';
 
 import 'package:woju/theme/widget/custom_text.dart';
@@ -27,35 +27,32 @@ class _MyItemPageState extends ConsumerState<MyItemPage> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _fetchInitialData(false);
+      final userToken = ref.watch(userDetailInfoStateProvider)?.userToken ?? "";
+
+      _fetchInitialData(true, userToken);
     });
     super.initState();
   }
 
-  Future<void> _fetchInitialData(bool isForced) async {
-    final userToken = ref.read(userDetailInfoStateProvider)?.userToken ?? '';
+  Future<void> _fetchInitialData(bool isForced, String userToken) async {
     await ref.read(myItemStateProvider.notifier).fetchItemList(
           userToken,
           isForced,
         );
   }
 
-  Future<void> _deleteItem(String itemUUID) async {
-    final userToken = ref.read(userDetailInfoStateProvider)?.userToken ?? '';
+  Future<void> _deleteItem(String itemUUID, String userToken) async {
     await ref.read(myItemStateProvider.notifier).deleteItem(
           userToken,
           itemUUID,
         );
+  }
 
-    Future<void> _updateItemDetail(String itemUUID) async {
-      final userToken = ref.read(userDetailInfoStateProvider)?.userToken ?? '';
-      final item =
-          await ref.read(itemDetailStateProvider.notifier).fetchItemDetail(
-                itemUUID,
-                userToken,
-                true,
-              );
-    }
+  Future<void> _updateItemDetail(
+      ItemDetailModel item, int itemStatus, String userToken) async {
+    await ref
+        .read(myItemStateProvider.notifier)
+        .updateItemDetail(item, itemStatus, userToken);
   }
 
   @override
@@ -65,6 +62,8 @@ class _MyItemPageState extends ConsumerState<MyItemPage> {
     final myItemState = ref.watch(myItemStateProvider);
     final myItemStateNotifier = ref.read(myItemStateProvider.notifier);
 
+    final userToken = ref.watch(userDetailInfoStateProvider)?.userToken ?? "";
+
     return SafeArea(
       child: (myItemState.isFetching == true)
           ? const Center(
@@ -72,7 +71,7 @@ class _MyItemPageState extends ConsumerState<MyItemPage> {
             )
           : RefreshIndicator(
               onRefresh: () async {
-                await _fetchInitialData(true);
+                await _fetchInitialData(true, userToken);
               },
               child: ListView(
                 padding: const EdgeInsets.symmetric(vertical: 16),
@@ -84,6 +83,7 @@ class _MyItemPageState extends ConsumerState<MyItemPage> {
                       return _buildItem(
                         item,
                         scale,
+                        userToken,
                         itemImageLength: imageSize,
                         isDeleting: myItemState.isDeleting == true,
                         onTap: () => myItemStateNotifier.onTapItemDetailPage(
@@ -96,7 +96,7 @@ class _MyItemPageState extends ConsumerState<MyItemPage> {
                               .pushItemEditPage(context, item: item);
                         },
                         onEndToStart: () async {
-                          await _deleteItem(item.itemUUID);
+                          await _deleteItem(item.itemUUID, userToken);
                         },
                       );
                     },
@@ -109,7 +109,8 @@ class _MyItemPageState extends ConsumerState<MyItemPage> {
 
   Widget _buildItem(
     ItemDetailModel item,
-    double scale, {
+    double scale,
+    String userToken, {
     double? itemImageLength,
     Function()? onTap,
     Function()? onLongPress,
@@ -136,9 +137,6 @@ class _MyItemPageState extends ConsumerState<MyItemPage> {
 
     // 제목이 없을 경우 빈 문자열로 설정
     final itemName = item.itemName ?? '';
-
-    // 설명이 없을 경우 빈 문자열로 설정
-    final itemDescription = item.itemDescription ?? '';
 
     // 테마
     final theme = Theme.of(context);
@@ -209,27 +207,21 @@ class _MyItemPageState extends ConsumerState<MyItemPage> {
                             ).tr(): () {
                               Navigator.of(context).pop();
 
-                              ref
-                                  .read(itemDetailStateProvider.notifier)
-                                  .pushItemEditPage(context);
+                              _updateItemDetail(item, 0, userToken);
                             },
                             Text(
                               item.getItemStatusToString(itemStatus: 1),
                             ).tr(): () {
                               Navigator.of(context).pop();
 
-                              ref
-                                  .read(itemDetailStateProvider.notifier)
-                                  .pushItemEditPage(context);
+                              _updateItemDetail(item, 1, userToken);
                             },
                             Text(
                               item.getItemStatusToString(itemStatus: 2),
                             ).tr(): () {
                               Navigator.of(context).pop();
 
-                              ref
-                                  .read(itemDetailStateProvider.notifier)
-                                  .pushItemEditPage(context);
+                              _updateItemDetail(item, 2, userToken);
                             },
                           },
                         );

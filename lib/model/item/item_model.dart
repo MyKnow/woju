@@ -3,9 +3,9 @@ import 'dart:typed_data';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:woju/model/item/add_item_state_model.dart';
 import 'package:woju/model/item/category_model.dart';
 import 'package:woju/model/item/location_model.dart';
-import 'package:woju/service/debug_service.dart';
 
 /// # ItemModel
 ///
@@ -259,7 +259,7 @@ class ItemModel {
       (Match match) => '${match[1]},',
     );
 
-    printd('itemPriceString : $itemPriceString');
+    // printd('itemPriceString : $itemPriceString');
 
     return itemPriceString + (displayKRW == true ? '원' : '');
   }
@@ -479,7 +479,7 @@ class ItemModel {
         final List<int> data = List<int>.from(item['data']);
         return Uint8List.fromList(data);
       }).toList();
-      printd("imageList.length: ${imageList.length}");
+      // printd("imageList.length: ${imageList.length}");
 
       // TODO: double로 변환
       final feelingOfUse = json['itemFeelingOfUse'].toDouble();
@@ -493,7 +493,7 @@ class ItemModel {
         itemFeelingOfUse: feelingOfUse,
       );
     } catch (e) {
-      printd("fromJson error: $e");
+      // printd("fromJson error: $e");
       return ItemModel.initial();
     }
   }
@@ -526,6 +526,7 @@ class ItemModel {
 /// - [ItemDetailModel] - [copyWith] : 상태를 복사하여 새로운 상태를 반환한다.
 /// - [String] - [createItemDateToString] : 상품 생성 시간 문자열 반환
 /// - [String] - [getItemStatusToString] : 상품 등록 상태 문자열 반환
+/// - [ItemDetailModel] - [itemDetailModelFromAddItemStateModel] : AddItemStateModel를 ItemDetailModel로 변환
 ///
 class ItemDetailModel extends ItemModel {
   /// ### 상품 UUID
@@ -630,7 +631,6 @@ class ItemDetailModel extends ItemModel {
   ///
   static ItemDetailModel fromJson(Map<String, dynamic> json) {
     try {
-      printd("fromJson: $json");
       // buffer 이미지 리스트를 Uint8List로 변환
       List<Uint8List> imageList = [];
       try {
@@ -639,40 +639,40 @@ class ItemDetailModel extends ItemModel {
             final List<int> data = List<int>.from(item['data']);
             return Uint8List.fromList(data);
           }).toList();
-          printd("imageList.length: ${imageList.length}");
+          // printd("imageList.length: ${imageList.length}");
         } else {
-          printd("itemImages is null");
+          // printd("itemImages is null");
         }
       } catch (e) {
-        printd("imageList error: $e");
+        // printd("imageList error: $e");
       }
 
       final itemUUID = json['itemUUID'];
-      printd("itemUUID: $itemUUID");
+      // printd("itemUUID: $itemUUID");
       final itemName = json['itemName'];
-      printd("itemName: $itemName");
+      // printd("itemName: $itemName");
       final itemDescription = json['itemDescription'];
-      printd("itemDescription: $itemDescription");
+      // printd("itemDescription: $itemDescription");
       final itemPrice = json['itemPrice'];
-      printd("itemPrice: $itemPrice");
+      // printd("itemPrice: $itemPrice");
       final itemOwnerUUID = json['itemOwnerUUID'];
-      printd("itemOwnerUUID: $itemOwnerUUID");
+      // printd("itemOwnerUUID: $itemOwnerUUID");
       final itemStatus = json['itemStatus'];
-      printd("itemStatus: $itemStatus");
+      // printd("itemStatus: $itemStatus");
       final itemViews = json['itemViews'];
-      printd("itemViews: $itemViews");
+      // printd("itemViews: $itemViews");
       final createdAt = DateTime.parse(json['createdAt']);
-      printd("createdAt: $createdAt");
+      // printd("createdAt: $createdAt");
       final updatedAt = DateTime.parse(json['updatedAt']);
-      printd("updatedAt: $updatedAt");
+      // printd("updatedAt: $updatedAt");
       final itemFeelingOfUse = (json['itemFeelingOfUse'] as int).toDouble();
-      printd("feelingOfUse: $itemFeelingOfUse");
+      // printd("feelingOfUse: $itemFeelingOfUse");
       final itemCategory = CategoryModel.fromString(json['itemCategory']);
-      printd("itemCategory: $itemCategory");
+      // printd("itemCategory: $itemCategory");
       final itemBarterPlace = Location.fromJson(json['itemBarterPlace']);
-      printd("itemBarterPlace: $itemBarterPlace");
+      // printd("itemBarterPlace: $itemBarterPlace");
       final itemLikedUsers = List<String>.from(json['itemLikedUsers']);
-      printd("itemLikedUsers: $itemLikedUsers");
+      // printd("itemLikedUsers: $itemLikedUsers");
 
       return ItemDetailModel(
         itemUUID: itemUUID,
@@ -691,7 +691,7 @@ class ItemDetailModel extends ItemModel {
         itemLikedUsers: itemLikedUsers,
       );
     } catch (e) {
-      printd("fromJson error: $e");
+      // printd("fromJson error: $e");
       return ItemDetailModel.initial();
     }
   }
@@ -750,5 +750,37 @@ class ItemDetailModel extends ItemModel {
       default:
         return 'common.itemStatus.all'.tr();
     }
+  }
+
+  /// # [itemDetailModelFromAddItemStateModel]
+  /// - AddItemStateModel를 ItemDetailModel로 변환
+  ///
+  /// ### Parameters
+  /// - [AddItemStateModel] - [addItemModel] : AddItemStateModel
+  /// - [String] - [itemOwnerUUID] : 상품 소유자 UUID
+  /// - [int] - [itemStatus] : 상품 상태
+  ///
+  /// ### Returns
+  /// - [ItemDetailModel] : ItemDetailModel
+  ///
+  static ItemDetailModel itemDetailModelFromAddItemStateModel(
+      AddItemStateModel addItemModel, String itemOwnerUUID, int itemStatus) {
+    return ItemDetailModel(
+      itemUUID: addItemModel.itemUUID ?? '',
+      itemCategory:
+          addItemModel.itemModel.itemCategory ?? CategoryModel.categories.first,
+      itemImageList: addItemModel.itemModel.itemImageList,
+      itemName: addItemModel.itemModel.itemName ?? '',
+      itemDescription: addItemModel.itemModel.itemDescription ?? '',
+      itemPrice: addItemModel.itemModel.itemPrice ?? 0,
+      itemFeelingOfUse: addItemModel.itemModel.itemFeelingOfUse,
+      itemBarterPlace: addItemModel.barterPlace ?? Location.defaultLocation,
+      itemOwnerUUID: itemOwnerUUID,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+      itemStatus: itemStatus,
+      itemViews: 0,
+      itemLikedUsers: [],
+    );
   }
 }

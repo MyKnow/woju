@@ -61,6 +61,10 @@ class HomePage extends ConsumerWidget {
             "User Token: ${userDetail?.userToken}",
             isLocalize: false,
           ),
+          CustomText(
+            "Favorite Category Map: ${userDetail?.userFavoriteCategoriesMap}",
+            isLocalize: false,
+          ),
         ],
       ),
     );

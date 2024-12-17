@@ -188,8 +188,6 @@ extension MyItemPageAction on MyItemStateNotifier {
 
     setIsFetching(false);
 
-    printd("itemUUID in itemList: ${itemList.map((e) => e.itemUUID)}");
-
     return itemList;
   }
 

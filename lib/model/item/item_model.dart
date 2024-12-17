@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:woju/model/item/add_item_state_model.dart';
 import 'package:woju/model/item/category_model.dart';
 import 'package:woju/model/item/location_model.dart';
+import 'package:woju/service/debug_service.dart';
 
 /// # ItemModel
 ///
@@ -555,7 +556,13 @@ class ItemDetailModel extends ItemModel {
   final int itemViews;
 
   /// ### 상품에 좋아요를 누른 사용자 UUID 리스트
-  final List<String> itemLikedUsers;
+  final Map<String, String> itemLikedUsers;
+
+  /// ### 상품에 싫어요를 누른 사용자 UUID 리스트
+  final List<String> itemUnlikedUsers;
+
+  /// ### 상품에 매칭된 사용자 UUID 리스트
+  final Map<String, String> itemMatchedUsers;
 
   ItemDetailModel({
     required this.itemUUID,
@@ -566,6 +573,8 @@ class ItemDetailModel extends ItemModel {
     required this.itemStatus,
     required this.itemViews,
     required this.itemLikedUsers,
+    required this.itemUnlikedUsers,
+    required this.itemMatchedUsers,
     required CategoryModel super.itemCategory,
     required super.itemImageList,
     required String super.itemName,
@@ -585,7 +594,9 @@ class ItemDetailModel extends ItemModel {
       updatedAt: DateTime.now(),
       itemStatus: 0,
       itemViews: 0,
-      itemLikedUsers: [],
+      itemLikedUsers: {},
+      itemUnlikedUsers: [],
+      itemMatchedUsers: {},
       itemImageList: [],
       itemName: '',
       itemDescription: '',
@@ -616,7 +627,9 @@ class ItemDetailModel extends ItemModel {
       'itemUpdatedAt': updatedAt.toIso8601String(),
       'itemStatus': itemStatus,
       'itemViews': itemViews,
-      'itemLikedUsers': itemLikedUsers,
+      'itemLikedUsers': itemLikedUsers.toString(),
+      'itemUnlikedUsers': itemUnlikedUsers.toString(),
+      'itemMatchedUsers': itemMatchedUsers.toString(),
     };
   }
 
@@ -671,8 +684,13 @@ class ItemDetailModel extends ItemModel {
       // printd("itemCategory: $itemCategory");
       final itemBarterPlace = Location.fromJson(json['itemBarterPlace']);
       // printd("itemBarterPlace: $itemBarterPlace");
-      final itemLikedUsers = List<String>.from(json['itemLikedUsers']);
+      final itemLikedUsers = Map<String, String>.from(json['itemLikedUsers']);
       // printd("itemLikedUsers: $itemLikedUsers");
+      final itemUnlikedUsers = List<String>.from(json['itemUnlikedUsers']);
+      // printd("itemUnlikedUsers: $itemUnlikedUsers");
+      final itemMatchedUsers =
+          Map<String, String>.from(json['itemMatchedUsers']);
+      // printd("itemMatchedUsers: $itemMatchedUsers");
 
       return ItemDetailModel(
         itemUUID: itemUUID,
@@ -689,9 +707,11 @@ class ItemDetailModel extends ItemModel {
         itemStatus: itemStatus,
         itemViews: itemViews,
         itemLikedUsers: itemLikedUsers,
+        itemUnlikedUsers: itemUnlikedUsers,
+        itemMatchedUsers: itemMatchedUsers,
       );
     } catch (e) {
-      // printd("fromJson error: $e");
+      printd("fromJson error: $e");
       return ItemDetailModel.initial();
     }
   }
@@ -780,7 +800,9 @@ class ItemDetailModel extends ItemModel {
       updatedAt: DateTime.now(),
       itemStatus: itemStatus,
       itemViews: 0,
-      itemLikedUsers: [],
+      itemLikedUsers: {},
+      itemUnlikedUsers: [],
+      itemMatchedUsers: {},
     );
   }
 }

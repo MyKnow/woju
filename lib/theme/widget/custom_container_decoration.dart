@@ -10,6 +10,8 @@ class CustomDecorationContainer extends ConsumerWidget {
   final EdgeInsetsGeometry? hearderTextPadding;
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
+  final bool? decorationEnable;
+
   const CustomDecorationContainer({
     super.key,
     required this.child,
@@ -19,6 +21,7 @@ class CustomDecorationContainer extends ConsumerWidget {
     this.hearderTextPadding,
     this.padding = const EdgeInsets.all(8),
     this.margin = const EdgeInsets.symmetric(horizontal: 20),
+    this.decorationEnable = true,
   });
 
   @override
@@ -50,16 +53,19 @@ class CustomDecorationContainer extends ConsumerWidget {
             height: height,
             padding: padding,
             margin: (headerText == null) ? null : const EdgeInsets.only(top: 8),
-            decoration: BoxDecoration(
-              color: nowTheme.cardTheme.color ?? nowTheme.cardColor,
-              borderRadius: BorderRadius.circular(30),
-              boxShadow: [
-                BoxShadow(
-                  color: nowTheme.cardTheme.shadowColor ?? nowTheme.shadowColor,
-                  blurRadius: 2,
-                ),
-              ],
-            ),
+            decoration: decorationEnable == true
+                ? BoxDecoration(
+                    color: nowTheme.cardTheme.color ?? nowTheme.cardColor,
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: nowTheme.cardTheme.shadowColor ??
+                            nowTheme.shadowColor,
+                        blurRadius: 2,
+                      ),
+                    ],
+                  )
+                : null,
             child: child,
           ),
         ],

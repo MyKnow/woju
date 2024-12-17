@@ -84,6 +84,7 @@ enum Category {
 /// - [String] get [localizedName] : 카테고리 이름을 반환(로컬라이징)
 /// - [String] get [description] : 카테고리 설명을 반환(로컬라이징)
 /// - [Uint8List] get [image] : 카테고리 아이콘(이미지)을 반환
+/// - [Category] - [fromString] : 문자열로부터 카테고리 반환
 ///
 extension CategoryExtension on Category {
   /// # 카테고리 이름 반환 메서드
@@ -124,6 +125,82 @@ extension CategoryExtension on Category {
     );
 
     return image;
+  }
+
+  /// # [Category] - [getCategoryMapFromString]
+  /// - 문자열로부터 카테고리 맵 반환
+  ///
+  /// ### Parameters
+  /// - [String]? - [categoryMap] : 카테고리 맵 문자열
+  ///  - ex) {"electronics": 1, "fashion": 2, "book": 3}
+  ///
+  /// ### Returns
+  /// - [Map]<[Category], [int]>? : 카테고리 맵
+  ///
+  static Map<Category, int>? getCategoryMapFromString(String? categoryMap) {
+    if (categoryMap == null || categoryMap.isEmpty) {
+      return null;
+    }
+
+    final map = <Category>[];
+
+    try {
+      // 쉼표로 분리
+      final categoryList = categoryMap.split(',').map((e) => e.trim()).toList();
+
+      // 맵에 추가
+      for (final category in categoryList) {
+        final split = category.split(':');
+        final categoryName = split[0].replaceAll(RegExp(r'[{"}]'), '');
+        final categoryValue =
+            int.parse(split[1].replaceAll(RegExp(r'[{"}]'), ''));
+        map.add(CategoryExtension.fromString(categoryName));
+
+        printd('categoryName: $categoryName, categoryValue: $categoryValue');
+      }
+
+      return {for (var e in map) e: 1};
+    } catch (e) {
+      printd('getCategoryMapFromString error: $e');
+      return null;
+    }
+  }
+
+  /// # [Category] - [toStringFromCategoryList]
+  /// - 카테고리 리스트를 문자열로 변환
+  ///
+  /// ### Parameters
+  /// - [List]<[Category]>? - [categoryList] : 카테고리 리스트
+  ///
+  /// ### Returns
+  /// - [String] : 카테고리 리스트 문자열 (Localized)
+  ///
+  static String toStringFromCategoryList(List<Category>? categoryList) {
+    if (categoryList == null || categoryList.isEmpty) {
+      return 'Category.emptyList';
+    }
+
+    return categoryList.map((e) => e.localizedName).toList().join(', ');
+  }
+
+  /// # [Category] - [fromString]
+  /// - 문자열로부터 카테고리 반환
+  ///
+  /// ### Parameters
+  /// - [String] - [categoryName] : 카테고리 이름
+  ///
+  /// ### Returns
+  /// - [Category] : 카테고리
+  ///
+  static Category fromString(String categoryName) {
+    try {
+      return Category.values.firstWhere(
+        (element) => element.toString() == 'Category.$categoryName',
+      );
+    } catch (e) {
+      printd('fromString error: $e');
+      return Category.etc;
+    }
   }
 }
 

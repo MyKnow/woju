@@ -253,24 +253,35 @@ class UserService {
   ///
   static Future<bool> updateUser(
       UserDetailInfoModel userDetailInfo, String userPassword) async {
-    final response = await HttpService.userPost('/user/update-user-info', {
-      "userUUID": userDetailInfo.userUUID,
-      "userProfileImage": userDetailInfo.profileImage,
-      "userID": userDetailInfo.userID,
-      "userPhoneNumber": userDetailInfo.userPhoneNumber,
-      "dialCode": userDetailInfo.dialCode,
-      "isoCode": userDetailInfo.isoCode,
-      "userNickName": userDetailInfo.userNickName,
-      "userGender": userDetailInfo.userGender.value,
-      "userBirthDate": userDetailInfo.userBirthDate.toString(),
-      "userPassword": userPassword,
-      "termsVersion": userDetailInfo.termsVersion,
-      "privacyVersion": userDetailInfo.privacyVersion,
-    });
+    final categoryMapToJson = userDetailInfo.userFavoriteCategoriesMap
+        ?.map((key, value) => MapEntry(key.name, value));
+
+    final categoryMapToJsonString = json.encode(categoryMapToJson);
+    printd("categoryMapToJsonString: $categoryMapToJsonString");
+
+    final response = await HttpService.userPost(
+      '/user/update-user-info',
+      {
+        "userUUID": userDetailInfo.userUUID,
+        "userProfileImage": userDetailInfo.profileImage,
+        "userID": userDetailInfo.userID,
+        "userPhoneNumber": userDetailInfo.userPhoneNumber,
+        "dialCode": userDetailInfo.dialCode,
+        "isoCode": userDetailInfo.isoCode,
+        "userNickName": userDetailInfo.userNickName,
+        "userGender": userDetailInfo.userGender.value,
+        "userBirthDate": userDetailInfo.userBirthDate.toString(),
+        "userPassword": userPassword,
+        "termsVersion": userDetailInfo.termsVersion,
+        "privacyVersion": userDetailInfo.privacyVersion,
+        "userFavoriteCategories": categoryMapToJsonString,
+      },
+    );
 
     if (response.statusCode == 200) {
       return true;
     } else {
+      printd("response.body: ${response.body}");
       return false;
     }
   }

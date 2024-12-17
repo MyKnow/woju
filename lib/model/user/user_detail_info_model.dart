@@ -1,11 +1,36 @@
-import 'dart:typed_data';
-
+import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+
+import 'package:woju/model/item/category_model.dart' as woju;
 import 'package:woju/model/user/user_gender_model.dart';
+
 import 'package:woju/service/debug_service.dart';
 
 part 'user_detail_info_model.g.dart';
 
+/// # [UserDetailInfoModel]
+/// - 유저 세부 정보 모델
+///
+/// ### Fields
+/// - [String] - [userUUID]: 유저 UUID
+/// - [Uint8List]? - [profileImage]: 프로필 이미지
+/// - [String] - [userID]: 유저 ID
+/// - [String] - [userPhoneNumber]: 유저 전화번호
+/// - [String] - [dialCode]: 유저 국가번호
+/// - [String] - [isoCode]: 유저 국가코드
+/// - [String] - [userUID]: 유저 UID
+/// - [String] - [userNickName]: 유저 닉네임
+/// - [Gender] - [userGender]: 유저 성별
+/// - [DateTime] - [userBirthDate]: 유저 생년월일
+/// - [String]? - [termsVersion]: 약관 버전
+/// - [String]? - [privacyVersion]: 개인정보 처리방침 버전
+/// - [String]? - [userToken]: 유저 토큰
+/// - [Map]<[woju.Category], [int]>? - [userFavoriteCategoriesList]: 유저가 즐겨찾는 카테고리 리스트
+///
+/// ### Methods
+/// - [UserDetailInfoModel] - [fromJson]: JSON 데이터를 [UserDetailInfoModel]로 변환
+/// - [UserDetailInfoModel] - [copyWith]: 필드를 변경한 새로운 [UserDetailInfoModel] 생성
+///
 @HiveType(typeId: 1)
 class UserDetailInfoModel {
   @HiveField(0)
@@ -47,6 +72,9 @@ class UserDetailInfoModel {
   @HiveField(12)
   final String? userToken;
 
+  @HiveField(13)
+  final Map<woju.Category, int>? userFavoriteCategoriesMap;
+
   UserDetailInfoModel({
     required this.userUUID,
     this.profileImage,
@@ -61,6 +89,7 @@ class UserDetailInfoModel {
     this.userToken,
     this.termsVersion,
     this.privacyVersion,
+    this.userFavoriteCategoriesMap,
   });
 
   factory UserDetailInfoModel.fromJson(Map<String, dynamic> json) {
@@ -92,6 +121,10 @@ class UserDetailInfoModel {
       termsVersion: userInfo['termsVersion'],
       privacyVersion: userInfo['privacyVersion'],
       userToken: userToken,
+      userFavoriteCategoriesMap:
+          woju.CategoryExtension.getCategoryMapFromString(
+        userInfo['userFavoriteCategoriesList'],
+      ),
     );
   }
 
@@ -109,6 +142,7 @@ class UserDetailInfoModel {
     bool? profileImageDelete,
     String? termsVersion,
     String? privacyVersion,
+    Map<woju.Category, int>? userFavoriteCategoriesList,
   }) {
     return UserDetailInfoModel(
       userUUID: userUUID ?? this.userUUID,
@@ -124,6 +158,8 @@ class UserDetailInfoModel {
       userBirthDate: userBirthDate ?? this.userBirthDate,
       termsVersion: termsVersion ?? this.termsVersion,
       privacyVersion: privacyVersion ?? this.privacyVersion,
+      userFavoriteCategoriesMap:
+          userFavoriteCategoriesList ?? this.userFavoriteCategoriesMap,
     );
   }
 }

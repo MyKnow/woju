@@ -16,6 +16,7 @@ import 'package:woju/page/home/main/addItem/feeling_of_use_guide_page.dart';
 import 'package:woju/page/home/main/main_page.dart';
 import 'package:woju/page/home/shared/item_detail_page.dart';
 import 'package:woju/page/home/setting/setting_page.dart';
+import 'package:woju/page/home/shared/user_favorite_category_page.dart';
 import 'package:woju/page/home/userProfile/user_id_change_page.dart';
 import 'package:woju/page/home/userProfile/user_phone_number_change_page.dart';
 import 'package:woju/page/home/userProfile/user_profile_page.dart';
@@ -149,6 +150,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
                 path: 'userWithdrawal',
                 builder: (context, state) => const UserWithdrawalPage(),
                 text: "회원 탈퇴",
+              ),
+              _buildNoTransitionRoute(
+                path: 'userFavoriteCategoriesChange',
+                builder: (context, state) => const UserFavoriteCategoriesPage(),
+                text: "선호 카테고리 변경",
               ),
             ],
           ),

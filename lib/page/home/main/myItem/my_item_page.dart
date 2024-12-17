@@ -294,7 +294,7 @@ class _MyItemPageState extends ConsumerState<MyItemPage> {
                               ),
                             ],
                           ),
-                          const Row(
+                          Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               const Icon(
@@ -302,8 +302,8 @@ class _MyItemPageState extends ConsumerState<MyItemPage> {
                                 color: Colors.green,
                               ),
                               const SizedBox(width: 4),
-                              const CustomText(
-                                '0', // TODO: 실제 채팅 요청 갯수로 변경
+                              CustomText(
+                                item.itemMatchedUsers.length.toString(),
                                 isLocalize: false,
                               ),
                             ],

@@ -250,7 +250,6 @@ class ItemDetailPageState extends ConsumerState<ItemDetailPage> {
                             // Views
                             CustomText(
                               '${itemState.item.itemViews}',
-                              // 'Test Views',
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.disabledColor,
                               ),
@@ -278,7 +277,6 @@ class ItemDetailPageState extends ConsumerState<ItemDetailPage> {
                                   // Likes
                                   CustomText(
                                     '${itemState.item.itemLikedUsers.length}',
-                                    // 'Test Likes',
                                     style: theme.textTheme.bodySmall?.copyWith(
                                       color: theme.disabledColor,
                                     ),
@@ -286,6 +284,32 @@ class ItemDetailPageState extends ConsumerState<ItemDetailPage> {
                                   ),
                                 ],
                               ),
+                            ),
+
+                            // 여백
+                            const SizedBox(width: 16),
+
+                            // 채팅방 수
+                            Row(
+                              children: [
+                                // icon
+                                Icon(
+                                  Icons.chat_sharp,
+                                  size: theme.textTheme.bodySmall?.fontSize,
+                                  applyTextScaling: true,
+                                  color: theme.disabledColor,
+                                ),
+                                // 여백
+                                const SizedBox(width: 8),
+                                // Likes
+                                CustomText(
+                                  '${itemState.item.itemMatchedUsers.length}',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.disabledColor,
+                                  ),
+                                  isLocalize: false,
+                                ),
+                              ],
                             ),
                           ],
                         ),

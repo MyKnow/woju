@@ -76,30 +76,26 @@ class UserProfilePage extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             // 유저 프로필 이미지 변경
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.only(bottom: 8, top: 32),
-              child: const CustomText(
-                "home.userProfile.userProfileImage",
-                isBold: true,
-                isColorful: true,
+            CustomDecorationContainer(
+              margin: const EdgeInsets.only(bottom: 8, top: 32),
+              headerText: "home.userProfile.userProfileImage",
+              decorationEnable: false,
+              child: ProfileImageWidget(
+                isEditable: userProfileEditState.isEditing,
+                image: userProfileEditState.userImage,
+                onImageSelectedForDefault: () async {
+                  await userProfileStateNotifier.onClickUserProfileImage(
+                      context, null);
+                },
+                onImageSelectedForGallery: () async {
+                  await userProfileStateNotifier.onClickUserProfileImage(
+                      context, true);
+                },
+                onImageSelectedForCamera: () async {
+                  await userProfileStateNotifier.onClickUserProfileImage(
+                      context, false);
+                },
               ),
-            ),
-            ProfileImageWidget(
-              isEditable: userProfileEditState.isEditing,
-              image: userProfileEditState.userImage,
-              onImageSelectedForDefault: () async {
-                await userProfileStateNotifier.onClickUserProfileImage(
-                    context, null);
-              },
-              onImageSelectedForGallery: () async {
-                await userProfileStateNotifier.onClickUserProfileImage(
-                    context, true);
-              },
-              onImageSelectedForCamera: () async {
-                await userProfileStateNotifier.onClickUserProfileImage(
-                    context, false);
-              },
             ),
 
             // 유저 고유 번호 조회
@@ -157,25 +153,23 @@ class UserProfilePage extends ConsumerWidget {
             ),
 
             // 유저 성별 변경
-            Container(
+            CustomDecorationContainer(
+              headerText: "home.userProfile.userGender",
               width: double.infinity,
-              padding: const EdgeInsets.only(bottom: 8, top: 32),
-              child: const CustomText(
-                "home.userProfile.userGender",
-                isBold: true,
-                isColorful: true,
+              margin: const EdgeInsets.only(top: 32),
+              padding: EdgeInsets.zero,
+              child: CustomToggleSwitch(
+                decorationEnable: false,
+                currentValue: userProfileEditState.userGender.index,
+                values: GenderExtension.getGenderIndex(),
+                labelOfValue: GenderExtension.getGenderList(),
+                onToggle: (index) {
+                  if (userProfileEditState.isEditing) {
+                    userProfileStateNotifier.onChangeUserGender(index);
+                  }
+                },
+                isEnable: userProfileEditState.isEditing,
               ),
-            ),
-            CustomToggleSwitch(
-              currentValue: userProfileEditState.userGender.index,
-              values: GenderExtension.getGenderIndex(),
-              labelOfValue: GenderExtension.getGenderList(),
-              onToggle: (index) {
-                if (userProfileEditState.isEditing) {
-                  userProfileStateNotifier.onChangeUserGender(index);
-                }
-              },
-              isEnable: userProfileEditState.isEditing,
             ),
 
             // 유저 생년월일 변경
@@ -190,6 +184,31 @@ class UserProfilePage extends ConsumerWidget {
               ),
             ),
 
+            // 선호 카테고리 변경
+            CustomDecorationContainer(
+              headerText: "home.userProfile.userFavoriteCategories.header",
+              margin: const EdgeInsets.only(top: 32),
+              child: ListTile(
+                titleAlignment: ListTileTitleAlignment.center,
+                leading: Icon(
+                  CupertinoIcons.heart_fill,
+                  color: Theme.of(context).primaryColor,
+                  applyTextScaling: true,
+                ),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  color: Theme.of(context).primaryColor,
+                  applyTextScaling: true,
+                ),
+                title: CustomText(
+                  userProfileEditState.getCategoryString(),
+                  isLocalize: false,
+                ),
+                onTap: userProfileStateNotifier
+                    .pushToUserFavoriteCategoriesPage(context),
+              ),
+            ),
+
             // 유저 계정 관리 영역
             CustomDecorationContainer(
               headerText: "home.userProfile.userAccountAction",
@@ -197,6 +216,7 @@ class UserProfilePage extends ConsumerWidget {
               child: Column(
                 children: [
                   ListTile(
+                    titleAlignment: ListTileTitleAlignment.center,
                     leading: Icon(
                       CupertinoIcons.lock_shield_fill,
                       color: Theme.of(context).primaryColor,
@@ -215,6 +235,8 @@ class UserProfilePage extends ConsumerWidget {
                       userProfileStateNotifier
                           .navigateToChangePasswordPage(context);
                     },
+                    selectedTileColor:
+                        Theme.of(context).primaryColor.withOpacity(0.1),
                   ),
                   Divider(
                     height: 1,
@@ -222,6 +244,7 @@ class UserProfilePage extends ConsumerWidget {
                     color: Theme.of(context).disabledColor.withOpacity(0.5),
                   ),
                   ListTile(
+                    titleAlignment: ListTileTitleAlignment.center,
                     leading: Icon(
                       CupertinoIcons.phone_fill,
                       color: Theme.of(context).primaryColor,
@@ -247,6 +270,7 @@ class UserProfilePage extends ConsumerWidget {
                     color: Theme.of(context).disabledColor.withOpacity(0.5),
                   ),
                   ListTile(
+                    titleAlignment: ListTileTitleAlignment.center,
                     leading: Icon(
                       CupertinoIcons.person_crop_circle_fill,
                       color: Theme.of(context).primaryColor,
@@ -271,6 +295,7 @@ class UserProfilePage extends ConsumerWidget {
                     color: Theme.of(context).disabledColor.withOpacity(0.5),
                   ),
                   ListTile(
+                    titleAlignment: ListTileTitleAlignment.center,
                     leading: Icon(
                       Icons.logout_rounded,
                       color: Theme.of(context).primaryColor,
@@ -296,6 +321,7 @@ class UserProfilePage extends ConsumerWidget {
                     color: Theme.of(context).disabledColor.withOpacity(0.5),
                   ),
                   ListTile(
+                    titleAlignment: ListTileTitleAlignment.center,
                     leading: Icon(
                       Icons.person_remove_rounded,
                       color: Theme.of(context).primaryColor,

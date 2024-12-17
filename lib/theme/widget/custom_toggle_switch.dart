@@ -16,6 +16,7 @@ class CustomToggleSwitch extends ConsumerWidget {
   final bool? bottomLabelEnable;
   final void Function(int) onToggle;
   final bool? isEnable;
+  final bool? decorationEnable;
 
   const CustomToggleSwitch({
     super.key,
@@ -29,6 +30,7 @@ class CustomToggleSwitch extends ConsumerWidget {
     required this.onToggle,
     this.bottomLabelEnable,
     this.isEnable = true,
+    this.decorationEnable = true,
   });
 
   @override
@@ -67,16 +69,18 @@ class CustomToggleSwitch extends ConsumerWidget {
           width: double.infinity,
           height: 56,
           margin: EdgeInsets.zero,
-          decoration: BoxDecoration(
-            color: theme.cardTheme.color ?? theme.cardColor,
-            borderRadius: BorderRadius.circular(30),
-            boxShadow: [
-              BoxShadow(
-                color: theme.cardTheme.shadowColor ?? theme.shadowColor,
-                blurRadius: 2,
-              ),
-            ],
-          ),
+          decoration: decorationEnable == true
+              ? BoxDecoration(
+                  color: theme.cardTheme.color ?? theme.cardColor,
+                  borderRadius: BorderRadius.circular(30),
+                  boxShadow: [
+                    BoxShadow(
+                      color: theme.cardTheme.shadowColor ?? theme.shadowColor,
+                      blurRadius: 2,
+                    ),
+                  ],
+                )
+              : null,
           child: AnimatedToggleSwitch<int>.size(
             current: currentValue,
             borderWidth: 1,
@@ -91,6 +95,15 @@ class CustomToggleSwitch extends ConsumerWidget {
             iconAnimationType: AnimationType.onHover,
             styleAnimationType: AnimationType.onHover,
             spacing: 1.0,
+            customStyleBuilder: (context, local, global) {
+              return ToggleStyle(
+                indicatorColor:
+                    isEnable == true ? theme.primaryColor : theme.disabledColor,
+                backgroundColor: theme.cardTheme.color,
+                borderColor: Colors.transparent,
+                borderRadius: BorderRadius.circular(30),
+              );
+            },
             customIconBuilder: (context, local, global) {
               if (iconOfValue != null) {
                 return Icon(

@@ -26,7 +26,8 @@ class ItemService {
   /// - [Future]<[http.Response]>
   ///
   static Future<List<ItemDetailModel>> fetchItemList(String userToken) async {
-    final result = await HttpService.itemGet('/item/get-item-list', header: {
+    final result =
+        await HttpService.itemGet('/item/get-users-item-list', header: {
       'Authorization': 'Bearer $userToken',
     });
 
@@ -40,10 +41,10 @@ class ItemService {
         return [];
       }
 
-      final itemList = (itemListJson as List)
-          .map((e) => ItemDetailModel.fromJson(e))
-          .toList();
-
+      final itemList = (itemListJson as List).map((e) {
+        var result = ItemDetailModel.fromJson(e);
+        return result;
+      }).toList();
       return itemList;
     }
     return [];

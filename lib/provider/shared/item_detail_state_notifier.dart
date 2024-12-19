@@ -72,7 +72,7 @@ class ItemDetailState {
 
 final itemDetailStateProvider =
     StateNotifierProvider.autoDispose<ItemDetailStateNotifier, ItemDetailState>(
-  (ref) => ItemDetailStateNotifier(),
+  (ref) => ItemDetailStateNotifier(ref),
 );
 
 /// # [ItemDetailStateNotifier]
@@ -85,7 +85,8 @@ final itemDetailStateProvider =
 /// - [void] - [clearItemDetail] : 아이템 상세 정보를 초기화한다.
 ///
 class ItemDetailStateNotifier extends StateNotifier<ItemDetailState> {
-  ItemDetailStateNotifier() : super(ItemDetailState.initial());
+  late Ref ref;
+  ItemDetailStateNotifier(this.ref) : super(ItemDetailState.initial());
 
   void updateItemDetail(ItemDetailModel item) {
     state = state.copyWith(item: item);

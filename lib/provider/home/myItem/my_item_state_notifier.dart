@@ -12,7 +12,7 @@ import 'package:woju/service/debug_service.dart';
 import 'package:woju/service/toast_message_service.dart';
 
 final myItemStateProvider =
-    StateNotifierProvider.autoDispose<MyItemStateNotifier, MyItemState>(
+    StateNotifierProvider<MyItemStateNotifier, MyItemState>(
   (ref) => MyItemStateNotifier(),
 );
 
@@ -185,6 +185,7 @@ extension MyItemPageAction on MyItemStateNotifier {
     final itemList = await ItemService.fetchItemList(userToken);
 
     setItemList(itemList);
+    printd("itemList: $itemList");
 
     setIsFetching(false);
 

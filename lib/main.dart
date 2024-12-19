@@ -63,10 +63,10 @@ class MainApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp.router(
-      builder: (context, child) => AccessibilityTools(
-        logLevel: LogLevel.none,
-        child: child,
-      ),
+      // builder: (context, child) => AccessibilityTools(
+      //   logLevel: LogLevel.none,
+      //   child: child,
+      // ),
       debugShowCheckedModeBanner: false,
       debugShowMaterialGrid: false,
       darkTheme: CustomThemeData.dark,

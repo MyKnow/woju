@@ -151,7 +151,7 @@ class UserProfileEditState {
   ///
   String getCategoryString() {
     if (userFavoriteCategories.isEmpty || userFavoriteCategories.keys.isEmpty) {
-      return 'home.userProfile.userFavoriteCategoriesChange.title'.tr();
+      return 'home.userProfile.userFavoriteCategories.title'.tr();
     }
 
     // 최대 3개까지만 표시하고, 그 이상일 경우에는 '...' 표시

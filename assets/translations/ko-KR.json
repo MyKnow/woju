@@ -1,9 +1,9 @@
 {
     "onboarding": {
         "description": {
-            "1": "스쳐 지나간 인연과 이어져보세요",
-            "2": "실시간으로 근처의 사람들과 소통할 수 있어요",
-            "3": "자기 전, 낯선 이와 이야기를 나눠보세요"
+            "1": "사용하지 않는 물건을 교환하고 새로운 물건을 얻어보세요",
+            "2": "물건을 교환하면서 새로운 인연을 만들어보세요",
+            "3": "저렴한 물건으로 고가의 물건을 교환해보세요"
         },
         "startWithPhoneNumber": "전화번호로 시작하기",
         "signIn": {
@@ -137,6 +137,22 @@
                 "withdrawalCancelButton" : "취소",
                 "withdrawalSuccess" : "탈퇴에 성공했습니다",
                 "withdrawalFailed" : "탈퇴에 실패했습니다. 잠시 후에 다시 시도해주세요"
+            },
+            "userFavoriteCategories" : {
+                "header" : "관심 카테고리",
+                "title" : "관심 카테고리를 선택해주세요",
+                "dialog" : {
+                    "title" : "관심 카테고리 저장",
+                    "content" : "관심 카테고리를 저장하시겠습니까?",
+                    "update" : "저장",
+                    "updateCancel" : "저장 안함"
+                },
+                "selectPage" : {
+                    "description" : "카테고리를 짧게 누르면 선택, 드래그해서 순서를 변경할 수 있어요",
+                    "headerOfFavoriteCategories" : "관심 카테고리",
+                    "headerOfNonFavoriteCategories" : "관심 없는 카테고리"
+                }
+
             }
         },
         "setting" : {
@@ -586,5 +602,23 @@
                 }
             }
         }
+    },
+    "matchingPage" : {
+        "emptyMyItems" : {
+            "title" : "내 아이템이 없습니다!",
+            "description" : "아이템을 등록하고 교환을 시작해보세요",
+            "button": "아이템 추가하기"
+        },
+        "selectItem" : "상대방과 교환 할 내 아이템을 선택해주세요",
+        "swipeToWhatYouWant" : "왼쪽으로 스와이프 하면 스킵\n오른쪽으로 스와이프 하면 교환 요청을 보낼 수 있어요",
+        "swipeToUnlike" : "스킵합니다",
+        "swipeToLike" : "교환 요청을 보냅니다",
+        "emptyRecommendedItems" : {
+            "title" : "새로운 추천 아이템이 없습니다",
+            "description" : "다른 아이템을 기다려주세요!"
+        }
+    },
+    "chatPage": {
+        "emptyChatroom" : "채팅방이 없습니다"
     }
 }

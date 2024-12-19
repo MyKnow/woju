@@ -152,7 +152,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
                 text: "회원 탈퇴",
               ),
               _buildNoTransitionRoute(
-                path: 'userFavoriteCategoriesChange',
+                path: 'userFavoriteCategories',
                 builder: (context, state) => const UserFavoriteCategoriesPage(),
                 text: "선호 카테고리 변경",
               ),

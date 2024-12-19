@@ -617,13 +617,13 @@ extension UserProfileEditAction on UserProfileStateNotifier {
         (_) {
           AdaptiveDialog.showAdaptiveDialog(
             context,
-            title: "home.userProfile.userFavoriteCategoriesChange.title".tr(),
+            title: "home.userProfile.userFavoriteCategories.dialog.title".tr(),
             content: CustomText(
-              "home.userProfile.userFavoriteCategoriesChange.content".tr(),
+              "home.userProfile.userFavoriteCategories.dialog.content".tr(),
             ),
             actions: {
-              Text("home.userProfile.userFavoriteCategoriesChange.update".tr()):
-                  () async {
+              Text("home.userProfile.userFavoriteCategories.dialog.update"
+                  .tr()): () async {
                 // 다이얼로그 닫기
                 context.pop();
 
@@ -650,7 +650,7 @@ extension UserProfileEditAction on UserProfileStateNotifier {
                 }
               },
               Text(
-                "home.userProfile.userFavoriteCategoriesChange.updateCancel"
+                "home.userProfile.userFavoriteCategories.dialog.updateCancel"
                     .tr(),
               ): () {
                 // 다이얼로그 닫기
@@ -761,7 +761,7 @@ extension UserProfileEditNavigationAction on UserProfileStateNotifier {
       backupUserProfile();
 
       // 즐겨찾기 카테고리 페이지로 이동
-      context.push('/userProfile/userFavoriteCategoriesChange');
+      context.push('/userProfile/userFavoriteCategories');
     };
   }
 }

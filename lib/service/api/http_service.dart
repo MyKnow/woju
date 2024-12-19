@@ -6,6 +6,7 @@ import 'package:woju/service/debug_service.dart';
 class HttpService {
   static String userAPIUrl = dotenv.env['USER_API_URL'] ?? '';
   static String itemAPIUrl = dotenv.env['ITEM_API_URL'] ?? '';
+  static String chatAPIUrl = dotenv.env['CHAT_API_URL'] ?? '';
 
   static Uri getUserAPIUrl(String path) {
     return Uri.parse(userAPIUrl + path);
@@ -13,6 +14,10 @@ class HttpService {
 
   static Uri getItemAPIUrl(String path) {
     return Uri.parse(itemAPIUrl + path);
+  }
+
+  static Uri getChatAPIUrl(String path) {
+    return Uri.parse(chatAPIUrl + path);
   }
 
   /// # [userPost]
@@ -94,6 +99,7 @@ class HttpService {
   static Future<http.Response> itemGet(String url,
       {Map<String, String>? header, Map<String, dynamic>? query}) async {
     final itemUri = getItemAPIUrl(url);
+    printd("itemGet query: $query");
 
     return await _get(itemUri, header, query);
   }
@@ -118,6 +124,67 @@ class HttpService {
     final itemUri = getItemAPIUrl(url);
 
     return await _delete(itemUri, header, body: body);
+  }
+
+  /// # [chatPost]
+  /// - 채팅 API POST 요청
+  ///
+  /// ### Parameters
+  /// - [String] - [url] : API URI
+  /// - [Map]<[String], [dynamic]> - [body] : API Body
+  ///
+  /// ### Parameters (Optional)
+  /// - [Map]<[String], [String]>? - [header] : API Header
+  ///
+  /// ### Returns
+  /// - [Future]<[http].[Response]> : API Response
+  ///
+  static Future<http.Response> chatPost(String url, Map<String, dynamic> body,
+      {Map<String, String>? header}) async {
+    final chatUri = getChatAPIUrl(url);
+
+    return await _post(chatUri, body, header);
+  }
+
+  /// # [chatGet]
+  /// - 채팅 API GET 요청
+  ///
+  /// ### Parameters
+  /// - [String] - [url] : API URI
+  ///
+  /// ### Parameters (Optional)
+  /// - [Map]<[String], [String]>? - [header] : API Header
+  /// - [Map]<[String], [dynamic]>? - [query] : API Query
+  ///
+  /// ### Returns
+  /// - [Future]<[http].[Response]> : API Response
+  ///
+  static Future<http.Response> chatGet(String url,
+      {Map<String, String>? header, Map<String, dynamic>? query}) async {
+    final chatUri = getChatAPIUrl(url);
+
+    return await _get(chatUri, header, query);
+  }
+
+  /// # [chatDelete]
+  /// - 채팅 API DELETE 요청
+  ///
+  /// ### Parameters
+  /// - [String] - [url] : API URI
+  /// - [Map]<[String], [String]> - [header] : API Header
+  ///
+  /// ### Parameters
+  /// - [Map]<[String], [dynamic]>? - [body] : API Body
+  ///
+  /// ### Returns
+  /// - [Future]<[http].[Response]> : API Response
+  ///
+  static Future<http.Response> chatDelete(
+      String url, Map<String, String> header,
+      {Map<String, dynamic>? body}) async {
+    final chatUri = getChatAPIUrl(url);
+
+    return await _delete(chatUri, header, body: body);
   }
 
   /// # [_get]

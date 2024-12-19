@@ -1,386 +1,399 @@
 {
     "onboarding": {
         "description": {
-            "1": "Reconnect with those fleeting encounters",
-            "2": "Communicate with people nearby in real-time",
-            "3": "Have a chat with a stranger before going to sleep"
+            "1": "Exchange unused items and get new ones",
+            "2": "Make new connections while exchanging items",
+            "3": "Exchange low-cost items for high-value ones"
         },
-        "startWithPhoneNumber": "Start with Phone Number",
+        "startWithPhoneNumber": "Start with phone number",
         "signIn": {
             "title": "Sign In",
-            "signInWithPhoneNumber" : "Sign in with Phone Number",
-            "signInWithID" : "Sign in with ID",
+            "signInWithPhoneNumber": "Sign in with phone number",
+            "signInWithID": "Sign in with ID",
             "inputUserID": "Please enter your ID",
             "inputPhoneNumber": "Please enter your phone number",
             "inputPassword": "Please enter your password",
             "forgotPassword": "Forgot your password?",
             "signIn": "Sign In",
-            "resetPassword" : {
+            "resetPassword": {
                 "title": "Reset Password",
-                "done" : "Reset Complete",
-                "error" : "A server error has occurred. Please try again",
-                "success" : "Password reset successful. Please log in with your new password"
+                "done": "Reset Complete",
+                "error": "A server error occurred. Please try again",
+                "success": "Password reset successful.\nPlease log in with your new password"
             }
         },
-        "signUp" : {
+        "signUp": {
             "title": "Sign Up",
-            "signin" : "Already have an account?",
+            "signin": "Already have an account?",
             "phoneNumber": "Please enter your phone number",
-            "phoneNumberVerified" : "Verification complete",
-            "phoneNumberAvailable" : "Phone number is available",
-            "termsAgreement" : {
-                "title" : "[Required] I agree to the Terms of Service.",
-                "subtitle" : "View Terms",
-                "page" : {
-                    "appBarTitle" : "Agree to Terms of Service",
-                    "title" : "Terms of Service Version: {version}",
-                    "agreeSuccess" : "{date}, you agreed to the Terms of Service.",
-                    "agreeButton" : "Agree"
+            "phoneNumberVerified": "Verification complete",
+            "phoneNumberAvailable": "Phone number is available",
+            "termsAgreement": {
+                "title": "[Required] I agree to the terms of use.",
+                "subtitle": "View terms",
+                "page": {
+                    "appBarTitle": "Agree to Terms of Use",
+                    "title": "Terms of Use Version: {version}",
+                    "agreeSuccess": "You agreed to the terms of use on {date}.",
+                    "agreeButton": "I Agree"
                 }
             },
-            "privacyAgreement" : {
-                "title" : "[Required] I agree to the Privacy Policy.",
-                "subtitle" : "View Policy",
-                "page" : {
-                    "appBarTitle" : "Agree to Privacy Policy",
-                    "title" : "Privacy Policy Version: {version}",
-                    "agreeSuccess" : "{date}, you agreed to the Privacy Policy.",
-                    "agreeButton" : "Agree"
+            "privacyAgreement": {
+                "title": "[Required] I agree to the privacy policy.",
+                "subtitle": "View terms",
+                "page": {
+                    "appBarTitle": "Agree to Privacy Policy",
+                    "title": "Privacy Policy Version: {version}",
+                    "agreeSuccess": "You agreed to the privacy policy on {date}.",
+                    "agreeButton": "I Agree"
                 }
             },
             "confirmPassword": "Confirm Password",
-            "searchCountry": "Search for a country",
+            "searchCountry": "You can search for a country",
             "next": "Next",
-            "sendCode": "Send Code",
-            "changePhoneNumber": "Change Number",
+            "sendCode": "Verify",
+            "changePhoneNumber": "Change number",
             "password": "Please enter your password",
             "passwordRule": "Please enter a password with at least 8 characters",
             "passwordAvailable": "Password is available",
-            "userID": "Please enter your ID",
+            "userID": "Please enter your desired ID",
             "userIDCheck": "Check for duplicates",
             "userIDAvailable": "ID is available",
             "userIDAvailableSimple": "Available",
             "modifyUserID": "Change ID",
-            "detail" : {
+            "detail": {
                 "title": "Complete Profile",
-                "profileImage" : {
-                    "default": "Set to Default Image",
-                    "fromGallery": "Select from Gallery",
-                    "fromCamera": "Take Photo"
+                "profileImage": {
+                    "default": "Change to default image",
+                    "fromGallery": "Select from gallery",
+                    "fromCamera": "Take a photo"
                 },
                 "done": "Sign Up",
-                "signUpSuccess": "Sign Up Successful",
-                "nickname": "Please enter a nickname",
+                "signUpSuccess": "Sign up successful",
+                "nickname": "Please enter your nickname",
                 "nicknameValid": "Nickname is available",
                 "gender": {
                     "title": "Please select your gender",
                     "private": "Private",
                     "man": "Male",
-                    "woman" : "Female",
-                    "other" : "Other"
+                    "woman": "Female",
+                    "other": "Other"
                 },
                 "birth": "Please enter your date of birth"
             }
         },
         "skip": "Skip"
     },
-    "home" : {
-        "title" : "Home",
-        "drawer" : {
-            "closeIconDescription" : "Close Menu",
-            "openIconDescription" : "Open Menu",
-            "customerServiceCenter" : "Customer Service",
-            "signOut" : "Sign Out",
-            "appVersion" : "App Version: {version}",
-            "profile" : "My Profile",
-            "customerService" : "Customer Service",
-            "setting" : "Settings"
+    "home": {
+        "title": "Home",
+        "drawer": {
+            "closeIconDescription": "Close menu",
+            "openIconDescription": "Open menu",
+            "customerServiceCenter": "Customer Service",
+            "signOut": "Sign Out",
+            "appVersion": "App Version: {version}",
+            "profile": "My Profile",
+            "customerService": "Customer Service",
+            "setting": "Settings"
         },
-        "userProfile" : {
-            "title" : "Profile",
-            "save" : "Save",
-            "edit" : "Edit Profile",
-            "cancel" : "Cancel",
-            "userProfileImage" : "Profile Image",
-            "userUUID" : "User Unique ID",
-            "userUUIDCopied" : "Unique ID copied",
-            "userNickName" : "Nickname",
-            "userID" : "ID",
+        "userProfile": {
+            "title": "Profile",
+            "save": "Save",
+            "edit": "Edit Profile",
+            "cancel": "Cancel",
+            "userProfileImage": "Profile Image",
+            "userUUID": "User UUID",
+            "userUUIDCopied": "UUID copied",
+            "userNickName": "Nickname",
+            "userID": "ID",
             "userPhoneNumber": "Phone Number",
-            "userGender" : "Gender",
-            "userBirthDate" : "Date of Birth",
-            "userAccountAction" : "Account Management",
-            "userPasswordChange" : {
-                "title" : "Change Password",
-                "currentPassword" : "Current Password",
-                "newPassword" : "New Password",
-                "changePassword" : "Change Password"
+            "userGender": "Gender",
+            "userBirthDate": "Date of Birth",
+            "userAccountAction": "Account Management",
+            "userPasswordChange": {
+                "title": "Change Password",
+                "currentPassword": "Current Password",
+                "newPassword": "New Password",
+                "changePassword": "Change Password"
             },
-            "userPhoneNumberChange" : {
-                "title" : "Change Phone Number",
-                "newPhoneNumber" : "New Phone Number",
-                "authCode" : "Verification Code",
-                "changePhoneNumberButton" : "Change Phone Number"
+            "userPhoneNumberChange": {
+                "title": "Change Phone Number",
+                "newPhoneNumber": "New Phone Number",
+                "authCode": "Verification Code",
+                "changePhoneNumberButton": "Change Phone Number"
             },
-            "userIDChange" : {
-               "title": "Change ID",
-                "newUserID" : "New ID",
-                "changeUserIDButton" : "Change ID"
+            "userIDChange": {
+                "title": "Change ID",
+                "newUserID": "New ID",
+                "changeUserIDButton": "Change ID"
             },
-            "userSignOut" : "Sign Out",
-            "userWithdrawal" : {
-                "title" : "Delete Account",
-                "withdrawalButton" : "Delete Account",
-                "withdrawalDetail" : "All information will be deleted upon account deletion.",
-                "withdrawalConfirm" : "Are you sure you want to delete your account?",
-                "withdrawalConfirmButton" : "Delete",
-                "withdrawalCancelButton" : "Cancel",
-                "withdrawalSuccess" : "Account deletion successful",
-                "withdrawalFailed" : "Failed to delete account. Please try again later"
+            "userSignOut": "Sign Out",
+            "userWithdrawal": {
+                "title": "Withdraw Membership",
+                "withdrawalButton": "Withdraw",
+                "withdrawalDetail": "All information will be deleted upon withdrawal.",
+                "withdrawalConfirm": "Are you sure you want to withdraw?",
+                "withdrawalConfirmButton": "Withdraw",
+                "withdrawalCancelButton": "Cancel",
+                "withdrawalSuccess": "Withdrawal successful",
+                "withdrawalFailed": "Withdrawal failed. Please try again later"
+            },
+            "userFavoriteCategories": {
+                "header": "Favorite Categories",
+                "title": "Please select your favorite categories",
+                "dialog": {
+                    "title": "Save Favorite Categories",
+                    "content": "Do you want to save your favorite categories?",
+                    "update": "Save",
+                    "updateCancel": "Do not save"
+                },
+                "selectPage": {
+                    "description": "Tap to select, drag to change order",
+                    "headerOfFavoriteCategories": "Favorite Categories",
+                    "headerOfNonFavoriteCategories": "Non-Favorite Categories"
+                }
             }
         },
-        "setting" : {
-            "title" : "Settings",
-            "theme" : {
-                "title" : "Theme",
-                "appearance" :{
-                    "title" : "Dark Mode",
-                    "button_0" : "Follow System Settings",
-                    "button_1" : "Light Mode",
-                    "button_2" : "Dark Mode"
+        "setting": {
+            "title": "Settings",
+            "theme": {
+                "title": "Theme",
+                "appearance": {
+                    "title": "Dark Mode",
+                    "button_0": "Follow system settings",
+                    "button_1": "Light Mode",
+                    "button_2": "Dark Mode"
                 },
-                "language" : {
-                    "title" : "Language"
+                "language": {
+                    "title": "Language"
                 }
             }
         }
     },
-    "matching" : {
-        "title" : "Matching"
+    "matching": {
+        "title": "Matching"
     },
-    "chat" : {
-        "title" : "Chat"
+    "chat": {
+        "title": "Chat"
     },
-    "addItem" : {
-        "title" : "Add Item",
-        "doneButton" : "Register",
-        "imageAddButton" : {
-            "actionSheet" : {
-                "title" : "Add Item Image",
-                "message" : "Select a method to add an image",
-                "fromCamera" : "Take Photo",
-                "fromGallery" : "Select from Gallery"
+    "addItem": {
+        "title": "Add Item",
+        "editTitle": "Edit Item",
+        "editButton": "Edit",
+        "doneButton": "Register",
+        "imageAddButton": {
+            "actionSheet": {
+                "title": "Add Item Image",
+                "message": "Choose how to add an image",
+                "fromCamera": "Take a photo",
+                "fromGallery": "Select from gallery"
             }
         },
-        "imageItem" : {
-            "description" : "Tap to edit, long press to view in full",
-            "actionSheet" : {
-                "title" : "Edit Item Image",
-                "message" : "Select a method to edit the image",
-                "edit" : "Edit Image",
-                "editMenuOpenButton" : "Open Edit Menu for Image {index}",
-                "setToMainImage" : "Set as Main Image",
-                "delete" : "Delete Image"
+        "imageItem": {
+            "description": "Tap to edit, long press to view larger",
+            "actionSheet": {
+                "title": "Edit Item Image",
+                "message": "Choose how to edit the image",
+                "edit": "Edit Image",
+                "editMenuOpenButton": "Open edit menu for image {index}",
+                "setToMainImage": "Set as main image",
+                "delete": "Delete Image"
             },
-            "mainImageBanner" : "Main Image"
+            "mainImageBanner": "Main Image"
         },
-        "itemCategory" : {
-            "title" : "Select Category",
-            "selectCategory" : "Please select a category",
-            "categorySelectPage" : {
-                "title" : "Select Category",
+        "itemCategory": {
+            "title": "Select Category",
+            "selectCategory": "Please select a category",
+            "categorySelectPage": {
+                "title": "Select Category",
                 "longPressToSeeDescription": "Tap to select, long press to view description"
             }
         },
-        "itemName" : {
-            "title" : "Item Name",
+        "itemName": {
+            "title": "Item Name",
             "hintText": "Please enter the item name"
         },
-        "itemDescription" : {
-            "title" : "Item Description",
+        "itemDescription": {
+            "title": "Item Description",
             "hintText": "Please enter a description of the item"
         },
-        "feelingOfUse" : {
-            "title" : "Select Condition",
-            "description" : "Please select the condition of the item",
-            "label" : {
-                "unopened" : {
-                    "title" : "Unopened",
-                    "description" : "The item is in unopened condition"
+        "feelingOfUse": {
+            "title": "Select Condition",
+            "description": "Please select the condition of the item",
+            "label": {
+                "unopened": {
+                    "title": "Unopened",
+                    "description": "The item is unopened"
                 },
-                "simpleUnpack" : {
-                    "title" : "Unused",
-                    "description" : "The item is opened but unused"
+                "simpleUnpack": {
+                    "title": "Unused",
+                    "description": "The item is opened but unused"
                 },
-                "used" : {
-                    "title" : "Used",
-                    "description" : "The item is used but with minimal wear"
+                "used": {
+                    "title": "Slightly Used",
+                    "description": "The item is used but in good condition"
                 },
-                "muchUsed" : {
-                    "title" : "Heavily Used",
-                    "description" : "The item is used with significant wear"
+                "muchUsed": {
+                    "title": "Heavily Used",
+                    "description": "The item is used and shows signs of wear"
                 },
-                "broken" : {
-                    "title" : "Broken",
-                    "description" : "The item is broken"
+                "broken": {
+                    "title": "Damaged",
+                    "description": "The item is damaged"
                 }
             },
-            "infoButton" : "View Condition Selection Guide",
-            "guidePage" : {
-                "title" : "Condition Selection Guide",
-                "description" : "Tap to select, long press to view image in full"
+            "infoButton": "View condition selection guide",
+            "guidePage": {
+                "title": "Condition Selection Guide",
+                "description": "Tap to select, long press to view larger"
             }
         },
-        "itemPrice" : {
-            "title" : "Item Price",
+        "itemPrice": {
+            "title": "Item Price",
             "hintText": "Please enter the item price",
-            "invalidRange" : "Please enter a price between 0 and 100,000,000,000"
+            "invalidRange": "Please enter a price between 0 and 100,000,000,000"
         },
-        "barterPlace" : {
+        "barterPlace": {
             "title": "Exchange Location",
-            "empty" : "Please select an exchange location",
-            "barterPlace" : {
-                "title": "Exchange Location",
-                "empty" : "Please select an exchange location",
-                "placeSelectPage" : {
-                  "title" : "Select Exchange Location",
-                  "hint" : "Drag the map to select a location",
-                  "selectButton" : "Select",
-                  "selectLocation" : "Select Location",
-                  "emptyLocation" : "Place a marker on a building or landmark"
-                }
+            "empty": "Please set an exchange location",
+            "placeSelectPage": {
+                "title": "Select Exchange Location",
+                "hint": "Drag the map to select a location",
+                "selectButton": "Select",
+                "selectLocation": "Select Location",
+                "emptyLocation": "Place a marker on a building or landmark"
             }
         },
-        "addItemSuccess" : "Item registered successfully",
-        "addItemFail" : "Failed to register item. Please try again"
+        "addItemSuccess": "Item successfully registered",
+        "addItemFail": "Failed to register item. Please try again"
     },
     "accessibility": {
-        "hideKeyboardButton": "Hide Keyboard Button",
-        "hidePasswordFieldButton": "Hide Password Button",
-        "showPasswordFieldButton": "Show Password Button"
+        "hideKeyboardButton": "Hide keyboard button",
+        "hidePasswordFieldButton": "Hide password button",
+        "showPasswordFieldButton": "Show password button"
     },
-    "status" : {
-        "authcode" : {
+    "status": {
+        "authcode": {
             "label": "Please enter the verification code",
-            "invalid": "Please enter a 6-digit code",
+            "invalid": "Please enter a 6-digit verification code",
             "verify": "Verify Code",
-            "verified": "Verification Complete",
+            "verified": "Verification complete",
             "resend": "Resend"
         },
-        "AuthStatus" : {
-            "failedInvalidPhoneNumber" : "Please enter a valid phone number",
-            "failedAuthCodeNotSent" : "Unable to send verification code. Please try again",
-            "failedAuthCodeTimeout" : "Verification code expired. Please request a new one",
-            "failedAuthCodeEmpty" : "Please enter the verification code",
-            "failedAuthCodeInvalid" : "Please enter a 6-digit code"
+        "AuthStatus": {
+            "failedInvalidPhoneNumber": "Please enter a valid phone number",
+            "failedAuthCodeNotSent": "Unable to send verification code. Please try again",
+            "failedAuthCodeTimeout": "Verification code expired. Please request again",
+            "failedAuthCodeEmpty": "Please enter the verification code",
+            "failedAuthCodeInvalid": "Please enter a 6-digit verification code"
         },
-        "server" : {
-            "error" : "A server error has occurred. Please try again",
-            "online" : "Connected to server",
-            "offline" : "Disconnected from server",
-            "connecting" : "Connecting to server"
+        "server": {
+            "error": "A server error occurred. Please try again",
+            "online": "Connected to server",
+            "offline": "Disconnected from server",
+            "connecting": "Connecting to server"
         },
-        "PhoneNumberStatus" : {
-            "lengthInvalid" : "Please enter a phone number between 5 and 15 digits",
-            "invalid" : "Phone number is not available",
-            "countryCodeEmpty" : "Please enter the country code",
-            "available" : "Phone number is available",
-            "authCompleted" : "Verification complete",
-            "notAvailable" : "Phone number is already in use",
-            "valid" : "Valid phone number format",
-            "empty" : "Please enter the phone number",
-            "validForDisabled" : "Phone Number",
-            "phoneNumberUpdateCancelButton" : "Cancel Phone Number Change",
-            "phoneNumberUpdateConfirmButton" : "Attempt to Change Phone Number",
-            "phoneNumberUpdate" : "Change Number",
-            "phoneNumberUpdateActivateButton" : "Activate Phone Number Change"
+        "PhoneNumberStatus": {
+            "lengthInvalid": "Please enter a phone number between 5 and 15 digits",
+            "invalid": "Phone number is not available",
+            "countryCodeEmpty": "Please enter the country code",
+            "available": "Phone number is available",
+            "authCompleted": "Verification complete",
+            "notAvailable": "Phone number is already in use",
+            "valid": "Valid phone number format",
+            "empty": "Please enter your phone number",
+            "validForDisabled": "Phone number",
+            "phoneNumberUpdateCancelButton": "Cancel phone number change button",
+            "phoneNumberUpdateConfirmButton": "Attempt phone number change button",
+            "phoneNumberUpdate": "Change number",
+            "phoneNumberUpdateActivateButton": "Activate phone number change button"
         },
-        "UserIDStatus" : {
-            "empty" :"Please enter your ID",
-            "inputUserID" : "Please enter your ID",
-            "validForSignUp" : "ID is available",
-            "validIDFormat" : "Valid ID format",
-            "validForDisabled" : "ID",
-            "invalid" : "ID can only contain lowercase letters and numbers",
-            "invalidAlphabet" : "ID must contain at least 6 lowercase letters",
-            "invalidAlphabetFirst" : "ID must start with a letter",
-            "alphabetFirst" : "ID must start with a letter",
-            "short" : "ID must be at least 6 characters",
-            "long" : "ID must be no more than 20 characters",
-            "exists" : "ID is already in use",
-            "notAvailable" : "ID is not available",
-            "serverError" : "A server error has occurred. Please try again",
-            "userIDUpdateCancelButton" : "Cancel ID Change",
-            "userIDUpdateConfirmButton" : "Attempt to Change ID",
-            "userIDUpdate" : "Change ID",
-            "userIDUpdateActivateButton" : "Activate ID Change"
+        "UserIDStatus": {
+            "empty": "Please enter your ID",
+            "inputUserID": "Please enter your ID",
+            "validForSignUp": "ID is available",
+            "validIDFormat": "Valid ID format",
+            "validForDisabled": "ID",
+            "invalid": "ID can only contain letters and numbers",
+            "invalidAlphabet": "ID must contain at least 6 lowercase letters",
+            "invalidAlphabetFirst": "ID must start with a letter",
+            "alphabetFirst": "ID must start with a letter",
+            "short": "ID must be at least 6 characters",
+            "long": "ID must be no more than 20 characters",
+            "exists": "ID is already in use",
+            "notAvailable": "ID is not available",
+            "serverError": "A server error occurred. Please try again",
+            "userIDUpdateCancelButton": "Cancel ID change button",
+            "userIDUpdateConfirmButton": "Attempt ID change button",
+            "userIDUpdate": "Change ID",
+            "userIDUpdateActivateButton": "Activate ID change button"
         },
-        "PasswordStatus" : {
-            "empty" : "Please enter your password",
-            "valid" : "Password is available",
-            "invalid" : "Password must contain special characters, letters, and numbers",
-            "short" : "Password must be at least 8 characters",
-            "long" : "Password must be no more than 20 characters",
-            "validForSignIn" : "Valid password format"
+        "PasswordStatus": {
+            "empty": "Please enter your password",
+            "valid": "Password is available",
+            "invalid": "Password must include special characters, letters, and numbers",
+            "short": "Password must be at least 8 characters",
+            "long": "Password must be no more than 20 characters",
+            "validForSignIn": "Valid password format"
         },
-        "gender" : {
-            "title" : "Please select your gender",
-            "man" : "Male",
-            "woman" : "Female",
-            "other" : "Other",
-            "private" : "Private"
+        "gender": {
+            "title": "Please select your gender",
+            "man": "Male",
+            "woman": "Female",
+            "other": "Other",
+            "private": "Private"
         },
-        "UserNickNameStatus" : {
-            "title" : "Please enter a nickname",
-            "empty" : "Please enter a nickname",
-            "short" : "Nickname must be at least 2 characters",
-            "long" : "Nickname must be no more than 20 characters",
-            "invalid" : "Nickname is not available",
-            "valid" : "Nickname is available",
-            "value" : "{nickname}",
-            "validForDisabled" : "Nickname",
-            "nicknameUpdateCancelButton" : "Cancel Nickname Change",
-            "nicknameUpdateConfirmButton" : "Attempt to Change Nickname",
-            "nicknameUpdate" : "Change Nickname",
-            "nicknameUpdateActivateButton" : "Activate Nickname Change"
+        "UserNickNameStatus": {
+            "title": "Please enter your nickname",
+            "empty": "Please enter your nickname",
+            "short": "Nickname must be at least 2 characters",
+            "long": "Nickname must be no more than 20 characters",
+            "invalid": "Nickname is not available",
+            "valid": "Nickname is available",
+            "value": "{nickname}",
+            "validForDisabled": "Nickname",
+            "nicknameUpdateCancelButton": "Cancel nickname change button",
+            "nicknameUpdateConfirmButton": "Attempt nickname change button",
+            "nicknameUpdate": "Change nickname",
+            "nicknameUpdateActivateButton": "Activate nickname change button"
         },
-        "UserExistStatus" : {
-            "exist" : "User already exists",
-            "notExist" : "User does not exist"
+        "UserExistStatus": {
+            "exist": "User already exists",
+            "notExist": "User does not exist"
         },
-        "SignInStatus" : {
-            "loginFailedForInvalidLoginInfo" : "ID or password is incorrect",
-            "loginFailedForServer" : "Failed to log in. Please try again",
-            "loginSuccess" : "Welcome, {nickname}",
-            "withDrawalFailed" : "Failed to withdraw. Please try again"
+        "SignInStatus": {
+            "loginFailedForInvalidLoginInfo": "Invalid ID or password",
+            "loginFailedForServer": "Failed to log in. Please try again",
+            "loginSuccess": "Welcome, {nickname}",
+            "withDrawalFailed": "Failed to withdraw. Please try again"
         },
-        "SignUpError" : {
-            "authCodeEmpty" : "Please enter the verification code",
-            "authCodeInvalid" : "Please enter a valid verification code",
-            "authCodeTimeout" : "Verification code expired. Please request a new one",
-            "authCodeNotSent" : "Unable to send verification code. Please try again",
-            "serverError" : "A server error has occurred. Please try again",
-            "alreadySignedUp" : "Phone number already registered.",
-            "signUpFailure": "Sign up failed"
+        "SignUpError": {
+            "authCodeEmpty": "Please enter the verification code",
+            "authCodeInvalid": "Please enter a valid verification code",
+            "authCodeTimeout": "Verification code expired. Please request again",
+            "authCodeNotSent": "Unable to send verification code. Please try again",
+            "serverError": "A server error occurred. Please try again",
+            "alreadySignedUp": "Phone number is already registered.",
+            "signUpFailure": "Failed to sign up"
         },
-        "UserServiceStatus" : {
-            "updateSuccess" : "Updated successfully",
-            "updateFailed" : "Failed to update. Please try again"
+        "UserServiceStatus": {
+            "updateSuccess": "Successfully updated",
+            "updateFailed": "Failed to update. Please try again"
         }
     },
-    "error" : {
-        "server" : {
-            "title" : "Server Error",
-            "description" : "A server error has occurred. Please try again later"
+    "error": {
+        "server": {
+            "title": "Server Error",
+            "description": "A server error occurred. Please try again later"
         },
-        "router" : {
-            "title" : "Page Error",
-            "description" : "The page you are looking for does not exist.",
-            "back" : "Go to Main Page"
+        "router": {
+            "title": "Page Error",
+            "description": "The page does not exist.",
+            "back": "Go to main page"
         },
-        "userDetail" : {
-            "nullInfo" : "Failed to retrieve user information.",
-            "emptyUUID" : "User information is not valid."
+        "userDetail": {
+            "nullInfo": "Failed to load user information.",
+            "emptyUUID": "User information is not valid."
         },
         "failureReason": {
             "USER_ID_NOT_AVAILABLE": "ID is not available",
@@ -389,96 +402,106 @@
             "PHONENUMBER_NOT_AVAILABLE": "Phone number is not available",
             "PHONENUMBER_EMPTY": "Please enter your phone number",
             "USER_LOGIN_INFO_EMPTY": "Please enter your login information",
-            "USER_SIGNUP_INFO_EMPTY": "Please complete all sign up information",
+            "USER_SIGNUP_INFO_EMPTY": "Please enter all sign-up information",
             "PASSWORD_NOT_MATCH": "Current password is incorrect",
             "PASSWORD_EMPTY": "Please enter your password",
-            "USER_UID_EMPTY": "User unique ID is empty.",
-            "SERVER_ERROR": "A server error has occurred",
+            "USER_UID_EMPTY": "User UUID is empty.",
+            "SERVER_ERROR": "A server error occurred",
             "TERMS_VERSION_EMPTY": "Please agree to the terms",
-            "TERMS_VERSION_NOT_MATCH": "Terms version format is incorrect"
+            "TERMS_VERSION_NOT_MATCH": "Terms version format is not valid"
         }
     },
-    "theme" : {
-        "dark" : "Dark Mode",
-        "light" : "Light Mode"
+    "theme": {
+        "dark": "Dark Mode",
+        "light": "Light Mode"
     },
-    "input" : {
-        "defaultLabel" : "Please enter content",
-        "defaultHint" : "Please enter content",
-        "defaultError" : "The input content is invalid"
+    "input": {
+        "defaultLabel": "Please enter content",
+        "defaultHint": "Please enter content",
+        "defaultError": "The entered content is not valid"
     },
-    "common" : {
-        "cancel" : "Cancel",
-        "done" : "Done",
-        "more" : "More",
-        "close" : "Close"
+    "common": {
+        "cancel": "Cancel",
+        "done": "Done",
+        "ok": "OK",
+        "more": "More",
+        "close": "Close",
+        "noItem": "No items available.",
+        "elapsedTime": {
+            "now": "Just now",
+            "minute": "{minute} minutes ago",
+            "hour": "{hour} hours ago",
+            "day": "{day} days ago",
+            "month": "{month} months ago",
+            "year": "{year} years ago"
+        }
     },
-    "imageEditor" : {
-        "paintEditor" : {
-            "bottomNavigationBarText" : "Draw",
-            "freestyle" : "Pen",
-            "arrow" : "Arrow",
-            "line" : "Line",
-            "rectangle" : "Rectangle",
-            "circle" : "Circle",
-            "dashLine" : "Dashed Line",
-            "lineWidth" : "Line Thickness",
-            "toggleFill" : "Fill Color",
-            "smallScreenMoreTooltip" : "More",
-            "back" : "Cancel Drawing",
-            "done" : "Complete Drawing"
+    "imageEditor": {
+        "paintEditor": {
+            "bottomNavigationBarText": "Draw",
+            "freestyle": "Pen",
+            "arrow": "Arrow",
+            "line": "Line",
+            "rectangle": "Rectangle",
+            "circle": "Circle",
+            "dashLine": "Dashed Line",
+            "lineWidth": "Line Width",
+            "toggleFill": "Fill Color",
+            "smallScreenMoreTooltip": "More",
+            "back": "Cancel Drawing",
+            "done": "Complete Drawing"
         },
-        "textEditor" : {
-            "inputHintText" : "Enter Text",
-            "bottomNavigationBarText" : "Add Text",
-            "textAlign" : "Text Alignment",
-            "fontScale" : "Font Size",
-            "backgroundMode" : "Background Color",
-            "smallScreenMoreTooltip" : "More",
-            "back" : "Cancel Text Input",
-            "done" : "Complete Text Input"
+        "textEditor": {
+            "inputHintText": "Enter text",
+            "bottomNavigationBarText": "Add Text",
+            "textAlign": "Text Alignment",
+            "fontScale": "Text Size",
+            "backgroundMode": "Background Color",
+            "smallScreenMoreTooltip": "More",
+            "back": "Cancel Text Entry",
+            "done": "Complete Text Entry"
         },
-        "cropRotateEditor" : {
-            "bottomNavigationBarText" : "Crop/Rotate",
-            "rotate" : "Rotate",
-            "ratio" : "Image Ratio",
-            "back" : "Cancel Crop/Rotate",
-            "done" : "Complete Crop/Rotate",
-            "cancel" : "Cancel",
-            "prepareImageDialogMsg" : "Preparing image",
-            "applyChangesDialogMsg" : "Applying image changes",
-            "smallScreenMoreTooltip" : "More",
-            "reset" : "Reset"
+        "cropRotateEditor": {
+            "bottomNavigationBarText": "Crop/Rotate",
+            "rotate": "Rotate",
+            "ratio": "Image Ratio",
+            "back": "Cancel Crop/Rotate",
+            "done": "Complete Crop/Rotate",
+            "cancel": "Cancel",
+            "prepareImageDialogMsg": "Preparing image",
+            "applyChangesDialogMsg": "Applying changes",
+            "smallScreenMoreTooltip": "More",
+            "reset": "Reset"
         },
-        "filterEditor" : {
-            "applyFilterDialogMsg" : "Applying filter",
-            "bottomNavigationBarText" : "Apply Filter",
-            "back" : "Cancel Filter",
-            "done" : "Complete Filter",
-            "filters" : {
-                "none" : "No Filter"
+        "filterEditor": {
+            "applyFilterDialogMsg": "Applying filter",
+            "bottomNavigationBarText": "Apply Filter",
+            "back": "Cancel Filter",
+            "done": "Complete Filter",
+            "filters": {
+                "none": "No Filter"
             }
         },
-        "blurEditor" : {
-            "applyBlurDialogMsg" : "Applying blur",
-            "bottomNavigationBarText" : "Apply Blur",
-            "back" : "Cancel Blur",
-            "done" : "Complete Blur"
+        "blurEditor": {
+            "applyBlurDialogMsg": "Applying blur",
+            "bottomNavigationBarText": "Apply Blur",
+            "back": "Cancel Blur",
+            "done": "Complete Blur"
         },
-        "emojiEditor" : {
-            "bottomNavigationBarText" : "Add Emoji",
-            "search" : "Search",
-            "noRecents" : "No recently used emojis"
+        "emojiEditor": {
+            "bottomNavigationBarText": "Add Emoji",
+            "search": "Search",
+            "noRecents": "No recent emojis"
         },
-        "cancel" : "Cancel Edit",
-        "done" : "Complete Edit",
-        "undo" : "Undo",
-        "redo" : "Redo",
-        "back" : "Back",
-        "remove" : "Delete Image",
-        "doneLoadingMsg" : "Image editing completed"
+        "cancel": "Cancel Edit",
+        "done": "Complete Edit",
+        "undo": "Undo",
+        "redo": "Redo",
+        "back": "Back",
+        "remove": "Delete Image",
+        "doneLoadingMsg": "Image editing complete"
     },
-    "Category" : {
+    "Category": {
         "all": {
             "name": "All",
             "description": "Includes all categories"
@@ -493,11 +516,11 @@
         },
         "lifestyle": {
             "name": "Lifestyle",
-            "description": "Includes all essential lifestyle items"
+            "description": "Includes all items necessary for daily life"
         },
         "fashion": {
             "name": "Fashion",
-            "description": "Includes all fashion-related items like clothes and accessories"
+            "description": "Includes all fashion-related products such as clothing and accessories"
         },
         "book": {
             "name": "Books",
@@ -505,11 +528,11 @@
         },
         "layette": {
             "name": "Baby Products",
-            "description": "Includes all baby products such as clothing and essentials"
+            "description": "Includes all baby products such as clothing and accessories"
         },
         "cosmetic": {
             "name": "Beauty",
-            "description": "Includes all beauty items like cosmetics and perfumes"
+            "description": "Includes all beauty products such as cosmetics and perfumes"
         },
         "sportsEquipment": {
             "name": "Sports Equipment",
@@ -520,11 +543,11 @@
             "description": "Includes all hobby goods such as gaming consoles"
         },
         "album": {
-            "name": "Albums",
+            "name": "Album",
             "description": "Includes all albums"
         },
         "carGoods": {
-            "name": "Car Accessories",
+            "name": "Car Goods",
             "description": "Includes all car accessories"
         },
         "ticket": {
@@ -532,16 +555,69 @@
             "description": "Includes all tickets such as concert and event tickets"
         },
         "petGoods": {
-            "name": "Pet Products",
-            "description": "Includes all pet products like food and clothing"
+            "name": "Pet Goods",
+            "description": "Includes all pet goods such as food and clothing"
         },
         "plant": {
             "name": "Plants",
             "description": "Includes all plants"
         },
         "etc": {
-            "name": "Other",
-            "description": "Includes all items not in other categories"
+            "name": "Others",
+            "description": "Includes all products not belonging to other categories"
         }
+    },
+    "myItem": {
+        "title": "My Item List",
+        "myItemList": {
+            "filterStatus": {
+                "all": "All",
+                "no_reservation": "No Reservation",
+                "reserved": "Reserved",
+                "completed": "Exchange Completed"
+            }
+        },
+        "itemStatusChange": {
+            "actionSheet": {
+                "title": "Change Item Status",
+                "message": "You can change the exchange availability of the item"
+            }
+        }
+    },
+    "itemDetail": {
+        "title": "Item Details",
+        "barterPlace": "Exchange Location",
+        "requestBarter": "Request Exchange",
+        "menu": {
+            "open": "Open Menu",
+            "actionSheet": {
+                "title": "Item Menu",
+                "report": "Report",
+                "edit": "Edit Item",
+                "delete": {
+                    "title": "Delete Item",
+                    "content": "Are you sure you want to delete?\nDeleted items cannot be recovered",
+                    "confirm": "Delete"
+                }
+            }
+        }
+    },
+    "matchingPage": {
+        "emptyMyItems": {
+            "title": "No Items!",
+            "description": "Register items and start exchanging",
+            "button": "Add Item"
+        },
+        "selectItem": "Select my item to exchange with the other party",
+        "swipeToWhatYouWant": "Swipe left to skip\nSwipe right to send an exchange request",
+        "swipeToUnlike": "Skip",
+        "swipeToLike": "Send Exchange Request",
+        "emptyRecommendedItems": {
+            "title": "No New Recommended Items",
+            "description": "Please wait for other items!"
+        }
+    },
+    "chatPage": {
+        "emptyChatroom": "No chat rooms"
     }
 }

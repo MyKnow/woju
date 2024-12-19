@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 
 import 'package:woju/page/home/main/chat_page.dart';
-import 'package:woju/page/home/main/home_page.dart';
+// import 'package:woju/page/home/main/home_page.dart';
 import 'package:woju/page/home/main/matching/matching_page.dart';
 import 'package:woju/page/home/main/myItem/my_item_page.dart';
 
@@ -50,23 +50,23 @@ class MainPage extends ConsumerWidget {
         currentIndex: bottomBarState,
         items: [
           // 홈 화면
-          BottomBarItem(
-            icon: const SizedBox(
-              width: 48,
-              height: 48,
-              child: Icon(
-                CupertinoIcons.home,
-                size: 24,
-              ),
-            ),
-            title: CustomText(
-              'home.title',
-              style: theme.textTheme.titleLarge?.copyWith(
-                color: theme.colorScheme.primary,
-              ),
-            ),
-            backgroundColor: theme.colorScheme.primary,
-          ),
+          // BottomBarItem(
+          //   icon: const SizedBox(
+          //     width: 48,
+          //     height: 48,
+          //     child: Icon(
+          //       CupertinoIcons.home,
+          //       size: 24,
+          //     ),
+          //   ),
+          //   title: CustomText(
+          //     'home.title',
+          //     style: theme.textTheme.titleLarge?.copyWith(
+          //       color: theme.colorScheme.primary,
+          //     ),
+          //   ),
+          //   backgroundColor: theme.colorScheme.primary,
+          // ),
           // 물건 교환 추천 화면
           BottomBarItem(
             icon: const SizedBox(
@@ -146,12 +146,10 @@ class MainPage extends ConsumerWidget {
   Widget _buildPage(int index) {
     switch (index) {
       case 0:
-        return const HomePage();
-      case 1:
         return const MatchingPage();
-      case 2:
+      case 1:
         return const ChatingPage();
-      case 3:
+      case 2:
         return const MyItemPage();
       default:
         return const SizedBox();
@@ -162,12 +160,10 @@ class MainPage extends ConsumerWidget {
   String _buildAppBar(int index) {
     switch (index) {
       case 0:
-        return "home.title";
-      case 1:
         return "matching.title";
-      case 2:
+      case 1:
         return "chat.title";
-      case 3:
+      case 2:
         return "myItem.title";
       default:
         return "home.title";
@@ -182,8 +178,6 @@ class MainPage extends ConsumerWidget {
       case 1:
         return null;
       case 2:
-        return null;
-      case 3:
         return [
           // 아이템 필터 버튼
           InkWell(

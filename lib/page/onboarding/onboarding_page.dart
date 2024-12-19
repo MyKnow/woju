@@ -40,10 +40,9 @@ class OnboardingPage extends ConsumerWidget {
         background: [
           // Image.asset('assets/slide_1.png'),
           // Image.asset('assets/slide_2.png'),
-          const Icon(
-            CupertinoIcons.person_2,
-            size: 100,
-            color: Colors.black,
+
+          Container(
+            color: Colors.red,
           ),
           Container(
             color: Colors.red,
@@ -57,10 +56,16 @@ class OnboardingPage extends ConsumerWidget {
         pageBodies: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: const Column(
+            child: Column(
               children: <Widget>[
                 SizedBox(
                   height: 480,
+                  child: Icon(
+                    // 물물교환 아이콘
+                    CupertinoIcons.arrow_2_squarepath,
+                    size: 200,
+                    color: Theme.of(context).primaryColor,
+                  ),
                 ),
                 CustomText('onboarding.description.1'),
               ],
@@ -68,23 +73,35 @@ class OnboardingPage extends ConsumerWidget {
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: const Column(
+            child: Column(
               children: <Widget>[
                 SizedBox(
                   height: 480,
+                  child: Icon(
+                    // 새로운 인연 아이콘
+                    CupertinoIcons.person_2_square_stack,
+                    size: 200,
+                    color: Theme.of(context).primaryColor,
+                  ),
                 ),
-                CustomText('onboarding.description.2'),
+                const CustomText('onboarding.description.2'),
               ],
             ),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: const Column(
+            child: Column(
               children: <Widget>[
                 SizedBox(
                   height: 480,
+                  child: Icon(
+                    // 고가의 물건 아이콘
+                    CupertinoIcons.money_dollar_circle,
+                    size: 200,
+                    color: Theme.of(context).primaryColor,
+                  ),
                 ),
-                CustomText('onboarding.description.3'),
+                const CustomText('onboarding.description.3'),
               ],
             ),
           ),

@@ -1,62 +1,56 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:woju/provider/home/chat/chat_page_state_notifier.dart';
 
-import 'package:woju/provider/onboarding/user_detail_info_state_notifier.dart';
-
+import 'package:woju/service/debug_service.dart';
 import 'package:woju/theme/widget/custom_text.dart';
-import 'package:woju/theme/widget/profile_image_widget.dart';
 
-class ChatingPage extends ConsumerWidget {
+class ChatingPage extends ConsumerStatefulWidget {
   const ChatingPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final userDetail = ref.watch(userDetailInfoStateProvider);
+  ConsumerState<ChatingPage> createState() => ChatingPageState();
+}
+
+class ChatingPageState extends ConsumerState<ChatingPage> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(Duration.zero, () {
+        printd('ChatingPage initState');
+        ref.read(chatPageStateProvider.notifier).getMyChatRoomList();
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final chatPageState = ref.watch(chatPageStateProvider);
     return SingleChildScrollView(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const SizedBox(width: double.infinity),
-          CustomText(
-            "User UUID: ${userDetail?.userUUID}",
-            isLocalize: false,
-          ),
-          CustomText(
-            "User ID: ${userDetail?.userID}",
-            isLocalize: false,
-          ),
-          CustomText(
-            "User Nickname: ${userDetail?.userNickName}",
-            isLocalize: false,
-          ),
-          CustomText(
-            "User Phone: ${userDetail?.dialCode} ${userDetail?.userPhoneNumber} (${userDetail?.isoCode})",
-            isLocalize: false,
-          ),
-          CustomText(
-            "User UID: ${userDetail?.userUID}",
-            isLocalize: false,
-          ),
-          CustomText(
-            "User Gender: ${userDetail?.userGender}",
-            isLocalize: false,
-          ),
-          ProfileImageWidget(
-            isEditable: false,
-            image: userDetail?.profileImage,
-          ),
-          CustomText(
-            "User BirthDate: ${userDetail?.userBirthDate}",
-            isLocalize: false,
-          ),
-          CustomText(
-            "User TermsAgreeVersion: ${userDetail?.termsVersion}",
-            isLocalize: false,
-          ),
-          CustomText(
-            "User PrivacyPolicyAgreeVersion: ${userDetail?.privacyVersion}",
-            isLocalize: false,
-          ),
+          chatPageState.isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : (chatPageState.chatDisplays.isNotEmpty)
+                  ? ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: chatPageState.chatDisplays.length,
+                      itemBuilder: (context, index) {
+                        final chat = chatPageState.chatDisplays[index];
+                        return ListTile(
+                          title: Text(chat.lastMessage.content),
+                          subtitle: Text(
+                              chat.users.map((e) => e.userNickName).join(', ')),
+                        );
+                      },
+                    )
+                  : const Center(
+                      child: CustomText(
+                      'chatPage.emptyChatroom',
+                    )),
         ],
       ),
     );

@@ -41,7 +41,7 @@ class _UserFavoriteCategoriesPageState
         .toList();
 
     return CustomScaffold(
-      title: "Temp Title",
+      title: "home.userProfile.userFavoriteCategories.title",
       body: PopScope(
         canPop: false,
         onPopInvokedWithResult: (didPop, result) async {
@@ -58,7 +58,7 @@ class _UserFavoriteCategoriesPageState
           child: Column(
             children: [
               const CustomText(
-                "Temp Description",
+                "home.userProfile.userFavoriteCategories.selectPage.description",
                 isDisabled: true,
               ),
 
@@ -66,7 +66,8 @@ class _UserFavoriteCategoriesPageState
               const SizedBox(height: 8 * 2),
 
               CustomDecorationContainer(
-                headerText: "Temp Header of Favorite Categories",
+                headerText:
+                    "home.userProfile.userFavoriteCategories.selectPage.headerOfFavoriteCategories",
                 padding: EdgeInsets.zero,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(30),
@@ -133,7 +134,8 @@ class _UserFavoriteCategoriesPageState
               const SizedBox(height: 8 * 2),
 
               CustomDecorationContainer(
-                headerText: "Temp Header of Non-Favorite Categories",
+                headerText:
+                    "home.userProfile.userFavoriteCategories.selectPage.headerOfNonFavoriteCategories",
                 padding: EdgeInsets.zero,
                 child: ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),

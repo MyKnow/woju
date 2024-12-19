@@ -163,3 +163,65 @@ class UserDetailInfoModel {
     );
   }
 }
+
+class UserDisplay {
+  final String userUUID;
+  final String userNickName;
+  final Uint8List? userProfileImage;
+  final Gender userGender;
+
+  UserDisplay({
+    required this.userUUID,
+    required this.userNickName,
+    this.userProfileImage,
+    required this.userGender,
+  });
+
+  factory UserDisplay.fromUserDetailInfoModel(UserDetailInfoModel user) {
+    return UserDisplay(
+      userUUID: user.userUUID,
+      userNickName: user.userNickName,
+      userProfileImage: user.profileImage,
+      userGender: user.userGender,
+    );
+  }
+
+  UserDetailInfoModel toUserDetailInfoModel() {
+    return UserDetailInfoModel(
+      userUUID: userUUID,
+      userNickName: userNickName,
+      profileImage: userProfileImage,
+      userGender: userGender,
+      userID: '',
+      userPhoneNumber: '',
+      dialCode: '',
+      isoCode: '',
+      userUID: '',
+      userBirthDate: DateTime.now(),
+    );
+  }
+
+  UserDisplay copyWith({
+    String? userUUID,
+    String? userNickName,
+    Uint8List? userProfileImage,
+    Gender? userGender,
+  }) {
+    return UserDisplay(
+      userUUID: userUUID ?? this.userUUID,
+      userNickName: userNickName ?? this.userNickName,
+      userProfileImage: userProfileImage ?? this.userProfileImage,
+      userGender: userGender ?? this.userGender,
+    );
+  }
+
+  // fromJson
+  static UserDisplay fromJson(Map<String, dynamic> json) {
+    return UserDisplay(
+      userUUID: json['userUUID'],
+      userNickName: json['userNickName'],
+      userProfileImage: json['userProfileImage'],
+      userGender: GenderExtension.getGenderFromString(json['userGender']),
+    );
+  }
+}

@@ -9,7 +9,7 @@ Flutter로 구현된 크로스플랫폼 앱으로, **한 번의 코드베이스�
 모든 교환 과정(제안, 수락, 완료 등)은 앱 내에서 이뤄지며, 채팅 기능과 상태 동기화를 통해 **원활한 거래 경험**을 제공합니다.  
 물품의 위치 정보를 관리하여 지도 기반 탐색 및 쿼리가 가능합니다.
 
-Back-End: [Link](https://github.com/MyKnow/woju)
+Back-End: [Link](https://github.com/MyKnow/woju_backend)
 
 ---
 
